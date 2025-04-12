@@ -3,8 +3,12 @@ package com.secureops.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
@@ -16,6 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "chats")
+@EqualsAndHashCode(of = "id") // Only use ID for equals/hashCode
+@ToString(exclude = {"participants", "messages"}) // Exclude collections from toString to prevent circular references
 public class Chat {
 
     @Id
@@ -39,31 +45,21 @@ public class Chat {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToMany
+    // Use fetch joins and avoid cascades to prevent circular references
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "chat_participants",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @Fetch(FetchMode.SUBSELECT) // Use subselect fetch mode to optimize collection loading
     private Set<User> participants = new HashSet<>();
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
     private Set<Message> messages = new HashSet<>();
 
     public enum ChatStatus {
         ACTIVE,
         ARCHIVED
-    }
-    
-    // Helper method to add a participant
-    public void addParticipant(User user) {
-        participants.add(user);
-        user.getChats().add(this);
-    }
-    
-    // Helper method to remove a participant
-    public void removeParticipant(User user) {
-        participants.remove(user);
-        user.getChats().remove(this);
     }
 }

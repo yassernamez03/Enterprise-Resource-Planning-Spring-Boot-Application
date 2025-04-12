@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegistrationDto {
-    
-    @NotEmpty(message = "Full name is required")
-    private String fullName;
+public class PasswordResetRequestDto {
     
     @NotEmpty(message = "Email is required")
     @Email(message = "Please provide a valid email address")

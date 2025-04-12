@@ -1,7 +1,6 @@
 package com.secureops.controller;
 
 import com.secureops.dto.ChatDto;
-import com.secureops.dto.UserDto;
 import com.secureops.entity.Chat;
 import com.secureops.entity.User;
 import com.secureops.service.ChatService;
@@ -27,57 +26,110 @@ public class ChatController {
     }
 
     @PostMapping
-    public ResponseEntity<ChatDto> createChat(
-            @Valid @RequestBody ChatDto chatDto,
-            @RequestParam List<Long> participantIds) {
+    public ResponseEntity<ChatDto> createChat(@Valid @RequestBody ChatDto chatDto) {
+        // Extract participant IDs from the DTO
+        List<Long> participantIds = chatDto.getParticipants();
+        
+        // Create the chat using the service
         Chat chat = chatService.createChat(chatDto, participantIds);
+        
         return new ResponseEntity<>(mapToDto(chat), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<ChatDto>> getUserChats() {
-        Long currentUserId = userService.getCurrentUser().getId();
-        List<ChatDto> chats = chatService.getUserChats(currentUserId).stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(chats);
+        System.out.println("DEBUG - getUserChats - Starting method");
+        try {
+            Long currentUserId = userService.getCurrentUser().getId();
+            System.out.println("DEBUG - getUserChats - Current user ID: " + currentUserId);
+            
+            List<Chat> chats = chatService.getUserChats(currentUserId);
+            System.out.println("DEBUG - getUserChats - Retrieved " + (chats != null ? chats.size() : "null") + " chats");
+            
+            if (chats != null) {
+                for (Chat chat : chats) {
+                    System.out.println("DEBUG - getUserChats - Chat ID: " + chat.getId() + ", Title: " + chat.getTitle());
+                    System.out.println("DEBUG - getUserChats - Participants: " + 
+                        (chat.getParticipants() != null ? chat.getParticipants().size() : "null"));
+                }
+            }
+            
+            List<ChatDto> chatDtos = chats.stream()
+                    .map(this::mapToDto)
+                    .collect(Collectors.toList());
+            System.out.println("DEBUG - getUserChats - Mapped to " + chatDtos.size() + " DTOs");
+            
+            return ResponseEntity.ok(chatDtos);
+        } catch (Exception e) {
+            System.out.println("DEBUG - getUserChats - Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ChatDto> getChatById(@PathVariable Long id) {
-        Chat chat = chatService.getChatById(id);
-        return ResponseEntity.ok(mapToDto(chat));
+        System.out.println("DEBUG - getChatById - Starting method with ID: " + id);
+        try {
+            Chat chat = chatService.getChatById(id);
+            System.out.println("DEBUG - getChatById - Retrieved chat: " + chat.getId() + ", Title: " + chat.getTitle());
+            System.out.println("DEBUG - getChatById - Participants: " + 
+                (chat.getParticipants() != null ? chat.getParticipants().size() : "null"));
+            
+            ChatDto responseDto = mapToDto(chat);
+            System.out.println("DEBUG - getChatById - Mapped to DTO: " + responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            System.out.println("DEBUG - getChatById - Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @PutMapping("/{id}/archive")
     public ResponseEntity<ChatDto> archiveChat(@PathVariable Long id) {
-        Chat chat = chatService.archiveChat(id);
-        return ResponseEntity.ok(mapToDto(chat));
+        System.out.println("DEBUG - archiveChat - Starting method with ID: " + id);
+        try {
+            Chat chat = chatService.archiveChat(id);
+            System.out.println("DEBUG - archiveChat - Chat archived: " + chat.getId() + ", Status: " + chat.getStatus());
+            
+            ChatDto responseDto = mapToDto(chat);
+            System.out.println("DEBUG - archiveChat - Returning response: " + responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (Exception e) {
+            System.out.println("DEBUG - archiveChat - Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private ChatDto mapToDto(Chat chat) {
+        System.out.println("DEBUG - mapToDto - Mapping chat ID: " + chat.getId());
         ChatDto chatDto = new ChatDto();
         chatDto.setId(chat.getId());
         chatDto.setTitle(chat.getTitle());
         chatDto.setStatus(chat.getStatus());
         
-        // Map participants to UserDto
-        List<UserDto> participants = chat.getParticipants().stream()
-                .map(this::mapUserToDto)
-                .collect(Collectors.toList());
-        chatDto.setParticipants(participants);
+        try {
+            // Map participants to user IDs for the response
+            if (chat.getParticipants() != null) {
+                System.out.println("DEBUG - mapToDto - Participants count: " + chat.getParticipants().size());
+                List<Long> participantIds = chat.getParticipants().stream()
+                        .map(User::getId)
+                        .collect(Collectors.toList());
+                chatDto.setParticipants(participantIds);
+                System.out.println("DEBUG - mapToDto - Mapped participant IDs: " + participantIds);
+            } else {
+                System.out.println("DEBUG - mapToDto - Participants is null");
+                chatDto.setParticipants(null);
+            }
+        } catch (Exception e) {
+            System.out.println("DEBUG - mapToDto - Exception mapping participants: " + e.getMessage());
+            e.printStackTrace();
+            // Set empty list to avoid null pointer
+            chatDto.setParticipants(List.of());
+        }
         
         return chatDto;
-    }
-    
-    private UserDto mapUserToDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setFullName(user.getFullName());
-        userDto.setEmail(user.getEmail());
-        userDto.setActive(user.isActive());
-        userDto.setRole(user.getRole());
-        userDto.setApprovalStatus(user.getApprovalStatus());
-        return userDto;
     }
 }

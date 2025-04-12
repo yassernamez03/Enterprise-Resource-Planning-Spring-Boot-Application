@@ -16,4 +16,5 @@ public class UserDto {
     private boolean isActive;
     private UserRole role;
     private ApprovalStatus approvalStatus;
+    private String avatarUrl;
 }

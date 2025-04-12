@@ -33,4 +33,5 @@ public class AppConstants {
     public static final String LOG_ACTION_REGISTER = "REGISTER";
     public static final String LOG_ACTION_APPROVE = "APPROVE";
     public static final String LOG_ACTION_REJECT = "REJECT";
+    public static final String LOG_ACTION_PASSWORD_RESET = "PASSWORD_RESET";
 }

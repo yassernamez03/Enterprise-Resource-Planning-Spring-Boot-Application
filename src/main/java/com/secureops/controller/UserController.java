@@ -1,13 +1,19 @@
 package com.secureops.controller;
 
+import com.secureops.dto.PasswordChangeDto;
 import com.secureops.dto.UserDto;
+import com.secureops.dto.UserProfileUpdateDto;
 import com.secureops.entity.User;
 import com.secureops.service.UserService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,4 +71,28 @@ public class UserController {
         return userDto;
     }
 
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
+        boolean changed = userService.changePassword(
+                passwordChangeDto.getCurrentPassword(),
+                passwordChangeDto.getNewPassword());
+
+        if (changed) {
+            return ResponseEntity.ok().body(
+                    Map.of("message", "Password changed successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    Map.of("message", "Current password is incorrect"));
+        }
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<UserDto> updateProfile(@RequestBody UserProfileUpdateDto profileUpdateDto) {
+        return ResponseEntity.ok(userService.updateProfile(profileUpdateDto));
+    }
+    
+    @PostMapping("/avatar")
+    public ResponseEntity<UserDto> updateAvatar(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(userService.updateAvatar(file));
+    }
 }

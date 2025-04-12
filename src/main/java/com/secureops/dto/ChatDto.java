@@ -18,5 +18,7 @@ public class ChatDto {
     private String title;
     
     private ChatStatus status;
-    private List<UserDto> participants;
+    
+    // Changed from List<UserDto> to List<Long> to allow passing IDs directly
+    private List<Long> participants;
 }

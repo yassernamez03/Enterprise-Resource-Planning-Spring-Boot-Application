@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import com.secureops.config.FileStorageConfig;
 
 @SpringBootApplication
-// @EnableJpaAuditing
 @EnableConfigurationProperties({
     FileStorageConfig.class
 })

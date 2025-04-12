@@ -3,7 +3,9 @@ package com.secureops.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +20,8 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"email"})
 })
+@EqualsAndHashCode(of = "id") // Only use ID for equals/hashCode
+@ToString(exclude = {"calendars", "messages", "logs"}) // Exclude collections from toString to prevent circular references
 public class User {
 
     @Id
@@ -32,6 +36,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(name = "avatar_file_name")
+    private String avatarFileName = "default-avatar.png";
 
     private boolean isActive = false;
 
@@ -50,17 +57,16 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
-
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Calendar> calendars = new HashSet<>();
 
-    @ManyToMany(mappedBy = "participants")
-    private Set<Chat> chats = new HashSet<>();
+    // Removed bidirectional relationship with Chat
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
     private Set<Message> messages = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Log> logs = new HashSet<>();
 
     public enum UserRole {
