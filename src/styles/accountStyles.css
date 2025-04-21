@@ -1,0 +1,75 @@
+/* Account page styles */
+
+/* Line clamp utility for truncating text */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Avatar placeholder */
+  .avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(79, 70, 229);
+    color: white;
+    font-weight: 600;
+  }
+  
+  /* Task status transition */
+  .task-status-transition {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Priority badge styles */
+  .priority-high {
+    background-color: rgb(254, 226, 226);
+    color: rgb(153, 27, 27);
+  }
+  
+  .priority-medium {
+    background-color: rgb(254, 249, 195);
+    color: rgb(161, 98, 7);
+  }
+  
+  .priority-low {
+    background-color: rgb(220, 252, 231);
+    color: rgb(22, 101, 52);
+  }
+  
+  /* Status badge styles */
+  .status-completed {
+    text-decoration: line-through;
+    color: rgb(107, 114, 128);
+  }
+  
+  /* Card hover effect */
+  .card-hover {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .card-hover:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Button hover transitions */
+  .btn-transition {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Loading animation */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
