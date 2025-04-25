@@ -46,12 +46,12 @@ public class Calendar {
 
     @OneToMany(mappedBy = "calendar", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> events = new HashSet<>();
-    
+
     // Renamed to match Java naming conventions
     public boolean isPrimary() {
         return primary;
     }
-    
+
     public void setPrimary(boolean primary) {
         this.primary = primary;
     }

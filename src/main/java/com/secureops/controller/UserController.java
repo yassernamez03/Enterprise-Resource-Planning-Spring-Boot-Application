@@ -86,11 +86,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserDtoById(id));
+    }
+
     @PostMapping("/profile")
     public ResponseEntity<UserDto> updateProfile(@RequestBody UserProfileUpdateDto profileUpdateDto) {
         return ResponseEntity.ok(userService.updateProfile(profileUpdateDto));
     }
-    
+
     @PostMapping("/avatar")
     public ResponseEntity<UserDto> updateAvatar(@RequestParam("file") MultipartFile file) {
         return ResponseEntity.ok(userService.updateAvatar(file));

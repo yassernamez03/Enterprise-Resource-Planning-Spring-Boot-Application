@@ -36,13 +36,16 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/files/view/**").permitAll()
+                .requestMatchers("/api/files/download/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/ws/**").permitAll()
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/users/pending").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/approve").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reject").hasRole("ADMIN")
                 // All other endpoints require authentication
+                .requestMatchers("/api/users/{id}").authenticated()
                 .anyRequest().authenticated()
             );
 

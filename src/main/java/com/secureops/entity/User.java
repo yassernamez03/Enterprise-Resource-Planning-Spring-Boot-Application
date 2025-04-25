@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,10 +19,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"email"})
+        @UniqueConstraint(columnNames = { "email" })
 })
 @EqualsAndHashCode(of = "id") // Only use ID for equals/hashCode
-@ToString(exclude = {"calendars", "messages", "logs"}) // Exclude collections from toString to prevent circular references
+@ToString(exclude = { "calendars", "messages", "logs" }) // Exclude collections from toString to prevent circular
+                                                         // references
 public class User {
 
     @Id
@@ -42,6 +44,13 @@ public class User {
 
     private boolean isActive = false;
 
+    
+    @Column(name = "reset_code")
+private String resetCode;
+
+@Column(name = "reset_code_expiry")
+private LocalDateTime resetCodeExpiry;
+
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
@@ -57,15 +66,18 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
-    
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Calendar> calendars = new HashSet<>();
 
-    // Removed bidirectional relationship with Chat
-
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages = new HashSet<>();
 
+    // Make sure Chat relationship also cascades
+    @ManyToMany(mappedBy = "participants", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<Chat> chats = new HashSet<>();
+
+    // For logs, keep them when user is deleted - no cascade
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Log> logs = new HashSet<>();
 

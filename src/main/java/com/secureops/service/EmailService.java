@@ -27,7 +27,20 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendPasswordResetEmail(String to, String fullName, String password) {
+    public void sendPasswordResetVerificationEmail(String to, String fullName, String verificationCode) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Password Reset - Verification Code");
+        message.setText("Hello " + fullName + ",\n\n"
+                + "We received a request to reset your password. Please use the following verification code to continue:\n\n"
+                + "Verification Code: " + verificationCode + "\n\n"
+                + "This code will expire in 15 minutes. If you did not request this password reset, please ignore this email.\n\n"
+                + "Regards,\nSecureOps Team");
+        
+        mailSender.send(message);
+    }
+
+    public void sendNewPasswordEmail(String to, String fullName, String password) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Password Reset - New Login Details");
@@ -39,5 +52,12 @@ public class EmailService {
                 + "Regards,\nSecureOps Team");
         
         mailSender.send(message);
+    }
+
+    // The original sendPasswordResetEmail is kept for backward compatibility
+    // but in the new flow, we'll use sendPasswordResetVerificationEmail first,
+    // then sendNewPasswordEmail after verification
+    public void sendPasswordResetEmail(String to, String fullName, String password) {
+        sendNewPasswordEmail(to, fullName, password);
     }
 }

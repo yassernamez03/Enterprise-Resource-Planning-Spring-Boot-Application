@@ -4,6 +4,7 @@ import com.secureops.dto.JwtAuthResponse;
 import com.secureops.dto.LoginDto;
 import com.secureops.dto.PasswordResetRequestDto;
 import com.secureops.dto.UserRegistrationDto;
+import com.secureops.dto.VerificationCodeDto;
 import com.secureops.service.AuthService;
 import com.secureops.service.UserService;
 import jakarta.validation.Valid;
@@ -34,16 +35,30 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
         userService.register(registrationDto);
-        return new ResponseEntity<>("User registered successfully. Please wait for admin approval.", HttpStatus.CREATED);
+        return new ResponseEntity<>("User registered successfully. Please wait for admin approval.",
+                HttpStatus.CREATED);
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@Valid @RequestBody PasswordResetRequestDto resetRequestDto) {
-        userService.resetPassword(resetRequestDto.getEmail());
-        
-        // We always return success even if the email doesn't exist for security reasons
+        userService.sendPasswordResetCode(resetRequestDto.getEmail());
+
         return ResponseEntity.ok(Map.of(
-            "message", "If your email is registered, you will receive password reset instructions shortly."
-        ));
+                "message", "If your email is registered, you will receive a verification code shortly."));
+    }
+
+    @PostMapping("/verify-reset-code")
+    public ResponseEntity<?> verifyResetCode(@Valid @RequestBody VerificationCodeDto verificationDto) {
+        boolean result = userService.verifyAndResetPassword(
+                verificationDto.getEmail(),
+                verificationDto.getVerificationCode());
+
+        if (result) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "Password has been reset successfully. Check your email for new credentials."));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Invalid or expired verification code."));
+        }
     }
 }

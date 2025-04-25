@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "chats")
 @EqualsAndHashCode(of = "id") // Only use ID for equals/hashCode
-@ToString(exclude = {"participants", "messages"}) // Exclude collections from toString to prevent circular references
+@ToString(exclude = { "participants", "messages" }) // Exclude collections from toString to prevent circular references
 public class Chat {
 
     @Id
@@ -45,18 +45,14 @@ public class Chat {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    // Use fetch joins and avoid cascades to prevent circular references
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "chat_participants",
-            joinColumns = @JoinColumn(name = "chat_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @Fetch(FetchMode.SUBSELECT) // Use subselect fetch mode to optimize collection loading
-    private Set<User> participants = new HashSet<>();
-
-    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages = new HashSet<>();
+
+    // For chat participants, don't cascade delete to users
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "chat_participants", joinColumns = @JoinColumn(name = "chat_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Fetch(FetchMode.SUBSELECT)
+    private Set<User> participants = new HashSet<>();
 
     public enum ChatStatus {
         ACTIVE,

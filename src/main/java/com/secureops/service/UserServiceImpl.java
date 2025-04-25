@@ -23,7 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,11 +40,11 @@ public class UserServiceImpl implements UserService {
     private final FileStorageService fileStorageService;
 
     public UserServiceImpl(UserRepository userRepository,
-                          CalendarRepository calendarRepository,
-                          PasswordEncoder passwordEncoder,
-                          LogService logService,
-                          EmailService emailService,
-                          FileStorageService fileStorageService) {
+            CalendarRepository calendarRepository,
+            PasswordEncoder passwordEncoder,
+            LogService logService,
+            EmailService emailService,
+            FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.calendarRepository = calendarRepository;
         this.passwordEncoder = passwordEncoder;
@@ -193,15 +196,14 @@ public class UserServiceImpl implements UserService {
         userDto.setActive(user.isActive());
         userDto.setRole(user.getRole());
         userDto.setApprovalStatus(user.getApprovalStatus());
-        
+
         // Add avatar URL
         if (user.getAvatarFileName() != null) {
             userDto.setAvatarUrl(getUserAvatarUrl(user.getAvatarFileName()));
         }
-        
+
         return userDto;
     }
-
 
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -262,7 +264,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean resetPassword(String email) {
+    public boolean sendPasswordResetCode(String email) {
         try {
             // Find the user
             User user = userRepository.findByEmail(email)
@@ -273,20 +275,21 @@ public class UserServiceImpl implements UserService {
                 return false;
             }
 
-            // Generate a new random password
-            String rawPassword = PasswordGenerator.generateRandomPassword(12);
+            // Generate a verification code (6 digits)
+            String verificationCode = String.format("%06d", new Random().nextInt(999999));
 
-            // Update the user's password
-            user.setPassword(passwordEncoder.encode(rawPassword));
+            // Store the code with expiration time (15 minutes from now)
+            user.setResetCode(verificationCode);
+            user.setResetCodeExpiry(LocalDateTime.now().plusMinutes(15));
             userRepository.save(user);
 
-            // Send the reset password email
-            emailService.sendPasswordResetEmail(user.getEmail(), user.getFullName(), rawPassword);
+            // Send the verification code email
+            emailService.sendPasswordResetVerificationEmail(user.getEmail(), user.getFullName(), verificationCode);
 
-            // Log the password reset
+            // Log the password reset request
             logService.createLog(
-                    "PASSWORD_RESET",
-                    "Password reset for user: " + user.getEmail(),
+                    "PASSWORD_RESET_REQUEST",
+                    "Password reset verification code sent for user: " + user.getEmail(),
                     getClientIp(),
                     AppConstants.LOG_TYPE_USER,
                     user.getId());
@@ -301,19 +304,72 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public boolean verifyAndResetPassword(String email, String verificationCode) {
+        try {
+            // Find the user
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+            // Check if the verification code is valid and not expired
+            if (user.getResetCode() == null ||
+                    !user.getResetCode().equals(verificationCode) ||
+                    LocalDateTime.now().isAfter(user.getResetCodeExpiry())) {
+                return false;
+            }
+
+            // Generate a new random password
+            String rawPassword = PasswordGenerator.generateRandomPassword(12);
+
+            // Update the user's password
+            user.setPassword(passwordEncoder.encode(rawPassword));
+
+            // Clear the verification code
+            user.setResetCode(null);
+            user.setResetCodeExpiry(null);
+
+            userRepository.save(user);
+
+            // Send the new password email
+            emailService.sendNewPasswordEmail(user.getEmail(), user.getFullName(), rawPassword);
+
+            // Log the password reset
+            logService.createLog(
+                    "PASSWORD_RESET_COMPLETE",
+                    "Password reset completed for user: " + user.getEmail(),
+                    getClientIp(),
+                    AppConstants.LOG_TYPE_USER,
+                    user.getId());
+
+            return true;
+        } catch (ResourceNotFoundException e) {
+            return false;
+        }
+    }
+
+    // Update the existing resetPassword method to use the new flow
+    @Override
+    @Transactional
+    public boolean resetPassword(String email) {
+        // For backward compatibility, we'll just call the first step
+        // of our new two-step process
+        return sendPasswordResetCode(email);
+    }
+
+    @Override
+    @Transactional
     public UserDto updateProfile(UserProfileUpdateDto profileUpdateDto) {
         // Get current user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = getUserByEmail(email);
-        
+
         // Update user information
         if (profileUpdateDto.getFullName() != null && !profileUpdateDto.getFullName().isBlank()) {
             user.setFullName(profileUpdateDto.getFullName());
         }
-        
+
         // Handle email change carefully
-        if (profileUpdateDto.getEmail() != null && !profileUpdateDto.getEmail().isBlank() 
+        if (profileUpdateDto.getEmail() != null && !profileUpdateDto.getEmail().isBlank()
                 && !profileUpdateDto.getEmail().equals(user.getEmail())) {
             // Check if email is already taken
             if (userRepository.existsByEmail(profileUpdateDto.getEmail())) {
@@ -321,9 +377,9 @@ public class UserServiceImpl implements UserService {
             }
             user.setEmail(profileUpdateDto.getEmail());
         }
-        
+
         User savedUser = userRepository.save(user);
-        
+
         // Log the profile update
         logService.createLog(
                 "PROFILE_UPDATE",
@@ -331,22 +387,22 @@ public class UserServiceImpl implements UserService {
                 getClientIp(),
                 AppConstants.LOG_TYPE_USER,
                 user.getId());
-        
+
         return mapToDto(savedUser);
     }
-    
+
     @Override
     @Transactional
     public UserDto updateAvatar(MultipartFile avatarFile) {
         if (avatarFile == null || avatarFile.isEmpty()) {
             throw new BadRequestException("Avatar file cannot be empty");
         }
-        
+
         // Get current user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = getUserByEmail(email);
-        
+
         // Check if user already has a custom avatar and delete it
         if (user.getAvatarFileName() != null && !user.getAvatarFileName().equals("default-avatar.png")) {
             try {
@@ -356,13 +412,13 @@ public class UserServiceImpl implements UserService {
                 System.err.println("Failed to delete old avatar: " + e.getMessage());
             }
         }
-        
+
         // Store the new avatar
         String fileName = fileStorageService.storeFile(avatarFile);
         user.setAvatarFileName(fileName);
-        
+
         User savedUser = userRepository.save(user);
-        
+
         // Log the avatar update
         logService.createLog(
                 "AVATAR_UPDATE",
@@ -370,10 +426,10 @@ public class UserServiceImpl implements UserService {
                 getClientIp(),
                 AppConstants.LOG_TYPE_USER,
                 user.getId());
-        
+
         return mapToDto(savedUser);
     }
-    
+
     @Override
     public String getUserAvatarUrl(String fileName) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -381,8 +437,7 @@ public class UserServiceImpl implements UserService {
                 .path(fileName)
                 .toUriString();
     }
-    
+
     // Update the mapToDto method to include avatar URL
-    
 
 }

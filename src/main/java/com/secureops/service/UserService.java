@@ -19,8 +19,15 @@ public interface UserService {
     UserDto getUserDtoById(Long id);
     UserDto getCurrentUser();
     List<UserDto> getAllUsers();
+    
     boolean changePassword(String currentPassword, String newPassword);
+    
+    // Legacy method - can be kept for backward compatibility
     boolean resetPassword(String email);
+    
+    // New methods for verification code flow
+    boolean sendPasswordResetCode(String email);
+    boolean verifyAndResetPassword(String email, String verificationCode);
 
     UserDto updateProfile(UserProfileUpdateDto profileUpdateDto);
     UserDto updateAvatar(MultipartFile avatarFile);

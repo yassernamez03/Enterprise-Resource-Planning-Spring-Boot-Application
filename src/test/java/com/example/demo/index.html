@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureOps Chat WebSocket Tester</title>
+    <!-- Updated SockJS and StompJS imports -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@6.1.2/bundles/stomp.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .control-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 5px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .connected {
+            color: green;
+        }
+        .disconnected {
+            color: red;
+        }
+        .messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: white;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .sent {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196F3;
+        }
+        .received {
+            background-color: #f1f8e9;
+            border-left: 5px solid #8bc34a;
+        }
+        .system {
+            background-color: #fff3e0;
+            border-left: 5px solid #ff9800;
+        }
+        .error {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>SecureOps Chat WebSocket Tester</h1>
+    
+    <div class="container">
+        <!-- Connection Panel -->
+        <div class="card">
+            <h2>Connection</h2>
+            <div class="control-group">
+                <label for="server-url">Server URL:</label>
+                <input type="text" id="server-url" value="http://localhost:8080/ws">
+            </div>
+            <div class="control-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Email address">
+            </div>
+            <div class="control-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password">
+            </div>
+            <div class="control-group">
+                <button id="connect-btn">Connect</button>
+                <button id="disconnect-btn" disabled>Disconnect</button>
+                <span class="status disconnected" id="connection-status">Disconnected</span>
+            </div>
+        </div>
+        
+        <!-- Chat Panel -->
+        <div class="card">
+            <h2>Chat Test</h2>
+            <div class="control-group">
+                <label for="chat-id">Chat ID:</label>
+                <input type="text" id="chat-id" placeholder="Enter chat ID">
+                <button id="subscribe-btn" disabled>Subscribe</button>
+            </div>
+            <div class="control-group">
+                <label for="message-content">Message:</label>
+                <input type="text" id="message-content" placeholder="Type a message" disabled>
+                <button id="send-btn" disabled>Send</button>
+            </div>
+        </div>
+        
+        <!-- Message Read Panel -->
+        <div class="card">
+            <h2>Mark as Read</h2>
+            <div class="control-group">
+                <label for="message-id">Message ID:</label>
+                <input type="text" id="message-id" placeholder="Enter message ID" disabled>
+                <button id="mark-read-btn" disabled>Mark as Read</button>
+            </div>
+        </div>
+        
+        <!-- Log Panel -->
+        <div class="card">
+            <h2>Messages Log</h2>
+            <button id="clear-btn">Clear Log</button>
+            <div class="messages" id="messages-log"></div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const serverUrlInput = document.getElementById('server-url');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const connectBtn = document.getElementById('connect-btn');
+        const disconnectBtn = document.getElementById('disconnect-btn');
+        const connectionStatus = document.getElementById('connection-status');
+        
+        const chatIdInput = document.getElementById('chat-id');
+        const subscribeBtn = document.getElementById('subscribe-btn');
+        const messageContentInput = document.getElementById('message-content');
+        const sendBtn = document.getElementById('send-btn');
+        
+        const messageIdInput = document.getElementById('message-id');
+        const markReadBtn = document.getElementById('mark-read-btn');
+        
+        const clearBtn = document.getElementById('clear-btn');
+        const messagesLog = document.getElementById('messages-log');
+        
+        // Variables
+        let stompClient = null;
+        let token = null;
+        let activeSubscriptions = [];
+        
+        // Functions
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                connectionStatus.textContent = 'Connected';
+                connectionStatus.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+                subscribeBtn.disabled = false;
+                messageIdInput.disabled = false;
+                markReadBtn.disabled = false;
+            } else {
+                connectionStatus.textContent = 'Disconnected';
+                connectionStatus.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+                subscribeBtn.disabled = true;
+                messageContentInput.disabled = true;
+                sendBtn.disabled = true;
+                messageIdInput.disabled = true;
+                markReadBtn.disabled = true;
+            }
+        }
+        
+        function logMessage(type, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            // Format the content if it's an object
+            let displayContent = content;
+            if (typeof content === 'object') {
+                displayContent = JSON.stringify(content, null, 2);
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            messageDiv.innerHTML = `<strong>${timestamp}</strong>: <pre>${displayContent}</pre>`;
+            messagesLog.appendChild(messageDiv);
+            messagesLog.scrollTop = messagesLog.scrollHeight;
+        }
+        
+        function connect() {
+            const serverUrl = serverUrlInput.value;
+            if (!serverUrl) {
+                logMessage('error', 'Server URL is required');
+                return;
+            }
+            
+            logMessage('system', `Connecting to ${serverUrl}...`);
+            
+            // For this simplified test, we'll connect directly
+            connectWebSocket(serverUrl);
+        }
+        
+        function connectWebSocket(serverUrl) {
+            try {
+                // Create SockJS instance
+                const socket = new SockJS(serverUrl);
+                
+                // Use the newer style StompJS client
+                stompClient = new StompJS.Client({
+                    webSocketFactory: function() {
+                        return socket;
+                    },
+                    debug: function(str) {
+                        console.log(str);
+                    },
+                    reconnectDelay: 5000,
+                    heartbeatIncoming: 4000,
+                    heartbeatOutgoing: 4000
+                });
+                
+                // Set up connection event handlers
+                stompClient.onConnect = function(frame) {
+                    logMessage('system', `WebSocket connected`);
+                    updateConnectionStatus(true);
+                };
+                
+                stompClient.onStompError = function(frame) {
+                    logMessage('error', `STOMP error: ${frame.headers['message']}`);
+                    updateConnectionStatus(false);
+                };
+                
+                stompClient.onWebSocketClose = function() {
+                    logMessage('system', 'WebSocket closed');
+                    updateConnectionStatus(false);
+                };
+                
+                stompClient.onWebSocketError = function(event) {
+                    logMessage('error', `WebSocket error`);
+                    console.error('WebSocket error:', event);
+                    updateConnectionStatus(false);
+                };
+                
+                // Activate the connection
+                stompClient.activate();
+                
+            } catch (error) {
+                logMessage('error', `Connection error: ${error.message}`);
+                console.error('Connection error:', error);
+                updateConnectionStatus(false);
+            }
+        }
+        
+        function disconnect() {
+            if (stompClient) {
+                // Unsubscribe from all topics
+                activeSubscriptions.forEach(subscription => {
+                    subscription.unsubscribe();
+                });
+                activeSubscriptions = [];
+                
+                if (stompClient.connected) {
+                    stompClient.deactivate();
+                    logMessage('system', 'WebSocket disconnected');
+                }
+                updateConnectionStatus(false);
+            }
+        }
+        
+        function subscribeToChatTopic() {
+            if (!stompClient || !stompClient.connected) {
+                logMessage('error', 'Not connected to WebSocket');
+                return;
+            }
+            
+            const chatId = chatIdInput.value;
+            if (!chatId) {
+                logMessage('error', 'Chat ID is required');
+                return;
+            }
+            
+            try {
+                // Subscribe to new messages
+                const messageSub = stompClient.subscribe(`/topic/chat/${chatId}`, message => {
+                    try {
+                        const payload = JSON.parse(message.body);
+                        logMessage('received', {
+                            type: 'New Message',
+                            data: payload
+                        });
+                    } catch (error) {
+                        logMessage('error', `Error parsing message: ${error.message}`);
+                        logMessage('system', `Raw message: ${message.body}`);
+                    }
+                });
+                activeSubscriptions.push(messageSub);
+                
+                // Subscribe to read status updates
+                const readSub = stompClient.subscribe(`/topic/chat/${chatId}/read`, message => {
+                    try {
+                        const payload = JSON.parse(message.body);
+                        logMessage('received', {
+                            type: 'Read Status Update',
+                            data: payload
+                        });
+                    } catch (error) {
+                        logMessage('error', `Error parsing read status: ${error.message}`);
+                        logMessage('system', `Raw message: ${message.body}`);
+                    }
+                });
+                activeSubscriptions.push(readSub);
+                
+                logMessage('system', `Subscribed to chat ${chatId} topics`);
+                messageContentInput.disabled = false;
+                sendBtn.disabled = false;
+                
+            } catch (error) {
+                logMessage('error', `Subscription error: ${error.message}`);
+                console.error('Subscription error:', error);
+            }
+        }
+        
+        function sendMessage() {
+            if (!stompClient || !stompClient.connected) {
+                logMessage('error', 'Not connected to WebSocket');
+                return;
+            }
+            
+            const chatId = chatIdInput.value;
+            const content = messageContentInput.value;
+            
+            if (!chatId) {
+                logMessage('error', 'Chat ID is required');
+                return;
+            }
+            
+            if (!content) {
+                logMessage('error', 'Message content is required');
+                return;
+            }
+            
+            const message = {
+                content: content,
+                timestamp: new Date()
+            };
+            
+            try {
+                stompClient.publish({
+                    destination: `/app/chat/${chatId}/sendMessage`,
+                    body: JSON.stringify(message)
+                });
+                
+                logMessage('sent', message);
+                messageContentInput.value = '';
+                
+            } catch (error) {
+                logMessage('error', `Error sending message: ${error.message}`);
+                console.error('Error sending message:', error);
+            }
+        }
+        
+        function markAsRead() {
+            if (!stompClient || !stompClient.connected) {
+                logMessage('error', 'Not connected to WebSocket');
+                return;
+            }
+            
+            const messageId = messageIdInput.value;
+            
+            if (!messageId) {
+                logMessage('error', 'Message ID is required');
+                return;
+            }
+            
+            const request = {
+                messageId: messageId
+            };
+            
+            try {
+                stompClient.publish({
+                    destination: '/app/chat/markAsRead',
+                    body: JSON.stringify(request)
+                });
+                
+                logMessage('sent', {
+                    type: 'Mark As Read',
+                    messageId: messageId
+                });
+                
+            } catch (error) {
+                logMessage('error', `Error marking as read: ${error.message}`);
+                console.error('Error marking as read:', error);
+            }
+        }
+        
+        // Event Listeners
+        connectBtn.addEventListener('click', connect);
+        disconnectBtn.addEventListener('click', disconnect);
+        subscribeBtn.addEventListener('click', subscribeToChatTopic);
+        sendBtn.addEventListener('click', sendMessage);
+        markReadBtn.addEventListener('click', markAsRead);
+        clearBtn.addEventListener('click', () => {
+            messagesLog.innerHTML = '';
+        });
+        
+        // Initial setup
+        updateConnectionStatus(false);
+        
+        // Show a helpful message at startup
+        logMessage('system', 'WebSocket Tester ready. Click "Connect" to start.');
+    </script>
+</body>
+</html>
