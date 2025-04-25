@@ -1,8 +1,8 @@
-// src/Router/index.jsx
-
+// src/AppRoutes.js
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
+import { ChatProvider } from '../context/ChatContext';
 import { ToastProvider } from '../context/ToastContext';
 import ProtectedRoute from '../Components/ProtectedRoute';
 import PublicRoute from '../Components/PublicRoute';
@@ -22,23 +22,25 @@ const AppRoutes = () => {
     <BrowserRouter>
       <ToastProvider>
         <AuthProvider>
-          <Routes>
-            {/* Public routes - redirect to home if authenticated */}
-            <Route element={<PublicRoute />}>
-              <Route path="/signup" element={<CreateAccountPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            </Route>
+          <ChatProvider>
+            <Routes>
+              {/* Public routes - redirect to home if authenticated */}
+              <Route element={<PublicRoute />}>
+                <Route path="/signup" element={<CreateAccountPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              </Route>
 
-            {/* Protected routes - redirect to login if not authenticated */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Home_Page />} />
-              <Route path="/account_details" element={<AccountPage />} />
-              <Route path="/calander_page" element={<WeeklyCalendar />} />
-              <Route path="/chat_page" element={<ChatApp />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-            </Route>
-          </Routes>
+              {/* Protected routes - redirect to login if not authenticated */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<Home_Page />} />
+                <Route path="/account_details" element={<AccountPage />} />
+                <Route path="/calander_page" element={<WeeklyCalendar />} />
+                <Route path="/chat_page" element={<ChatApp />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+              </Route>
+            </Routes>
+          </ChatProvider>
         </AuthProvider>
       </ToastProvider>
     </BrowserRouter>

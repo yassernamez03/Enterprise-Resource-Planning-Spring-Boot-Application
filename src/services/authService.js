@@ -1,3 +1,5 @@
+// Updated authService.js with verification code methods
+
 import { apiService } from './apiInterceptor';
 
 const authService = {
@@ -31,11 +33,25 @@ const authService = {
     }
   },
 
+  // Step 1: Request verification code for password reset
   forgotPassword: async (email) => {
     try {
       return await apiService.post('/auth/forgot-password', { email });
     } catch (error) {
       console.error('Forgot password error:', error);
+      throw error;
+    }
+  },
+
+  // Step 2: Verify code and complete password reset
+  verifyResetCode: async (email, verificationCode) => {
+    try {
+      return await apiService.post('/auth/verify-reset-code', { 
+        email, 
+        verificationCode 
+      });
+    } catch (error) {
+      console.error('Verification error:', error);
       throw error;
     }
   },

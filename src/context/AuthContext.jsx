@@ -5,8 +5,18 @@ import userService from '../services/userService';
 import { useToast } from './ToastContext';
 
 // Create the authentication context
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
+// Export the hook first (separate from the provider)
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+// Export the provider as a named export (not default)
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -76,17 +86,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Forgot password method
+  // Step 1: Request password reset verification code
   const forgotPassword = async (email) => {
     setLoading(true);
     try {
+      console.log('AuthContext: Calling forgotPassword API for email:', email);
       const data = await authService.forgotPassword(email);
       setLoading(false);
-      showSuccessToast('Password reset email sent. Please check your inbox.');
+      showSuccessToast('Verification code sent. Please check your email.');
+      console.log('AuthContext.forgotPassword success:', data);
       return data;
     } catch (error) {
       setLoading(false);
-      showErrorToast('Failed to send password reset email. Please try again.');
+      showErrorToast('Failed to send verification code. Please try again.');
+      console.error('AuthContext.forgotPassword error:', error);
+      throw error;
+    }
+  };
+
+  // Step 2: Verify code and complete password reset
+  const verifyResetCode = async (email, verificationCode) => {
+    setLoading(true);
+    try {
+      const data = await authService.verifyResetCode(email, verificationCode);
+      setLoading(false);
+      showSuccessToast('Password reset successful! Check your email for your new password.');
+      return data;
+    } catch (error) {
+      setLoading(false);
+      showErrorToast('Invalid or expired verification code. Please try again.');
       throw error;
     }
   };
@@ -108,6 +136,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     forgotPassword,
+    verifyResetCode,
     logout,
     isAuthenticated
   };
@@ -119,13 +148,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
+// If you still need a default export for backward compatibility
+// (but try to migrate away from this pattern in the future)
 export default AuthContext;

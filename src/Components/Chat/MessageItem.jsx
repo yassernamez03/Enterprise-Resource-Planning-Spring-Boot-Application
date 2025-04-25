@@ -1,6 +1,6 @@
 // components/MessageItem.js
-import React, { useEffect, useState } from 'react';
-import { Check, Reply, Mic, Image, Camera, File } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Check, CheckCheck, Reply, Mic, Image, Camera, File, Download } from 'lucide-react';
 
 const MessageItem = ({
   message,
@@ -9,9 +9,11 @@ const MessageItem = ({
   darkMode,
   highlightedMessageRef,
   originalMessage,
-  handleReplyToMessage
+  handleReplyToMessage,
+  currentUserId
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
+  const messageRef = useRef(null);
 
   // Animation effect when highlighted changes
   useEffect(() => {
@@ -24,10 +26,47 @@ const MessageItem = ({
     }
   }, [isHighlighted]);
 
+  // Handle mapping backend message to UI message
+  const uiMessage = useRef(null);
+  
+  useEffect(() => {
+    // If message is already in UI format (has sender as "user" or "contact")
+    if (message.sender === "user" || message.sender === "contact") {
+      uiMessage.current = message;
+      return;
+    }
+    
+    // Convert backend format to UI format
+    if (message.messageType === 'TEXT' || message.messageType === 'FILE') {
+      uiMessage.current = {
+        id: message.id,
+        text: message.messageType === 'TEXT' ? message.content : 
+              message.messageType === 'FILE' ? `📎 ${message.fileName}` : 'Unknown message type',
+        sender: message.sender.id === currentUserId ? "user" : "contact",
+        time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        readStatus: message.readStatus,
+        isAttachment: message.messageType === 'FILE',
+        fileUrl: message.messageType === 'FILE' ? message.fileUrl : null,
+        fileName: message.messageType === 'FILE' ? message.fileName : null,
+        fileType: message.messageType === 'FILE' ? message.fileType : null,
+        fileSize: message.messageType === 'FILE' ? message.fileSize : null
+      };
+    } else {
+      // Fallback for unknown message types
+      uiMessage.current = {
+        id: message.id,
+        text: 'Unsupported message type',
+        sender: message.sender.id === currentUserId ? "user" : "contact",
+        time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        readStatus: message.readStatus
+      };
+    }
+  }, [message, currentUserId]);
+
   // Define the animation styles
   const highlightAnimation = isAnimating ? {
     animation: 'highlightPulse 2s ease-in-out',
-    background: message.sender === "user" 
+    background: uiMessage.current?.sender === "user" 
       ? (darkMode ? 'rgba(22, 163, 74, 0.8)' : 'rgba(220, 252, 231, 0.9)') 
       : (darkMode ? 'rgba(55, 65, 81, 0.8)' : 'rgba(255, 255, 255, 0.9)')
   } : {};
@@ -38,35 +77,142 @@ const MessageItem = ({
     styleElement.textContent = `
       @keyframes highlightPulse {
         0%, 100% { 
-          background: ${message.sender === "user" 
+          background: ${uiMessage.current?.sender === "user" 
             ? (darkMode ? 'rgba(22, 163, 74, 1)' : 'rgba(220, 252, 231, 1)') 
             : (darkMode ? 'rgba(55, 65, 81, 1)' : 'rgba(255, 255, 255, 1)')};
           box-shadow: 0 0 0 0 rgba(20, 184, 166, 0); 
         }
         50% { 
-          background: ${message.sender === "user" 
+          background: ${uiMessage.current?.sender === "user" 
             ? (darkMode ? 'rgba(6, 95, 70, 1)' : 'rgba(167, 243, 208, 1)') 
             : (darkMode ? 'rgba(31, 41, 55, 1)' : 'rgba(229, 231, 235, 1)')};
           box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.3); 
         }
+      }
+      
+      @keyframes ellipsis {
+        0%, 100% { content: "."; }
+        33% { content: ".."; }
+        66% { content: "..."; }
+      }
+      
+      .animate-ellipsis:after {
+        content: "...";
+        animation: ellipsis 1.5s infinite;
       }
     `;
     document.head.appendChild(styleElement);
     return () => {
       document.head.removeChild(styleElement);
     };
-  }, [darkMode, message.sender]);
+  }, [darkMode]);
+
+  // Scroll into view if this is the highlighted message
+  useEffect(() => {
+    if (isHighlighted && messageRef.current) {
+      messageRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [isHighlighted]);
+
+  // Handle file attachments
+  const renderAttachment = () => {
+    if (!uiMessage.current) return null;
+    
+    if (uiMessage.current.isAttachment || uiMessage.current.fileUrl) {
+      let Icon = File;
+      
+      // Choose the right icon based on file type
+      if (uiMessage.current.fileType) {
+        if (uiMessage.current.fileType.startsWith('image/')) {
+          Icon = Image;
+        } else if (uiMessage.current.fileType.startsWith('video/')) {
+          Icon = Camera;
+        }
+      } else if (uiMessage.current.attachmentType) {
+        // For locally simulated attachments
+        if (uiMessage.current.attachmentType === 'image') {
+          Icon = Image;
+        } else if (uiMessage.current.attachmentType === 'camera') {
+          Icon = Camera;
+        }
+      }
+      
+      return (
+        <div className="flex items-center space-x-2 cursor-pointer hover:opacity-80">
+          <div className={`${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full p-2`}>
+            <Icon size={16} />
+          </div>
+          <div className="flex-1">
+            <div className="text-sm">{uiMessage.current.text}</div>
+            {uiMessage.current.fileSize && (
+              <div className="text-xs opacity-70">{formatFileSize(uiMessage.current.fileSize)}</div>
+            )}
+          </div>
+          {uiMessage.current.fileUrl && (
+            <a 
+              href={uiMessage.current.fileUrl}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-600' : 'hover:bg-gray-200'}`}
+            >
+              <Download size={16} />
+            </a>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Format file size
+  const formatFileSize = (bytes) => {
+    if (!bytes) return '';
+    if (bytes < 1024) return bytes + ' bytes';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
+  };
+
+  // Render voice message
+  const renderVoiceMessage = () => {
+    if (!uiMessage.current) return null;
+    
+    if (uiMessage.current.isVoice) {
+      return (
+        <div className="flex items-center space-x-2">
+          <div className={`${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full p-2`}>
+            <Mic size={16} />
+          </div>
+          <div className="flex-1">
+            <div className={`h-2 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'} rounded-full`}>
+              <div className={`h-2 ${darkMode ? 'bg-gray-400' : 'bg-gray-500'} rounded-full w-1/2`}></div>
+            </div>
+          </div>
+          <span className="text-xs">{uiMessage.current.duration}</span>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  if (!uiMessage.current) return null;
 
   return (
     <div
-      className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-      ref={highlightedMessageRef}
+      className={`flex ${uiMessage.current.sender === "user" ? "justify-end" : "justify-start"} group`}
+      ref={(node) => {
+        messageRef.current = node;
+        if (isHighlighted && highlightedMessageRef) {
+          highlightedMessageRef.current = node;
+        }
+      }}
     >
       <div
         className={`relative max-w-xs md:max-w-md rounded-lg p-3 ${
           isHighlighted ? 'ring-2 ring-teal-500 ring-offset-2' : ''
         } ${
-          message.sender === "user"
+          uiMessage.current.sender === "user"
             ? `${darkMode ? 'bg-green-800 text-white' : 'bg-green-100 text-gray-800'}`
             : `${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'}`
         }`}
@@ -79,60 +225,66 @@ const MessageItem = ({
             } border-l-2 border-teal-500`}
           >
             <div className="font-medium text-xs">
-              {originalMessage.sender === "user" ? "You" : currentChat.name}
+              {originalMessage.sender === "user" ? "You" : 
+                (originalMessage.sender.fullName || currentChat.title)}
             </div>
             <div className="truncate">
-              {originalMessage.text.length > 50 ? `${originalMessage.text.substring(0, 50)}...` : originalMessage.text}
+              {typeof originalMessage.text === 'string' ? 
+                (originalMessage.text.length > 50 
+                  ? `${originalMessage.text.substring(0, 50)}...` 
+                  : originalMessage.text)
+                : (typeof originalMessage.content === 'string' ? 
+                  (originalMessage.content.length > 50
+                    ? `${originalMessage.content.substring(0, 50)}...`
+                    : originalMessage.content)
+                  : 'Attachment')
+              }
             </div>
           </div>
         )}
         
-        {message.isVoice ? (
-          <div className="flex items-center space-x-2">
-            <div className={`${darkMode ? 'bg-gray-600' : 'bg-gray-200'} rounded-full p-2`}>
-              <Mic size={16} />
-            </div>
-            <div className="flex-1">
-              <div className={`h-2 ${darkMode ? 'bg-gray-600' : 'bg-gray-300'} rounded-full`}>
-                <div className={`h-2 ${darkMode ? 'bg-gray-400' : 'bg-gray-500'} rounded-full w-1/2`}></div>
-              </div>
-            </div>
-            <span className="text-xs">{message.duration}</span>
-          </div>
-        ) : message.isAttachment ? (
-          <div className="flex items-center space-x-2">
-            {message.attachmentType === 'image' && <Image size={20} />}
-            {message.attachmentType === 'camera' && <Camera size={20} />}
-            {message.attachmentType === 'file' && <File size={20} />}
-            <span>{message.text}</span>
-          </div>
+        {uiMessage.current.isVoice ? (
+          renderVoiceMessage()
+        ) : uiMessage.current.isAttachment || uiMessage.current.fileUrl ? (
+          renderAttachment()
         ) : (
-          <p>{message.text}</p>
+          <p>{uiMessage.current.text}</p>
         )}
+        
         <div className="flex items-center justify-end mt-1">
-          <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mr-1`}>{message.time}</span>
-          {message.sender === "user" && (
-            <Check className={darkMode ? "text-gray-400" : "text-gray-500"} size={14} />
+          <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mr-1`}>{uiMessage.current.time}</span>
+          {uiMessage.current.sender === "user" && (
+            uiMessage.current.readStatus ? (
+              <CheckCheck 
+                className="text-teal-500" 
+                size={14} 
+              />
+            ) : (
+              <Check 
+                className={darkMode ? "text-gray-400" : "text-gray-500"} 
+                size={14} 
+              />
+            )
           )}
         </div>
         
         {/* Message actions on hover */}
-        <div className={`absolute -left-10 top-0 h-full flex items-center ${message.sender === "user" ? "hidden" : ""}`}>
+        <div className={`absolute -left-10 top-0 h-full flex items-center ${uiMessage.current.sender === "user" ? "hidden" : ""}`}>
           <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
             <Reply 
               size={16} 
               className={darkMode ? 'text-gray-300' : 'text-gray-600'}
-              onClick={() => handleReplyToMessage(message.id)}
+              onClick={() => handleReplyToMessage(uiMessage.current.id)}
             />
           </div>
         </div>
         
-        <div className={`absolute -right-10 top-0 h-full flex items-center ${message.sender === "contact" ? "hidden" : ""}`}>
+        <div className={`absolute -right-10 top-0 h-full flex items-center ${uiMessage.current.sender === "contact" ? "hidden" : ""}`}>
           <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
             <Reply 
               size={16}
               className={darkMode ? 'text-gray-300' : 'text-gray-600'}
-              onClick={() => handleReplyToMessage(message.id)}
+              onClick={() => handleReplyToMessage(uiMessage.current.id)}
             />
           </div>
         </div>

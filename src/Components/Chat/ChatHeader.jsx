@@ -10,12 +10,31 @@ const ChatHeader = ({
   setShowChatView, 
   setShowAccountPage, 
   toggleArchiveChat, 
-  setShowSearchInChat 
+  setShowSearchInChat,
+  isUserTyping
 }) => {
   const [showChatMenu, setShowChatMenu] = useState(false);
   const chatMenuRef = useOutsideClick(() => setShowChatMenu(false));
   
   if (!currentChat) return null;
+  
+  // Function to get user avatar color based on ID
+  const getUserAvatarColor = (id) => {
+    const colors = ['blue', 'green', 'purple', 'red', 'yellow', 'teal', 'indigo', 'pink'];
+    const colorIndex = id % colors.length;
+    return colors[colorIndex];
+  };
+  
+  // Get the first letter of each word in the chat title for the avatar
+  const getAvatarText = () => {
+    if (!currentChat.title) return "?";
+    return currentChat.title
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
   
   return (
     <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'} p-3 border-b flex items-center justify-between`}>
@@ -29,17 +48,27 @@ const ChatHeader = ({
           </button>
         )}
         <div 
-          className={`bg-${currentChat.id === 1 ? 'blue' : currentChat.id === 2 ? 'green' : currentChat.id === 3 ? 'purple' : currentChat.id === 4 ? 'red' : 'yellow'}-500 rounded-full h-10 w-10 flex items-center justify-center text-white font-bold cursor-pointer`}
+          className={`bg-${getUserAvatarColor(currentChat.id)}-500 rounded-full h-10 w-10 flex items-center justify-center text-white font-bold cursor-pointer`}
           onClick={() => setShowAccountPage(true)}
         >
-          {currentChat.avatar}
+          {getAvatarText()}
         </div>
         <div 
           className="ml-3 cursor-pointer"
           onClick={() => setShowAccountPage(true)}
         >
-          <h2 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>{currentChat.name}</h2>
-          <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Online</p>
+          <h2 className={`font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+            {currentChat.title}
+          </h2>
+          {isUserTyping ? (
+            <p className={`text-xs ${darkMode ? 'text-teal-400' : 'text-teal-600'}`}>
+              Typing<span className="animate-ellipsis"></span>
+            </p>
+          ) : (
+            <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              Online
+            </p>
+          )}
         </div>
       </div>
       <div className="flex items-center space-x-4">
@@ -80,7 +109,7 @@ const ChatHeader = ({
                 }}
               >
                 <Archive size={16} className="mr-2" />
-                <span>{currentChat.archived ? 'Unarchive Chat' : 'Archive Chat'}</span>
+                <span>{currentChat.status === 'ARCHIVED' ? 'Unarchive Chat' : 'Archive Chat'}</span>
               </div>
               <div className={`p-3 ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'} cursor-pointer flex items-center`}>
                 <Trash2 size={16} className="mr-2" />

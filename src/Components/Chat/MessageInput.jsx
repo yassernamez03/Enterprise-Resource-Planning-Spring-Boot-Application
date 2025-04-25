@@ -1,5 +1,5 @@
 // components/MessageInput.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Paperclip, Smile, Mic, X, Image, Camera, File } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
 import ReplyBar from './ReplyBar';
@@ -10,7 +10,8 @@ const MessageInput = ({
   handleSendMessage, 
   currentChat,
   showReplyTo,
-  setShowReplyTo
+  setShowReplyTo,
+  onTypingStatusChange
 }) => {
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -18,10 +19,37 @@ const MessageInput = ({
   const [timerInterval, setTimerInterval] = useState(null);
   const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [typingTimeout, setTypingTimeout] = useState(null);
   
   const messageInputRef = useRef(null);
   const emojiPickerRef = useOutsideClick(() => setEmojiPickerOpen(false));
   const attachmentMenuRef = useOutsideClick(() => setShowAttachmentOptions(false));
+
+  // Handle typing indicator logic
+  useEffect(() => {
+    if (message.trim() && onTypingStatusChange) {
+      // User started typing
+      onTypingStatusChange(true);
+      
+      // Clear any existing timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+      
+      // Set a new timeout to stop typing indicator after 2 seconds of inactivity
+      const newTimeout = setTimeout(() => {
+        onTypingStatusChange(false);
+      }, 2000);
+      
+      setTypingTimeout(newTimeout);
+    }
+    
+    return () => {
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+    };
+  }, [message, onTypingStatusChange]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -42,6 +70,11 @@ const MessageInput = ({
       handleSendMessage(newMessage);
       setMessage("");
       setShowReplyTo(null);
+      
+      // Stop typing indicator
+      if (onTypingStatusChange) {
+        onTypingStatusChange(false);
+      }
     }
   };
 
@@ -99,6 +132,13 @@ const MessageInput = ({
   const handleEmojiClick = (emojiData, event) => {
     setMessage(prev => prev + emojiData.emoji);
     messageInputRef.current?.focus();
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      submitMessage();
+    }
   };
 
   return (
@@ -160,16 +200,15 @@ const MessageInput = ({
                 </div>
               )}
             </div>
-            <input
-              type="text"
+            <textarea
+              rows="1"
               placeholder="Type a message"
-              className={`bg-transparent flex-1 outline-none mx-2 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
+              className={`bg-transparent flex-1 outline-none mx-2 py-2 resize-none ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") submitMessage();
-              }}
+              onKeyPress={handleKeyPress}
               ref={messageInputRef}
+              style={{ maxHeight: '100px', overflow: 'auto' }}
             />
             <div className="flex items-center space-x-3">
               <div className="relative">
