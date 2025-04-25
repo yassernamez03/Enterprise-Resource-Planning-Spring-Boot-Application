@@ -5,23 +5,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.Future;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoiceRequest {
+public class QuoteRequest {
 
-    @NotNull(message = "Order ID is required")
-    private Long orderId;
+    @NotNull(message = "Client ID is required")
+    private Long clientId;
 
-    @NotNull(message = "Payment due date is required")
-    @Future(message = "Payment due date must be in the future")
-    private LocalDateTime paymentDueDate;
+    @NotNull(message = "Employee ID is required")
+    private Long employeeId;
+
+    @NotEmpty(message = "At least one item is required")
+    @Valid
+    private List<QuoteItemRequest> items;
 
     @Size(max = 500, message = "Notes cannot exceed 500 characters")
     private String notes;

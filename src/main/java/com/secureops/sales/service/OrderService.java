@@ -1,51 +1,35 @@
 package com.secureops.sales.service;
 
 import com.secureops.sales.dto.request.OrderRequest;
+import com.secureops.sales.dto.response.InvoiceResponse;
 import com.secureops.sales.dto.response.OrderResponse;
+import com.secureops.sales.entity.Order;
 import com.secureops.sales.entity.OrderStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
+import com.secureops.sales.entity.Quote;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderService {
-
     List<OrderResponse> getAllOrders();
-
-    Page<OrderResponse> getOrdersPaged(Pageable pageable);
 
     OrderResponse getOrderById(Long id);
 
     OrderResponse getOrderByNumber(String orderNumber);
 
-    OrderResponse createOrder(OrderRequest orderRequest);
+    OrderResponse createOrder(OrderRequest request);
 
-    OrderResponse createOrderFromQuote(Long quoteId);
+    OrderResponse createOrderFromQuote(Quote quote);
 
-    OrderResponse updateOrder(Long id, OrderRequest orderRequest);
-
-    @Transactional
-    OrderResponse updateOrderStatus(Long id, OrderStatus status);
+    OrderResponse updateOrder(Long id, OrderRequest request);
 
     void deleteOrder(Long id);
 
-    List<OrderResponse> getOrdersByClientId(Long clientId);
-
-    List<OrderResponse> getOrdersByEmployeeId(Long employeeId);
+    List<OrderResponse> getOrdersByClient(Long clientId);
+    List<OrderResponse> getOrdersByEmployee(Long employeeId);
 
     List<OrderResponse> getOrdersByStatus(OrderStatus status);
-
     List<OrderResponse> getOrdersByDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
-    OrderResponse changeOrderStatus(Long id, String status);
-
-    Page<OrderResponse> searchOrders(String searchTerm, Pageable pageable);
-
-    List<OrderResponse> getNonInvoicedOrders();
-
-    String generateOrderNumber();
-
-    List<OrderResponse> searchOrders(String searchTerm, int page, int size);
+    InvoiceResponse createInvoiceFromOrder(Long orderId);
 }

@@ -11,12 +11,9 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuoteItemResponse {
-    private Long id;
+public class ProductSalesSummary {
     private Long productId;
     private String productName;
-    private Integer quantity;
-    private BigDecimal unitPrice;
-    private BigDecimal subtotal;
-    private String description;
+    private Integer quantitySold;
+    private BigDecimal totalRevenue;
 }

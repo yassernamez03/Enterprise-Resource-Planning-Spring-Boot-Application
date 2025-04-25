@@ -1,90 +1,93 @@
 package com.secureops.sales.util;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
+/**
+ * Utility class for date and time operations
+ */
 public class DateUtils {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private DateUtils() {
+        // Private constructor to prevent instantiation
+    }
 
     /**
-     * Format LocalDateTime to string in format dd/MM/yyyy HH:mm:ss
+     * Returns the current date and time
      */
-    public static String formatDateTime(LocalDateTime dateTime) {
+    public static LocalDateTime getCurrentDateTime() {
+        return LocalDateTime.now();
+    }
+
+    /**
+     * Returns the start of the day (00:00:00) for the given date
+     */
+    public static LocalDateTime getStartOfDay(LocalDateTime dateTime) {
+        return LocalDate.from(dateTime).atStartOfDay();
+    }
+
+    /**
+     * Returns the end of the day (23:59:59.999999999) for the given date
+     */
+    public static LocalDateTime getEndOfDay(LocalDateTime dateTime) {
+        return LocalDate.from(dateTime).atTime(LocalTime.MAX);
+    }
+
+    /**
+     * Returns the start of the month (1st day, 00:00:00) for the given date
+     */
+    public static LocalDateTime getStartOfMonth(LocalDateTime dateTime) {
+        return YearMonth.from(dateTime).atDay(1).atStartOfDay();
+    }
+
+    /**
+     * Returns the end of the month (last day, 23:59:59.999999999) for the given date
+     */
+    public static LocalDateTime getEndOfMonth(LocalDateTime dateTime) {
+        return YearMonth.from(dateTime).atEndOfMonth().atTime(LocalTime.MAX);
+    }
+
+    /**
+     * Formats a date according to the specified pattern
+     */
+    public static String formatDate(LocalDateTime dateTime, String pattern) {
         if (dateTime == null) {
             return null;
         }
-        return dateTime.format(DATE_TIME_FORMATTER);
+        return dateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
-     * Format LocalDate to string in format dd/MM/yyyy
+     * Formats a date using the default pattern (dd/MM/yyyy HH:mm)
      */
-    public static String formatDate(LocalDate date) {
-        if (date == null) {
+    public static String formatDate(LocalDateTime dateTime) {
+        return formatDate(dateTime, "dd/MM/yyyy HH:mm");
+    }
+
+    /**
+     * Parses a date string using the specified pattern
+     */
+    public static LocalDateTime parseDate(String dateString, String pattern) {
+        if (dateString == null || dateString.isEmpty()) {
             return null;
         }
-        return date.format(DATE_FORMATTER);
+        return LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
-     * Parse string in format dd/MM/yyyy to LocalDate
+     * Returns true if the first date is after the second date
      */
-    public static LocalDate parseDate(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) {
-            return null;
-        }
-        return LocalDate.parse(dateStr, DATE_FORMATTER);
+    public static boolean isAfter(LocalDateTime first, LocalDateTime second) {
+        return first != null && second != null && first.isAfter(second);
     }
 
     /**
-     * Parse string in format dd/MM/yyyy HH:mm:ss to LocalDateTime
+     * Returns true if the first date is before the second date
      */
-    public static LocalDateTime parseDateTime(String dateTimeStr) {
-        if (dateTimeStr == null || dateTimeStr.trim().isEmpty()) {
-            return null;
-        }
-        return LocalDateTime.parse(dateTimeStr, DATE_TIME_FORMATTER);
-    }
-
-    /**
-     * Calculate due date by adding specified number of days to current date,
-     * skipping weekends
-     */
-    public static LocalDate calculateDueDate(int daysToAdd) {
-        LocalDate result = LocalDate.now();
-        int addedDays = 0;
-
-        while (addedDays < daysToAdd) {
-            result = result.plusDays(1);
-            if (!(result.getDayOfWeek() == DayOfWeek.SATURDAY ||
-                    result.getDayOfWeek() == DayOfWeek.SUNDAY)) {
-                addedDays++;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Format date for display in UI
-     */
-    public static String formatForDisplay(LocalDateTime dateTime) {
-        if (dateTime == null) {
-            return "";
-        }
-        return dateTime.format(DISPLAY_FORMATTER);
-    }
-
-    /**
-     * Calculate days between two dates
-     */
-    public static long daysBetween(LocalDate startDate, LocalDate endDate) {
-        return ChronoUnit.DAYS.between(startDate, endDate);
+    public static boolean isBefore(LocalDateTime first, LocalDateTime second) {
+        return first != null && second != null && first.isBefore(second);
     }
 }

@@ -6,112 +6,118 @@ import com.secureops.sales.entity.Product;
 import com.secureops.sales.exception.ResourceNotFoundException;
 import com.secureops.sales.repository.ProductRepository;
 import com.secureops.sales.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.secureops.sales.util.DateUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
-
     @Override
     public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
-                .map(this::mapToProductResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductResponse> getActiveProducts() {
-        return productRepository.findByActive(true).stream()
-                .map(this::mapToProductResponse)
+        return productRepository.findAll()
+                .stream()
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
-        return mapToProductResponse(product);
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+        return convertToResponse(product);
     }
 
     @Override
     @Transactional
-    public ProductResponse createProduct(ProductRequest productRequest) {
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setUnitPrice(productRequest.getUnitPrice());
-        product.setCategory(productRequest.getCategory());
+    public ProductResponse createProduct(ProductRequest request) {
+        Product product = convertToEntity(request);
+        product.setCreatedDate(DateUtils.getCurrentDateTime());
+        product.setLastModifiedDate(DateUtils.getCurrentDateTime());
         product.setActive(true);
-        product.setCreatedDate(LocalDateTime.now());
 
         Product savedProduct = productRepository.save(product);
-        return mapToProductResponse(savedProduct);
+        return convertToResponse(savedProduct);
     }
 
     @Override
     @Transactional
-    public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+    public ProductResponse updateProduct(Long id, ProductRequest request) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setUnitPrice(productRequest.getUnitPrice());
-        product.setCategory(productRequest.getCategory());
-        product.setLastModifiedDate(LocalDateTime.now());
+        existingProduct.setName(request.getName());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setUnitPrice(request.getUnitPrice());
+        existingProduct.setCategory(request.getCategory());
+        existingProduct.setActive(request.getActive());
+        existingProduct.setLastModifiedDate(DateUtils.getCurrentDateTime());
 
-        Product updatedProduct = productRepository.save(product);
-        return mapToProductResponse(updatedProduct);
+        Product updatedProduct = productRepository.save(existingProduct);
+        return convertToResponse(updatedProduct);
     }
 
     @Override
     @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
         // Soft delete - just mark as inactive
         product.setActive(false);
-        product.setLastModifiedDate(LocalDateTime.now());
+        product.setLastModifiedDate(DateUtils.getCurrentDateTime());
         productRepository.save(product);
     }
 
     @Override
-    public List<ProductResponse> searchProducts(String searchTerm) {
-        return productRepository.findByNameContainingIgnoreCase(searchTerm).stream()
-                .map(this::mapToProductResponse)
+    public List<ProductResponse> searchProducts(String query) {
+        if (query == null || query.isEmpty()) {
+            return getAllProducts();
+        }
+
+        // Search by name
+        List<Product> byName = productRepository.findByNameContainingIgnoreCase(query);
+
+        // Deduplicate and convert to response
+        return byName.stream()
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductResponse> getProductsByCategory(String category) {
-        return productRepository.findByCategoryAndActive(category, true).stream()
-                .map(this::mapToProductResponse)
+        List<Product> products = productRepository.findByCategoryIgnoreCase(category);
+        return products.stream()
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
 
-    private ProductResponse mapToProductResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescription(product.getDescription());
-        response.setUnitPrice(product.getUnitPrice());
-        response.setCategory(product.getCategory());
-        response.setActive(product.getActive());
-        response.setCreatedDate(product.getCreatedDate());
-        response.setLastModifiedDate(product.getLastModifiedDate());
-        return response;
+    private ProductResponse convertToResponse(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .unitPrice(product.getUnitPrice())
+                .category(product.getCategory())
+                .active(product.getActive())
+                .build();
+    }
+
+    private Product convertToEntity(ProductRequest request) {
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setUnitPrice(request.getUnitPrice());
+        product.setCategory(request.getCategory());
+        product.setActive(request.getActive() != null ? request.getActive() : true);
+        return product;
     }
 }

@@ -1,39 +1,73 @@
 package com.secureops.sales.util;
 
+import com.secureops.sales.entity.Order;
+import com.secureops.sales.entity.Quote;
+import com.secureops.sales.repository.QuoteRepository;
+import com.secureops.sales.repository.OrderRepository;
+import com.secureops.sales.repository.InvoiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Utility class for generating unique sequential numbers for quotes, orders, and invoices
+ */
 @Component
 public class NumberGenerator {
 
-    private final AtomicInteger quoteSequence = new AtomicInteger(1);
-    private final AtomicInteger orderSequence = new AtomicInteger(1);
-    private final AtomicInteger invoiceSequence = new AtomicInteger(1);
+    private static final String QUOTE_PREFIX = "SO";
+    private static final String ORDER_PREFIX = "OR";
+    private static final String INVOICE_PREFIX = "INV";
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+    private final QuoteRepository quoteRepository;
+    private final OrderRepository orderRepository;
+    private final InvoiceRepository invoiceRepository;
 
+    @Autowired
+    public NumberGenerator(QuoteRepository quoteRepository,
+                           OrderRepository orderRepository,
+                           InvoiceRepository invoiceRepository) {
+        this.quoteRepository = quoteRepository;
+        this.orderRepository = orderRepository;
+        this.invoiceRepository = invoiceRepository;
+    }
+
+    /**
+     * Generates a unique quote number in the format SO + sequential number
+     * E.g., SO8640
+     */
     public String generateQuoteNumber() {
-        String datePrefix = LocalDateTime.now().format(formatter);
-        return "SO" + datePrefix.substring(0, 4) + quoteSequence.getAndIncrement();
+        Long lastQuoteId = quoteRepository.findTopByOrderByIdDesc()
+                .map(Quote::getId)
+                .orElse(0L);
+
+        return QUOTE_PREFIX + (lastQuoteId + 1);
     }
 
+    /**
+     * Generates a unique order number in the format OR + sequential number
+     * E.g., OR8640
+     */
     public String generateOrderNumber() {
-        String datePrefix = LocalDateTime.now().format(formatter);
-        return "OR" + datePrefix.substring(0, 4) + orderSequence.getAndIncrement();
+        Long lastOrderId = orderRepository.findTopByOrderByIdDesc()
+                .map(Order::getId)
+                .orElse(0L);
+
+        return ORDER_PREFIX + (lastOrderId + 1);
     }
 
+    /**
+     * Generates a unique invoice number in the format INV + YYMMDD + sequential number
+     * E.g., INV250225-123
+     */
     public String generateInvoiceNumber() {
-        String datePrefix = LocalDateTime.now().format(formatter);
-        return "INV" + datePrefix.substring(0, 4) + invoiceSequence.getAndIncrement();
-    }
+        // Current date in format YYMMDD
+        String datePrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
 
-    // Reset sequences - could be used if needed
-    public void resetSequences() {
-        quoteSequence.set(1);
-        orderSequence.set(1);
-        invoiceSequence.set(1);
+        // Get last invoice created today
+        Long sequentialNumber = invoiceRepository.countByInvoiceNumberContaining(STR."INV\{datePrefix}") + 1;
+
+        return STR."INV\{datePrefix}-\{sequentialNumber}";
     }
 }

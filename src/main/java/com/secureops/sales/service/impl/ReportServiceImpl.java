@@ -1,210 +1,280 @@
 package com.secureops.sales.service.impl;
 
+import com.secureops.sales.dto.response.*;
 import com.secureops.sales.entity.*;
-import com.secureops.sales.repository.InvoiceRepository;
-import com.secureops.sales.repository.OrderItemRepository;
-import com.secureops.sales.repository.OrderRepository;
-import com.secureops.sales.repository.QuoteRepository;
+import com.secureops.sales.exception.ResourceNotFoundException;
+import com.secureops.sales.repository.*;
 import com.secureops.sales.service.ReportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.secureops.sales.util.DateUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
     private final QuoteRepository quoteRepository;
+    private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ClientRepository clientRepository;
 
-    @Autowired
-    public ReportServiceImpl(
-            OrderRepository orderRepository,
-            OrderItemRepository orderItemRepository,
-            QuoteRepository quoteRepository,
-            InvoiceRepository invoiceRepository) {
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.quoteRepository = quoteRepository;
-        this.invoiceRepository = invoiceRepository;
-    }
+    private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
 
     @Override
-    public BigDecimal getTotalSales(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate);
-
-        return orders.stream()
-                .filter(order -> order.getStatus() != OrderStatus.CANCELLED)
-                .map(Order::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    public Map<String, BigDecimal> getSalesByClient(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate);
-
-        return orders.stream()
-                .filter(order -> order.getStatus() != OrderStatus.CANCELLED)
-                .collect(Collectors.groupingBy(
-                        order -> order.getClient().getName(),
-                        Collectors.reducing(BigDecimal.ZERO, Order::getTotalAmount, BigDecimal::add)
-                ));
-    }
-
-    @Override
-    public Map<String, BigDecimal> getSalesByEmployee(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate);
-
-        return orders.stream()
-                .filter(order -> order.getStatus() != OrderStatus.CANCELLED)
-                .collect(Collectors.groupingBy(
-                        order -> order.getEmployee().getFullName(),
-                        Collectors.reducing(BigDecimal.ZERO, Order::getTotalAmount, BigDecimal::add)
-                ));
-    }
-
-    @Override
-    public Map<String, BigDecimal> getSalesByProduct(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate);
-
-        Map<String, BigDecimal> productSales = new HashMap<>();
-
-        for (Order order : orders) {
-            if (order.getStatus() == OrderStatus.CANCELLED) {
-                continue;
-            }
-
-            List<OrderItem> orderItems = orderItemRepository.findByOrder(order);
-
-            for (OrderItem item : orderItems) {
-                String productName = item.getProduct().getName();
-                BigDecimal itemTotal = item.getSubtotal();
-
-                productSales.merge(productName, itemTotal, BigDecimal::add);
-            }
-        }
-
-        return productSales;
-    }
-
-    @Override
-    public List<BigDecimal> getMonthlySales(int year) {
-        List<BigDecimal> monthlySales = new ArrayList<>(Collections.nCopies(12, BigDecimal.ZERO));
-
-        LocalDateTime startOfYear = LocalDateTime.of(year, 1, 1, 0, 0);
-        LocalDateTime endOfYear = LocalDateTime.of(year, 12, 31, 23, 59, 59);
-
-        List<Order> orders = orderRepository.findByCreatedDateBetween(startOfYear, endOfYear);
-
-        for (Order order : orders) {
-            if (order.getStatus() == OrderStatus.CANCELLED) {
-                continue;
-            }
-
-            int monthIndex = order.getCreatedDate().getMonth().getValue() - 1; // 0-based index
-            BigDecimal currentAmount = monthlySales.get(monthIndex);
-            monthlySales.set(monthIndex, currentAmount.add(order.getTotalAmount()));
-        }
-
-        return monthlySales;
-    }
-
-    @Override
-    public double getQuoteConversionRate(LocalDateTime startDate, LocalDateTime endDate) {
+    public SalesSummaryReport getSalesSummary(LocalDateTime startDate, LocalDateTime endDate) {
+        // Get all quotes within date range
         List<Quote> quotes = quoteRepository.findByCreatedDateBetween(startDate, endDate);
 
-        long totalQuotes = quotes.size();
-        if (totalQuotes == 0) {
-            return 0.0;
-        }
-
-        long convertedQuotes = quotes.stream()
-                .filter(quote -> quote.getStatus() == QuoteStatus.CONVERTED_TO_ORDER)
-                .count();
-
-        return (double) convertedQuotes / totalQuotes * 100.0;
-    }
-
-    @Override
-    public BigDecimal getOutstandingInvoicesTotal() {
-        List<Invoice> pendingInvoices = invoiceRepository.findByStatus(InvoiceStatus.PENDING);
-
-        return pendingInvoices.stream()
-                .map(Invoice::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    public BigDecimal getOverdueInvoicesTotal() {
-        List<Invoice> overdueInvoices = invoiceRepository.findByStatus(InvoiceStatus.OVERDUE);
-
-        return overdueInvoices.stream()
-                .map(Invoice::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    @Override
-    public Map<String, BigDecimal> getTopClients(LocalDateTime startDate, LocalDateTime endDate, int limit) {
-        Map<String, BigDecimal> clientSales = getSalesByClient(startDate, endDate);
-
-        return clientSales.entrySet().stream()
-                .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
-                .limit(limit)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
-    }
-
-    @Override
-    public Map<String, BigDecimal> getTopProducts(LocalDateTime startDate, LocalDateTime endDate, int limit) {
-        Map<String, BigDecimal> productSales = getSalesByProduct(startDate, endDate);
-
-        return productSales.entrySet().stream()
-                .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
-                .limit(limit)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
-    }
-
-    @Override
-    public Map<LocalDateTime, BigDecimal> getSalesByDate(LocalDateTime startDate, LocalDateTime endDate) {
+        // Get all orders within date range
         List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate);
 
-        // Group by day (truncate time part)
-        Map<LocalDateTime, BigDecimal> salesByDate = orders.stream()
-                .filter(order -> order.getStatus() != OrderStatus.CANCELLED)
+        // Get all invoices within date range
+        List<Invoice> invoices = invoiceRepository.findByCreatedDateBetween(startDate, endDate);
+
+        // Calculate totals
+        int totalQuotes = quotes.size();
+        int acceptedQuotes = (int) quotes.stream()
+                .filter(q -> q.getStatus() == QuoteStatus.ACCEPTED || q.getStatus() == QuoteStatus.CONVERTED_TO_ORDER)
+                .count();
+        int rejectedQuotes = (int) quotes.stream()
+                .filter(q -> q.getStatus() == QuoteStatus.REJECTED)
+                .count();
+
+        int totalOrders = orders.size();
+        int completedOrders = (int) orders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.COMPLETED || o.getStatus() == OrderStatus.INVOICED)
+                .count();
+        int cancelledOrders = (int) orders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.CANCELLED)
+                .count();
+
+        int totalInvoices = invoices.size();
+        int paidInvoices = (int) invoices.stream()
+                .filter(i -> i.getStatus() == InvoiceStatus.PAID)
+                .count();
+        int overdueInvoices = (int) invoices.stream()
+                .filter(i -> i.getStatus() == InvoiceStatus.OVERDUE)
+                .count();
+
+        // Calculate total sales and average order value
+        BigDecimal totalSales = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal averageOrderValue = totalOrders > 0 ?
+                totalSales.divide(BigDecimal.valueOf(totalOrders), 2, RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
+
+        // Generate monthly sales data
+        Map<String, BigDecimal> monthlySales = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
                 .collect(Collectors.groupingBy(
-                        order -> order.getCreatedDate().toLocalDate().atStartOfDay(),
-                        Collectors.reducing(BigDecimal.ZERO, Order::getTotalAmount, BigDecimal::add)
+                        o -> o.getCreatedDate().format(MONTH_FORMATTER),
+                        Collectors.mapping(
+                                Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                        )
                 ));
 
-        // Create entries for days with no sales
-        LocalDateTime currentDate = startDate.toLocalDate().atStartOfDay();
-        while (!currentDate.isAfter(endDate)) {
-            salesByDate.putIfAbsent(currentDate, BigDecimal.ZERO);
-            currentDate = currentDate.plusDays(1);
-        }
+        return SalesSummaryReport.builder()
+                .totalSales(totalSales)
+                .totalQuotes(totalQuotes)
+                .acceptedQuotes(acceptedQuotes)
+                .rejectedQuotes(rejectedQuotes)
+                .totalOrders(totalOrders)
+                .completedOrders(completedOrders)
+                .cancelledOrders(cancelledOrders)
+                .totalInvoices(totalInvoices)
+                .paidInvoices(paidInvoices)
+                .overdueInvoices(overdueInvoices)
+                .averageOrderValue(averageOrderValue)
+                .monthlySales(monthlySales)
+                .build();
+    }
 
-        // Sort by date
-        return salesByDate.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
+    @Override
+    public EmployeePerformanceReport getEmployeePerformance(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
+        // Verify employee exists
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", employeeId));
+
+        // Get employee quotes
+        List<Quote> quotes = quoteRepository.findByEmployeeIdAndCreatedDateBetween(
+                employeeId, startDate, endDate);
+
+        // Get employee orders
+        List<Order> orders = orderRepository.findByEmployeeIdAndCreatedDateBetween(
+                employeeId, startDate, endDate);
+
+        int totalQuotes = quotes.size();
+        int acceptedQuotes = (int) quotes.stream()
+                .filter(q -> q.getStatus() == QuoteStatus.ACCEPTED || q.getStatus() == QuoteStatus.CONVERTED_TO_ORDER)
+                .count();
+
+        // Calculate conversion rate
+        BigDecimal conversionRate = totalQuotes > 0 ?
+                BigDecimal.valueOf(acceptedQuotes)
+                        .divide(BigDecimal.valueOf(totalQuotes), 2, RoundingMode.HALF_UP)
+                        .multiply(BigDecimal.valueOf(100)) :
+                BigDecimal.ZERO;
+
+        // Calculate total sales
+        BigDecimal totalSales = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Calculate average order value
+        BigDecimal averageOrderValue = !orders.isEmpty() ?
+                totalSales.divide(BigDecimal.valueOf(orders.size()), 2, RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
+
+        // Generate monthly sales data
+        Map<String, BigDecimal> monthlySales = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .collect(Collectors.groupingBy(
+                        o -> o.getCreatedDate().format(MONTH_FORMATTER),
+                        Collectors.mapping(
+                                Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                        )
                 ));
+
+        return EmployeePerformanceReport.builder()
+                .employeeId(employeeId)
+                .employeeName(employee.getFullName())
+                .totalQuotes(totalQuotes)
+                .acceptedQuotes(acceptedQuotes)
+                .conversionRate(conversionRate)
+                .totalSales(totalSales)
+                .averageOrderValue(averageOrderValue)
+                .monthlySales(monthlySales)
+                .build();
+    }
+
+    @Override
+    public ClientSpendingReport getClientSpendingReport(Long clientId, LocalDateTime startDate, LocalDateTime endDate) {
+        // Verify client exists
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", clientId));
+
+        // Get client orders within date range
+        List<Order> orders = orderRepository.findByClientIdAndCreatedDateBetween(
+                clientId, startDate, endDate);
+
+        int orderCount = orders.size();
+
+        // Calculate total spent
+        BigDecimal totalSpent = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Calculate average order value
+        BigDecimal averageOrderValue = orderCount > 0 ?
+                totalSpent.divide(BigDecimal.valueOf(orderCount), 2, RoundingMode.HALF_UP) :
+                BigDecimal.ZERO;
+
+        // Find last order date
+        LocalDateTime lastOrderDate = orders.stream()
+                .map(Order::getCreatedDate)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
+
+        // Generate monthly spending data
+        Map<String, BigDecimal> monthlySpending = orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .collect(Collectors.groupingBy(
+                        o -> o.getCreatedDate().format(MONTH_FORMATTER),
+                        Collectors.mapping(
+                                Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                        )
+                ));
+
+        // Find top products
+        Map<Product, Integer> productQuantities = new HashMap<>();
+        Map<Product, BigDecimal> productRevenues = new HashMap<>();
+
+        orders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .flatMap(o -> o.getItems().stream())
+                .forEach(item -> {
+                    Product product = item.getProduct();
+                    productQuantities.merge(product, item.getQuantity(), Integer::sum);
+                    productRevenues.merge(product, item.getSubtotal(), BigDecimal::add);
+                });
+
+        List<ProductSalesSummary> topProducts = productQuantities.entrySet().stream()
+                .map(entry -> ProductSalesSummary.builder()
+                        .productId(entry.getKey().getId())
+                        .productName(entry.getKey().getName())
+                        .quantitySold(entry.getValue())
+                        .totalRevenue(productRevenues.get(entry.getKey()))
+                        .build())
+                .sorted(Comparator.comparing(ProductSalesSummary::getTotalRevenue).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        return ClientSpendingReport.builder()
+                .clientId(clientId)
+                .clientName(client.getName())
+                .totalSpent(totalSpent)
+                .orderCount(orderCount)
+                .averageOrderValue(averageOrderValue)
+                .lastOrderDate(lastOrderDate)
+                .monthlySpending(monthlySpending)
+                .topProducts(topProducts)
+                .build();
+    }
+
+    @Override
+    public ProductSalesReport getProductSalesReport(LocalDateTime startDate, LocalDateTime endDate) {
+        // Get all orders within date range
+        List<Order> orders = orderRepository.findByCreatedDateBetween(startDate, endDate)
+                .stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
+                .collect(Collectors.toList());
+
+        // Calculate product sales metrics
+        Map<Product, Integer> productQuantities = new HashMap<>();
+        Map<Product, BigDecimal> productRevenues = new HashMap<>();
+
+        orders.stream()
+                .flatMap(o -> o.getItems().stream())
+                .forEach(item -> {
+                    Product product = item.getProduct();
+                    productQuantities.merge(product, item.getQuantity(), Integer::sum);
+                    productRevenues.merge(product, item.getSubtotal(), BigDecimal::add);
+                });
+
+        List<ProductSalesSummary> productSales = productQuantities.entrySet().stream()
+                .map(entry -> ProductSalesSummary.builder()
+                        .productId(entry.getKey().getId())
+                        .productName(entry.getKey().getName())
+                        .quantitySold(entry.getValue())
+                        .totalRevenue(productRevenues.get(entry.getKey()))
+                        .build())
+                .sorted(Comparator.comparing(ProductSalesSummary::getTotalRevenue).reversed())
+                .collect(Collectors.toList());
+
+        int totalProductsSold = productQuantities.values().stream()
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        return ProductSalesReport.builder()
+                .totalProductsSold(totalProductsSold)
+                .productSales(productSales)
+                .build();
     }
 }

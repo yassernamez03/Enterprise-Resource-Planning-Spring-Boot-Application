@@ -19,6 +19,5 @@ public class ClientResponse {
     private String phone;
     private String address;
     private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
     private String notes;
 }

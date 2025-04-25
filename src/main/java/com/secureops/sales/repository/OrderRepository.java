@@ -1,11 +1,7 @@
 package com.secureops.sales.repository;
 
-import com.secureops.sales.entity.Client;
-import com.secureops.sales.entity.Employee;
 import com.secureops.sales.entity.Order;
 import com.secureops.sales.entity.OrderStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,26 +16,38 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByOrderNumber(String orderNumber);
 
-    List<Order> findByClient(Client client);
+    List<Order> findByClientId(Long clientId);
 
-    List<Order> findByEmployee(Employee employee);
+    List<Order> findByEmployeeId(Long employeeId);
 
     List<Order> findByStatus(OrderStatus status);
+    
+    Optional<Order> findByQuoteId(Long quoteId);
 
+    @Query("SELECT MAX(o.id) FROM Order o")
+    Optional<Long> findLastOrderId();
+
+    @Query("SELECT o FROM Order o JOIN o.client c " +
+            "WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(o.orderNumber) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Order> searchOrders(@Param("query") String query);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status AND o.createdDate BETWEEN :startDate AND :endDate")
+    Long countByStatusAndDateRange(@Param("status") OrderStatus status, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+//    ScopedValue<Integer> findMaxSequenceByPrefix(String basePrefix);
+
+    @Query("SELECT o FROM Order o WHERE o.createdDate BETWEEN :startDate AND :endDate")
     List<Order> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT o FROM Order o WHERE o.client.id = :clientId")
-    List<Order> findByClientId(@Param("clientId") Long clientId);
+    @Query("SELECT o FROM Order o WHERE o.employee.id = :employeeId AND o.createdDate BETWEEN :startDate AND :endDate")
+    List<Order> findByEmployeeIdAndCreatedDateBetween(
+            Long employeeId, LocalDateTime startDate, LocalDateTime endDate);
+    @Query("SELECT o FROM Order o WHERE o.client.id = :clientId AND o.createdDate BETWEEN :startDate AND :endDate")
+    List<Order> findByClientIdAndCreatedDateBetween(
+            @Param("clientId") Long clientId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT o FROM Order o WHERE o.employee.id = :employeeId")
-    List<Order> findByEmployeeId(@Param("employeeId") Long employeeId);
-
-    @Query("SELECT o FROM Order o WHERE o.quote.id = :quoteId")
-    Optional<Order> findByQuoteId(@Param("quoteId") Long quoteId);
-
-    @Query("SELECT o FROM Order o WHERE o.client.name LIKE %:searchTerm% OR o.orderNumber LIKE %:searchTerm%")
-    Page<Order> searchOrders(@Param("searchTerm") String searchTerm, Pageable pageable);
-
-    @Query("SELECT o FROM Order o WHERE o.status != 'INVOICED'")
-    List<Order> findNonInvoicedOrders();
+    Optional<Order> findTopByOrderByIdDesc();
 }

@@ -1,6 +1,6 @@
 package com.secureops.sales.dto.response;
 
-import com.secureops.sales.entity.InvoiceStatus;
+import com.secureops.sales.entity.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,23 +8,24 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvoiceResponse {
+public class OrderResponse {
     private Long id;
-    private String invoiceNumber;
+    private String orderNumber;
     private LocalDateTime createdDate;
     private Long clientId;
     private String clientName;
-    private Long orderId;
-    private String orderNumber;
+    private Long employeeId;
+    private String employeeName;
+    private Long quoteId;
+    private String quoteNumber;
+    private List<OrderItemResponse> items;
     private BigDecimal totalAmount;
-    private InvoiceStatus status;
-    private LocalDateTime paymentDueDate;
-    private LocalDateTime paymentDate;
-    private String paymentMethod;
+    private OrderStatus status;
     private String notes;
 }

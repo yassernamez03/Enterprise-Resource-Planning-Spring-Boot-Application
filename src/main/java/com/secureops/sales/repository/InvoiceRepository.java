@@ -1,10 +1,7 @@
 package com.secureops.sales.repository;
 
-import com.secureops.sales.entity.Client;
 import com.secureops.sales.entity.Invoice;
 import com.secureops.sales.entity.InvoiceStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,26 +16,28 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     Optional<Invoice> findByInvoiceNumber(String invoiceNumber);
 
-    List<Invoice> findByClient(Client client);
+    List<Invoice> findByClientId(Long clientId);
 
     List<Invoice> findByStatus(InvoiceStatus status);
 
     List<Invoice> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    List<Invoice> findByPaymentDueDateBefore(LocalDateTime dueDate);
+    Optional<Invoice> findByOrderId(Long orderId);
 
-    @Query("SELECT i FROM Invoice i WHERE i.client.id = :clientId")
-    List<Invoice> findByClientId(@Param("clientId") Long clientId);
+    @Query("SELECT MAX(i.id) FROM Invoice i")
+    Optional<Long> findLastInvoiceId();
 
-    @Query("SELECT i FROM Invoice i WHERE i.order.id = :orderId")
-    Optional<Invoice> findByOrderId(@Param("orderId") Long orderId);
+    @Query("SELECT i FROM Invoice i JOIN i.client c " +
+            "WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(i.invoiceNumber) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Invoice> searchInvoices(@Param("query") String query);
 
-    @Query("SELECT i FROM Invoice i WHERE i.status = 'OVERDUE'")
-    List<Invoice> findOverdueInvoices();
+    @Query("SELECT SUM(i.totalAmount) FROM Invoice i WHERE i.status = :status AND i.createdDate BETWEEN :startDate AND :endDate")
+    Optional<Double> sumTotalAmountByStatusAndDateRange(@Param("status") InvoiceStatus status, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT i FROM Invoice i WHERE i.client.name LIKE %:searchTerm% OR i.invoiceNumber LIKE %:searchTerm%")
-    Page<Invoice> searchInvoices(@Param("searchTerm") String searchTerm, Pageable pageable);
+    @Query("SELECT COUNT(i) FROM Invoice i WHERE i.status = :status AND i.createdDate BETWEEN :startDate AND :endDate")
+    Long countByStatusAndDateRange(@Param("status") InvoiceStatus status, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT i FROM Invoice i WHERE i.status = 'PENDING' AND i.paymentDueDate < :currentDate")
-    List<Invoice> findPendingInvoicesOverdue(@Param("currentDate") LocalDateTime currentDate);
+    Long countByInvoiceNumberContaining(String prefix);
+
 }
