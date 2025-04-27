@@ -84,4 +84,13 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new FileStorageException("Could not delete file " + fileName, ex);
         }
     }
+    
+    /**
+     * Returns the storage directory path for validation purposes
+     * @return Path object representing the file storage location
+     */
+    @Override
+    public Path getStorageDirectory() {
+        return this.fileStorageLocation;
+    }
 }

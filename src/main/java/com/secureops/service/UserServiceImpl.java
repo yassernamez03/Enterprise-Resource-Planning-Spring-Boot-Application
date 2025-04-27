@@ -4,11 +4,9 @@ import com.secureops.dto.UserDto;
 import com.secureops.dto.UserProfileUpdateDto;
 import com.secureops.dto.UserRegistrationDto;
 import com.secureops.entity.User;
-import com.secureops.entity.Calendar;
 import com.secureops.exception.BadRequestException;
 import com.secureops.exception.ResourceNotFoundException;
 import com.secureops.repository.UserRepository;
-import com.secureops.repository.CalendarRepository;
 import com.secureops.util.AppConstants;
 import com.secureops.util.PasswordGenerator;
 
@@ -33,20 +31,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CalendarRepository calendarRepository;
     private final PasswordEncoder passwordEncoder;
     private final LogService logService;
     private final EmailService emailService;
     private final FileStorageService fileStorageService;
 
     public UserServiceImpl(UserRepository userRepository,
-            CalendarRepository calendarRepository,
             PasswordEncoder passwordEncoder,
             LogService logService,
             EmailService emailService,
             FileStorageService fileStorageService) {
         this.userRepository = userRepository;
-        this.calendarRepository = calendarRepository;
         this.passwordEncoder = passwordEncoder;
         this.logService = logService;
         this.emailService = emailService;
@@ -72,14 +67,6 @@ public class UserServiceImpl implements UserService {
         user.setRole(User.UserRole.USER);
 
         User savedUser = userRepository.save(user);
-
-        // Create a default calendar for the user
-        Calendar defaultCalendar = new Calendar();
-        defaultCalendar.setName("Default Calendar");
-        defaultCalendar.setColor("#3788d8");
-        defaultCalendar.setPrimary(true);
-        defaultCalendar.setOwner(savedUser);
-        calendarRepository.save(defaultCalendar);
 
         // Log the registration
         logService.createLog(
@@ -437,7 +424,4 @@ public class UserServiceImpl implements UserService {
                 .path(fileName)
                 .toUriString();
     }
-
-    // Update the mapToDto method to include avatar URL
-
 }

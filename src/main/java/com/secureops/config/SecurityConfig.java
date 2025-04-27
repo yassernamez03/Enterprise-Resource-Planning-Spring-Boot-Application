@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users/pending").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/approve").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reject").hasRole("ADMIN")
+
                 // All other endpoints require authentication
                 .requestMatchers("/api/users/{id}").authenticated()
                 .anyRequest().authenticated()

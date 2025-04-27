@@ -23,5 +23,30 @@
     "name": "recaptcha.verify.url",
     "type": "java.lang.String",
     "description": "A description for 'recaptcha.verify.url'"
+  },
+  {
+    "name": "admin.email",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.email'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
+  },
+  {
+    "name": "admin.password",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.password'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
   }
 ]}

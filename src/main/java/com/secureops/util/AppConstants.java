@@ -25,6 +25,7 @@ public class AppConstants {
     public static final String LOG_TYPE_FILE = "FILE";
     
     // Log actions
+    public static final String LOG_ACTION_READ = "READ";
     public static final String LOG_ACTION_CREATE = "CREATE";
     public static final String LOG_ACTION_UPDATE = "UPDATE";
     public static final String LOG_ACTION_DELETE = "DELETE";

@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "events")
-public class Event {
+@Table(name = "tasks")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,24 +30,18 @@ public class Event {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date startTime;
+    private Date dueDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date endTime;
+    @Column(name = "completed")
+    private boolean completed = false;
 
-    @Column(name = "is_all_day")
-    private boolean allDay = false;
+    private String priority; // HIGH, MEDIUM, LOW
 
-    private String location;
-
-    private String recurrencePattern;
-    
     private String color;
     
     // If true, visible to all users; if false, only to assigned users
     private boolean isGlobal = false;
-    
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -64,8 +58,8 @@ public class Event {
     
     @ManyToMany
     @JoinTable(
-        name = "event_users",
-        joinColumns = @JoinColumn(name = "event_id"),
+        name = "task_users",
+        joinColumns = @JoinColumn(name = "task_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> assignedUsers = new HashSet<>();

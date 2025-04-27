@@ -22,8 +22,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = { "email" })
 })
 @EqualsAndHashCode(of = "id") // Only use ID for equals/hashCode
-@ToString(exclude = { "calendars", "messages", "logs" }) // Exclude collections from toString to prevent circular
-                                                         // references
+@ToString(exclude = { "messages", "logs" }) // Exclude collections from toString to prevent circular references
 public class User {
 
     @Id
@@ -44,12 +43,11 @@ public class User {
 
     private boolean isActive = false;
 
-    
     @Column(name = "reset_code")
-private String resetCode;
+    private String resetCode;
 
-@Column(name = "reset_code_expiry")
-private LocalDateTime resetCodeExpiry;
+    @Column(name = "reset_code_expiry")
+    private LocalDateTime resetCodeExpiry;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
@@ -66,9 +64,6 @@ private LocalDateTime resetCodeExpiry;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
-
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Calendar> calendars = new HashSet<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages = new HashSet<>();

@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,6 +22,10 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+
+    private static final List<String> ALLOWED_AVATAR_TYPES = Arrays.asList(
+            "image/jpeg", "image/png", "image/gif");
+    private static final long MAX_AVATAR_SIZE = 2 * 1024 * 1024;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -32,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/pending")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getPendingApprovals() {
         List<UserDto> pendingUsers = userService.getPendingApprovals().stream()
                 .map(this::mapToDto)
@@ -97,7 +102,74 @@ public class UserController {
     }
 
     @PostMapping("/avatar")
-    public ResponseEntity<UserDto> updateAvatar(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(userService.updateAvatar(file));
+public ResponseEntity<?> updateAvatar(@RequestParam("file") MultipartFile file) {
+    try {
+        // Check if file is empty
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Empty file"));
+        }
+        
+        // Validate declared content type (from HTTP headers)
+        String declaredContentType = file.getContentType();
+        if (declaredContentType == null || !ALLOWED_AVATAR_TYPES.contains(declaredContentType.toLowerCase())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Only JPEG, PNG, and GIF images are allowed"));
+        }
+
+        // Validate file size
+        if (file.getSize() > MAX_AVATAR_SIZE) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "File size exceeds the maximum limit of 2MB"));
+        }
+
+        // Validate actual file content by checking file signature/magic bytes
+        byte[] fileBytes = file.getBytes();
+        if (!isValidImageFile(fileBytes)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Invalid image file content detected"));
+        }
+
+        // Process valid file
+        UserDto updatedUser = userService.updateAvatar(file);
+        return ResponseEntity.ok(updatedUser);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("message", "Failed to upload avatar: " + e.getMessage()));
     }
+}
+
+/**
+ * Validates that the file content is actually an image by checking its magic bytes (file signature)
+ * @param fileBytes The bytes of the file to validate
+ * @return true if the file is a valid image, false otherwise
+ */
+private boolean isValidImageFile(byte[] fileBytes) {
+    if (fileBytes == null || fileBytes.length < 8) {
+        return false;
+    }
+
+    // Check for JPEG signature: SOI marker (FFD8) followed by either 
+    // JFIF (4A46494600) or Exif (457869660)
+    if (fileBytes[0] == (byte) 0xFF && fileBytes[1] == (byte) 0xD8) {
+        return true;
+    }
+
+    // Check for PNG signature: 89 50 4E 47 0D 0A 1A 0A
+    if (fileBytes[0] == (byte) 0x89 && fileBytes[1] == (byte) 0x50 && 
+        fileBytes[2] == (byte) 0x4E && fileBytes[3] == (byte) 0x47 && 
+        fileBytes[4] == (byte) 0x0D && fileBytes[5] == (byte) 0x0A && 
+        fileBytes[6] == (byte) 0x1A && fileBytes[7] == (byte) 0x0A) {
+        return true;
+    }
+
+    // Check for GIF signature: 'GIF87a' or 'GIF89a'
+    if (fileBytes[0] == (byte) 0x47 && fileBytes[1] == (byte) 0x49 && fileBytes[2] == (byte) 0x46 && 
+        fileBytes[3] == (byte) 0x38 && (fileBytes[4] == (byte) 0x37 || fileBytes[4] == (byte) 0x39) && 
+        fileBytes[5] == (byte) 0x61) {
+        return true;
+    }
+
+    // Not a valid image type
+    return false;
+}
 }

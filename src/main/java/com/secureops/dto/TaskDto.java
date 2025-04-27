@@ -12,26 +12,21 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventDto {
+public class TaskDto {
     
     private Long id;
     
-    @NotEmpty(message = "Event title cannot be empty")
+    @NotEmpty(message = "Task title cannot be empty")
     private String title;
     
     private String description;
     
-    @NotNull(message = "Start time cannot be null")
-    private Date startTime;
+    @NotNull(message = "Due date cannot be null")
+    private Date dueDate;
     
-    @NotNull(message = "End time cannot be null")
-    private Date endTime;
+    private boolean completed;
     
-    private boolean allDay;
-    
-    private String location;
-    
-    private String recurrencePattern;
+    private String priority;
     
     private String color;
     

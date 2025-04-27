@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/files")
@@ -34,6 +36,12 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file) {
+        // Validate filename before storing
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || !isValidFilename(originalFilename)) {
+            return ResponseEntity.badRequest().build();
+        }
+        
         String fileName = fileStorageService.storeFile(file);
         
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -44,14 +52,14 @@ public class FileController {
         Long currentUserId = userService.getCurrentUser().getId();
         logService.createLog(
             AppConstants.LOG_ACTION_CREATE,
-            "File uploaded: " + file.getOriginalFilename(),
-            getClientIp(),
+            "File uploaded: " + originalFilename,
+            getClientIpSafely(null),
             AppConstants.LOG_TYPE_FILE,
             currentUserId
         );
         
         FileUploadResponse response = new FileUploadResponse(
-                file.getOriginalFilename(),
+                originalFilename,
                 fileDownloadUri,
                 file.getContentType(),
                 file.getSize()
@@ -62,21 +70,46 @@ public class FileController {
 
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Validate the filename before processing
+        if (!isValidFilename(fileName)) {
+            return ResponseEntity.badRequest().build();
+        }
+        
         // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+        Resource resource;
+        try {
+            resource = fileStorageService.loadFileAsResource(fileName);
+            // Verify the resource is within the expected directory
+            if (!isResourceInAllowedDirectory(resource)) {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
         
         // Try to determine file's content type
         String contentType = null;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException ex) {
-            // Logger would be used here in production
+            // Log the error
+            System.err.println("Could not determine file type: " + ex.getMessage());
         }
         
         // Fallback to the default content type if type could not be determined
         if(contentType == null) {
             contentType = "application/octet-stream";
         }
+        
+        // Log the download
+        Long currentUserId = userService.getCurrentUser().getId();
+        logService.createLog(
+            AppConstants.LOG_ACTION_READ,
+            "File downloaded: " + fileName,
+            getClientIpSafely(request),
+            AppConstants.LOG_TYPE_FILE,
+            currentUserId
+        );
         
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
@@ -86,35 +119,105 @@ public class FileController {
     
     @DeleteMapping("/{fileName:.+}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {
-        fileStorageService.deleteFile(fileName);
+        // Validate the filename before processing
+        if (!isValidFilename(fileName)) {
+            return ResponseEntity.badRequest().build();
+        }
         
-        Long currentUserId = userService.getCurrentUser().getId();
-        logService.createLog(
-            AppConstants.LOG_ACTION_DELETE,
-            "File deleted: " + fileName,
-            getClientIp(),
-            AppConstants.LOG_TYPE_FILE,
-            currentUserId
-        );
-        
-        return ResponseEntity.noContent().build();
+        try {
+            fileStorageService.deleteFile(fileName);
+            
+            Long currentUserId = userService.getCurrentUser().getId();
+            logService.createLog(
+                AppConstants.LOG_ACTION_DELETE,
+                "File deleted: " + fileName,
+                getClientIpSafely(null),
+                AppConstants.LOG_TYPE_FILE,
+                currentUserId
+            );
+            
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     
-    private String getClientIp() {
-        HttpServletRequest request = ((org.springframework.web.context.request.ServletRequestAttributes) 
-                org.springframework.web.context.request.RequestContextHolder
-                .currentRequestAttributes()).getRequest();
-                
-        String ipAddress = request.getHeader("X-Forwarded-For");
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
+    /**
+     * Validates that a filename does not contain directory traversal sequences or other dangerous characters
+     */
+    private boolean isValidFilename(String fileName) {
+        // Reject null or empty filenames
+        if (fileName == null || fileName.isEmpty()) {
+            return false;
         }
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
+        
+        // Check for directory traversal patterns
+        if (fileName.contains("../") || fileName.contains("..\\") || 
+            fileName.contains("/") || fileName.contains("\\") ||
+            fileName.contains(":") || fileName.startsWith(".")) {
+            return false;
         }
-        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+        
+        // Additional validation - allow only alphanumeric characters, dots, hyphens, and underscores
+        return fileName.matches("^[a-zA-Z0-9._-]+$");
+    }
+    
+    /**
+     * Verifies that the resource is within the allowed storage directory
+     */
+    private boolean isResourceInAllowedDirectory(Resource resource) throws IOException {
+        Path resourcePath = Paths.get(resource.getFile().getCanonicalPath()).normalize();
+        // Get the storage directory from configuration (you'll need to implement this)
+        Path storageDirectory = fileStorageService.getStorageDirectory().normalize();
+        
+        // Check if the resource is within the storage directory
+        return resourcePath.startsWith(storageDirectory);
+    }
+    
+    /**
+     * Gets client IP safely by checking standard headers and fallbacks
+     */
+    private String getClientIpSafely(HttpServletRequest request) {
+        if (request == null) {
+            request = ((org.springframework.web.context.request.ServletRequestAttributes) 
+                    org.springframework.web.context.request.RequestContextHolder
+                    .currentRequestAttributes()).getRequest();
+        }
+        
+        // Try to get IP from headers, but limit the length to prevent header injection
+        String ipAddress = getHeaderValue(request, "X-Forwarded-For");
+        if (ipAddress == null) {
+            ipAddress = getHeaderValue(request, "Proxy-Client-IP");
+        }
+        if (ipAddress == null) {
+            ipAddress = getHeaderValue(request, "WL-Proxy-Client-IP");
+        }
+        if (ipAddress == null) {
             ipAddress = request.getRemoteAddr();
         }
+        
+        // If X-Forwarded-For contains multiple IPs, take the first one (client IP)
+        if (ipAddress != null && ipAddress.contains(",")) {
+            ipAddress = ipAddress.split(",")[0].trim();
+        }
+        
         return ipAddress;
+    }
+    
+    /**
+     * Gets a header value safely with validation
+     */
+    private String getHeaderValue(HttpServletRequest request, String headerName) {
+        String value = request.getHeader(headerName);
+        if (value == null || value.isEmpty() || "unknown".equalsIgnoreCase(value)) {
+            return null;
+        }
+        
+        // Limit header length to prevent header injection
+        if (value.length() > 100) {
+            value = value.substring(0, 100);
+        }
+        
+        return value;
     }
 }

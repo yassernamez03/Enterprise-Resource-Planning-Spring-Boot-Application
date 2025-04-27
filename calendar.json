@@ -1,0 +1,458 @@
+{
+    "info": {
+      "name": "SecureOps API",
+      "description": "API collection for SecureOps Task and Event management",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Tasks",
+        "description": "Task management endpoints",
+        "item": [
+          {
+            "name": "Create Task (Admin)",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/tasks",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Security Audit\",\n  \"description\": \"Perform quarterly security audit of all systems\",\n  \"dueDate\": \"2025-05-15T00:00:00.000Z\",\n  \"priority\": \"HIGH\",\n  \"color\": \"#FF5733\",\n  \"global\": true,\n  \"assignedUserIds\": [1, 2, 3]\n}"
+              },
+              "description": "Creates a new task (Admin only)"
+            }
+          },
+          {
+            "name": "Get Current User Assigned Tasks",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/assigned",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "assigned"]
+              },
+              "description": "Get all tasks assigned to the current user"
+            }
+          },
+          {
+            "name": "Get Current User Tasks By Date Range",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/assigned/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "assigned", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all tasks assigned to the current user within a date range"
+            }
+          },
+          {
+            "name": "Get User Assigned Tasks (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/assigned/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "assigned", "1"]
+              },
+              "description": "Get all tasks assigned to a specific user (Admin only)"
+            }
+          },
+          {
+            "name": "Get User Tasks By Date Range (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/assigned/1/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "assigned", "1", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get tasks assigned to a specific user within a date range (Admin only)"
+            }
+          },
+          {
+            "name": "Get All Visible Tasks",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/visible",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "visible"]
+              },
+              "description": "Get all tasks visible to the current user"
+            }
+          },
+          {
+            "name": "Get All Visible Tasks By Date Range",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/visible/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "visible", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all tasks visible to the current user within a date range"
+            }
+          },
+          {
+            "name": "Get All Tasks (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/all",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "all"]
+              },
+              "description": "Get all tasks in the system (Admin only)"
+            }
+          },
+          {
+            "name": "Get All Tasks By Date Range (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/all/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "all", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all tasks in the system within a date range (Admin only)"
+            }
+          },
+          {
+            "name": "Get Task By ID",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "1"]
+              },
+              "description": "Get a specific task by ID"
+            }
+          },
+          {
+            "name": "Update Task (Admin)",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/tasks/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "1"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Updated Security Audit\",\n  \"description\": \"Perform quarterly security audit with additional checks\",\n  \"dueDate\": \"2025-05-20T00:00:00.000Z\",\n  \"completed\": false,\n  \"priority\": \"CRITICAL\",\n  \"color\": \"#FF0000\",\n  \"global\": true,\n  \"assignedUserIds\": [1, 2, 3, 4]\n}"
+              },
+              "description": "Update an existing task (Admin only)"
+            }
+          },
+          {
+            "name": "Toggle Task Completion",
+            "request": {
+              "method": "PATCH",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/1/toggle-completion",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "1", "toggle-completion"]
+              },
+              "description": "Toggle the completion status of a task"
+            }
+          },
+          {
+            "name": "Delete Task (Admin)",
+            "request": {
+              "method": "DELETE",
+              "url": {
+                "raw": "{{base_url}}/api/tasks/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "tasks", "1"]
+              },
+              "description": "Delete a task (Admin only)"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Events",
+        "description": "Event management endpoints",
+        "item": [
+          {
+            "name": "Create Event (Admin)",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/events",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Security Team Meeting\",\n  \"description\": \"Weekly security team meeting\",\n  \"startTime\": \"2025-05-01T14:00:00.000Z\",\n  \"endTime\": \"2025-05-01T15:00:00.000Z\",\n  \"allDay\": false,\n  \"location\": \"Conference Room A\",\n  \"recurrencePattern\": \"WEEKLY\",\n  \"color\": \"#4287f5\",\n  \"global\": true,\n  \"assignedUserIds\": [1, 2, 3]\n}"
+              },
+              "description": "Creates a new event (Admin only)"
+            }
+          },
+          {
+            "name": "Get Current User Assigned Events",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/assigned",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "assigned"]
+              },
+              "description": "Get all events assigned to the current user"
+            }
+          },
+          {
+            "name": "Get Current User Events By Date Range",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/assigned/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "assigned", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all events assigned to the current user within a date range"
+            }
+          },
+          {
+            "name": "Get User Assigned Events (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/assigned/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "assigned", "1"]
+              },
+              "description": "Get all events assigned to a specific user (Admin only)"
+            }
+          },
+          {
+            "name": "Get User Events By Date Range (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/assigned/1/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "assigned", "1", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get events assigned to a specific user within a date range (Admin only)"
+            }
+          },
+          {
+            "name": "Get All Visible Events",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/visible",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "visible"]
+              },
+              "description": "Get all events visible to the current user"
+            }
+          },
+          {
+            "name": "Get All Visible Events By Date Range",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/visible/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "visible", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all events visible to the current user within a date range"
+            }
+          },
+          {
+            "name": "Get All Events (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/all",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "all"]
+              },
+              "description": "Get all events in the system (Admin only)"
+            }
+          },
+          {
+            "name": "Get All Events By Date Range (Admin)",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/all/range?startDate=2025-04-01&endDate=2025-05-31",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "all", "range"],
+                "query": [
+                  {
+                    "key": "startDate",
+                    "value": "2025-04-01"
+                  },
+                  {
+                    "key": "endDate",
+                    "value": "2025-05-31"
+                  }
+                ]
+              },
+              "description": "Get all events in the system within a date range (Admin only)"
+            }
+          },
+          {
+            "name": "Get Event By ID",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/events/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "1"]
+              },
+              "description": "Get a specific event by ID"
+            }
+          },
+          {
+            "name": "Update Event (Admin)",
+            "request": {
+              "method": "PUT",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/events/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "1"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"title\": \"Updated Security Team Meeting\",\n  \"description\": \"Weekly security team meeting with additional agenda items\",\n  \"startTime\": \"2025-05-01T13:30:00.000Z\",\n  \"endTime\": \"2025-05-01T15:30:00.000Z\",\n  \"allDay\": false,\n  \"location\": \"Conference Room B\",\n  \"recurrencePattern\": \"WEEKLY\",\n  \"color\": \"#2b6eff\",\n  \"global\": true,\n  \"assignedUserIds\": [1, 2, 3, 4]\n}"
+              },
+              "description": "Update an existing event (Admin only)"
+            }
+          },
+          {
+            "name": "Delete Event (Admin)",
+            "request": {
+              "method": "DELETE",
+              "url": {
+                "raw": "{{base_url}}/api/events/1",
+                "host": ["{{base_url}}"],
+                "path": ["api", "events", "1"]
+              },
+              "description": "Delete an event (Admin only)"
+            }
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8080",
+        "type": "string"
+      }
+    ],
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "key": "token",
+          "value": "{{jwt_token}}",
+          "type": "string"
+        }
+      ]
+    }
+  }
