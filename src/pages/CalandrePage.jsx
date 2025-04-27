@@ -10,7 +10,11 @@ const WeeklyCalendar = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showAllUpcoming, setShowAllUpcoming] = useState(false);
-    
+    // search for events
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [showSearchResults, setShowSearchResults] = useState(false);
+
     // Get current month and year from selected date instead of new Date()
     const currentMonth = selectedDate.toLocaleString('default', { month: 'long' });
     const currentYear = selectedDate.getFullYear();
@@ -44,8 +48,9 @@ const WeeklyCalendar = () => {
 
     // Handle event click to show details
     const handleEventClick = (event) => {
-    setSelectedEvent(event);
-    setShowModal(true);
+        console.log("Selected event for editing:", event);
+        setSelectedEvent(event);
+        setShowModal(true);
     };
 
     // Generate array of dates for the week
@@ -113,7 +118,6 @@ const WeeklyCalendar = () => {
         id: 1,
         title: "Start Design",
         type: "task",
-        day: 0,
         date: "2025-04-08",
         startTime: "07:00",
         endTime: "08:00",
@@ -127,7 +131,6 @@ const WeeklyCalendar = () => {
         id: 2,
         title: "Create Wireframe",
         type: "task",
-        day: 0, // Monday
         date: "2025-04-08",
         startTime: "08:00",
         endTime: "09:00",
@@ -141,7 +144,6 @@ const WeeklyCalendar = () => {
         id: 3,
         title: "Tech Conference 2024",
         type: "event",
-        day: 0, // Monday
         date: "2025-04-07",
         startTime: "10:00",
         endTime: "11:30",
@@ -155,7 +157,6 @@ const WeeklyCalendar = () => {
         id: 4,
         title: "Learn a New Language",
         type: "goal",
-        day: 2, // Wednesday
         date: "2025-04-09",
         startTime: "09:00",
         endTime: "10:00",
@@ -167,7 +168,6 @@ const WeeklyCalendar = () => {
         id: 5,
         title: "Webinar: Career Development",
         type: "event",
-        day: 4, // Friday
         date: "2025-04-07",
         startTime: "07:30",
         endTime: "09:30",
@@ -179,7 +179,6 @@ const WeeklyCalendar = () => {
         id: 6,
         title: "Complete the task",
         type: "goal",
-        day: 5, // Saturday
         date: "2025-04-10",
         startTime: "09:00",
         endTime: "10:00",
@@ -193,7 +192,6 @@ const WeeklyCalendar = () => {
         id: 7,
         title: "Working on Prototyping",
         type: "task",
-        day: 6, // Sunday
         date: "2025-04-07",
         startTime: "11:00",
         endTime: "12:00",
@@ -226,26 +224,40 @@ const WeeklyCalendar = () => {
 
     // Helper to position an event in the grid
     const getEventPosition = (event) => {
-    const startHour = parseInt(event.startTime.split(':')[0]);
-    const startMinute = parseInt(event.startTime.split(':')[1]);
-    const endHour = parseInt(event.endTime.split(':')[0]);
-    const endMinute = parseInt(event.endTime.split(':')[1]);
-    
-    // Calculate row positions
-    const startRow = (startHour - 7) * 2 + (startMinute === 30 ? 1 : 0) + 1;
-    const endRow = (endHour - 7) * 2 + (endMinute === 30 ? 1 : 0) + 1;
-    const duration = endRow - startRow;
-    
-    return {
+        const startHour = parseInt(event.startTime.split(':')[0]);
+        const startMinute = parseInt(event.startTime.split(':')[1]);
+        const endHour = parseInt(event.endTime.split(':')[0]);
+        const endMinute = parseInt(event.endTime.split(':')[1]);
+        
+        // Calculate row positions
+        const startRow = (startHour - 7) * 2 + (startMinute === 30 ? 1 : 0) + 1;
+        const endRow = (endHour - 7) * 2 + (endMinute === 30 ? 1 : 0) + 1;
+        const duration = endRow - startRow;
+        
+        // For the week view, we need to calculate the day column based on the date
+        let dayColumn = 0;
+        if (event.dayIndex !== undefined) {
+        // If dayIndex is provided (for the week view)
+        dayColumn = event.dayIndex + 2;
+        } else {
+        // Otherwise calculate it from the date
+        const eventDate = new Date(event.date);
+        const day = eventDate.getDay();
+        // Convert to our format (Monday = 0, ... Sunday = 6)
+        const adjustedDay = day === 0 ? 6 : day - 1;
+        dayColumn = adjustedDay + 2;
+        }
+        
+        return {
         gridRowStart: startRow,
         gridRowEnd: `span ${duration}`,
-        gridColumnStart: event.day + 2, // +2 because first column is time
-    };
+        gridColumnStart: dayColumn
+        };
     };
 
     // Generate mini calendar with selectable dates
     const generateMiniCalendar = () => {
-    const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    const days = ['M', 'T', 'W', 'Tl', 'F', 'S', 'So'];
     const rows = [];
     
     // Get first day of currently selected month
@@ -286,19 +298,26 @@ const WeeklyCalendar = () => {
                         date.getMonth() === selectedDate.getMonth() && 
                         date.getFullYear() === selectedDate.getFullYear();
         
+        const hasEvents = events.some(event => event.date === date.toISOString().split('T')[0]);
+        // In the generateMiniCalendar function
         cells.push(
-        <div 
+            <div 
             key={`day-${day}`} 
-            className="h-6 w-6 flex items-center justify-center cursor-pointer"
-            onClick={() => selectDate(date)}
-        >
-            <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full 
+            className="h-6 w-6 flex flex-col items-center justify-center cursor-pointer"
+            onClick={() => {
+                selectDate(date);
+                setCurrentView('week');
+                setCurrentWeek(generateWeekDates(date));
+            }}
+            >
+            <span className={`text-xs w-6 h-6 flex items-center justify-center rounded-full relative
                         ${isCurrentDay ? 'bg-blue-500 text-white' : ''}
                         ${isSelected && !isCurrentDay ? 'bg-blue-200 text-blue-800' : ''}
                         ${!isCurrentDay && !isSelected ? 'hover:bg-gray-100' : ''}`}>
-            {day}
+                {day}
+                {hasEvents && <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-1 h-1 bg-blue-500 rounded-full"></span>}
             </span>
-        </div>
+            </div>
         );
     }
     
@@ -317,43 +336,63 @@ const WeeklyCalendar = () => {
 
     // Modal for creating new events
     const EventModal = ({ isEdit = false }) => {
-    const [newEvent, setNewEvent] = useState(
-        isEdit && selectedEvent ? {
-        ...selectedEvent
-        } : {
-        title: "",
-        type: "task",
-        startTime: "09:00",
-        endTime: "10:00",
-        day: selectedDate.getDay() === 0 ? 6 : selectedDate.getDay() - 1,
-        date: `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`,
-        participants: []
-        }
-    );
+        const [newEvent, setNewEvent] = useState(() => {
+            if (isEdit && selectedEvent) {
+                // For editing, use the existing event's data
+                return {...selectedEvent};
+            } else {
+                // For new events, use today's date as default
+                const today = new Date();
+                const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                
+                return {
+                    title: "",
+                    type: "task",
+                    startTime: "09:00",
+                    endTime: "10:00",
+                    date: formattedDate,
+                    participants: []
+                };
+            }
+        });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    
-        const eventToSave = {
-        ...newEvent,
-        id: isEdit && selectedEvent ? selectedEvent.id : Date.now(), // unique ID
-        // Make sure date is properly set if not already
-        date: newEvent.date || `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            
+            console.log("Before update - Selected event:", selectedEvent);
+            console.log("Before update - New event data:", newEvent);
+            console.log("Before update - All events:", events);
+            
+            const eventToSave = {
+              ...newEvent,
+              id: isEdit && selectedEvent ? selectedEvent.id : Date.now(),
+              date: newEvent.date || `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
+            };
+        
+            console.log("Event to save:", eventToSave);
+        
+            if (isEdit && selectedEvent) {
+              // Update existing event
+              setEvents(prevEvents => {
+                const updatedEvents = prevEvents.map(ev => 
+                  ev.id === selectedEvent.id ? eventToSave : ev
+                );
+                console.log("After update - Updated events:", updatedEvents);
+                return updatedEvents;
+              });
+            } else {
+              // Add new event
+              setEvents(prevEvents => [...prevEvents, eventToSave]);
+            }
+        
+            setShowModal(false);
+            setSelectedEvent(null);
+            
+            if (currentView !== 'week') {
+              setCurrentView('week');
+            }
+            setCurrentWeek(generateWeekDates(new Date(eventToSave.date)));
         };
-    
-        if (isEdit && selectedEvent) {
-        // Update existing event
-        setEvents(prevEvents =>
-            prevEvents.map(ev => ev.id === selectedEvent.id ? eventToSave : ev)
-        );
-        } else {
-        // Add new event
-        setEvents(prevEvents => [...prevEvents, eventToSave]);
-        }
-    
-        setShowModal(false);
-        setSelectedEvent(null);
-    };
     
 
     const handleDelete = () => {
@@ -425,17 +464,36 @@ const WeeklyCalendar = () => {
 
             <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <div className="flex items-center">
                 <input
-                type="date"
-                value={newEvent.date || `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`}
-                onChange={(e) => {
-                    // Update both the new event date and the selected date
-                    setNewEvent({...newEvent, date: e.target.value});
-                    setSelectedDate(new Date(e.target.value));
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                required
-                />
+  type="date"
+  value={newEvent.date}
+  onChange={(e) => {
+    console.log("Date changed to:", e.target.value);
+    console.log("Previous event data:", newEvent);
+    setNewEvent({...newEvent, date: e.target.value});
+    console.log("Updated event data:", {...newEvent, date: e.target.value});
+  }}
+  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+  required
+/>
+                    <button
+                    type="button"
+                    onClick={() => {
+                        // Show a date picker or the mini calendar
+                        // For simplicity, let's just use today's date
+                        const today = new Date();
+                        const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                        setNewEvent({...newEvent, date: formattedDate});
+                    }}
+                    className="ml-2 p-2 bg-gray-100 rounded-md hover:bg-gray-200"
+                    >
+                    <Calendar className="h-4 w-4 text-gray-600" />
+                    </button>
+                </div>
+                </div>
             </div>
 
             <div className="flex justify-between">
@@ -486,39 +544,77 @@ const WeeklyCalendar = () => {
             <h1 className="text-lg font-bold">Calendar App</h1>
         </div>
         <div className="flex items-center w-full md:w-auto">
-            <nav className="flex space-x-4 mr-4 overflow-x-auto whitespace-nowrap">
-            <button 
-                className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'day' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
-                onClick={() => changeView('day')}
-            >
-                Day
-            </button>
-            <button 
-                className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'week' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
-                onClick={() => changeView('week')}
-            >
-                Week
-            </button>
-            <button 
-                className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'month' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
-                onClick={() => changeView('month')}
-            >
-                Month
-            </button>
-            <button 
-                className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'year' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
-                onClick={() => changeView('year')}
-            >
-                Year
-            </button>
-            </nav>
+        <nav className="flex space-x-4 mr-4 overflow-x-auto whitespace-nowrap">
+        <button 
+            className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'week' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+            onClick={() => changeView('week')}
+        >
+            Week
+        </button>
+        <button 
+            className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'month' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+            onClick={() => changeView('month')}
+        >
+            Month
+        </button>
+        <button 
+            className={`px-3 py-1.5 text-sm rounded-md ${currentView === 'year' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
+            onClick={() => changeView('year')}
+        >
+            Year
+        </button>
+        </nav>
             <div className="relative">
             <input
                 type="text"
                 placeholder="Search"
+                value={searchTerm}
+                onChange={(e) => {
+                setSearchTerm(e.target.value);
+                if (e.target.value.trim()) {
+                    const results = events.filter(event => 
+                    event.title.toLowerCase().includes(e.target.value.toLowerCase())
+                    );
+                    setSearchResults(results);
+                    setShowSearchResults(true);
+                } else {
+                    setShowSearchResults(false);
+                }
+                }}
                 className="pl-8 pr-3 py-1.5 border border-gray-300 rounded-md text-sm"
             />
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            
+            {/* Search Results Dropdown */}
+            {showSearchResults && searchResults.length > 0 && (
+                <div className="absolute z-10 mt-1 w-64 bg-white rounded-md shadow-lg max-h-60 overflow-auto">
+                {searchResults.map(event => (
+                    <div 
+                    key={event.id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b last:border-b-0"
+                    onClick={() => {
+                        // Navigate to the event's week
+                        setSelectedDate(new Date(event.date));
+                        setCurrentWeek(generateWeekDates(new Date(event.date)));
+                        setCurrentView('week');
+                        setShowSearchResults(false);
+                        setSearchTerm('');
+                    }}
+                    >
+                    <div className="font-medium">{event.title}</div>
+                    <div className="text-xs text-gray-500">
+                        {new Date(event.date).toLocaleDateString()} • {event.startTime} - {event.endTime}
+                    </div>
+                    </div>
+                ))}
+                </div>
+            )}
+            
+            {showSearchResults && searchResults.length === 0 && searchTerm.trim() && (
+                <div className="absolute z-10 mt-1 w-64 bg-white rounded-md shadow-lg p-3 text-sm text-gray-500">
+                No events found
+                </div>
+            )}
             </div>
         </div>
         </div>
@@ -637,8 +733,8 @@ const WeeklyCalendar = () => {
             })
             .map(event => {
                 const position = getEventPosition({
-                ...event,
-                day: dayIndex // needed for grid column
+                    ...event,
+                    dayIndex: dayIndex
                 });
 
                 return (
@@ -688,57 +784,103 @@ const WeeklyCalendar = () => {
 
 
     const renderMonthView = () => (
-    <div className="bg-white p-4">
+        <div className="bg-white p-4">
         <div className="grid grid-cols-7 gap-2">
-        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
             <div key={day} className="text-center py-2 font-medium text-gray-500">
-            {day}
+                {day}
             </div>
-        ))}
-        
-        {Array.from({ length: 35 }).map((_, index) => {
-            // Logic to determine if the day is in the current month
-            const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), index - 
-                                new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1).getDay() + 2);
-            const isCurrentMonth = date.getMonth() === selectedDate.getMonth();
-            const isCurrentDay = isToday(date);
+            ))}
             
-            // Count events for this day
-            const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1; // Convert to our day format
-            const dayEvents = events.filter(event => event.day === dayOfWeek);
+            {(() => {
+            const firstDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+            const lastDay = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+            const daysInMonth = lastDay.getDate();
             
-            return (
-            <div 
-                key={index}
-                className={`border rounded-md p-2 min-h-16 ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}`}
-                onClick={() => selectDate(date)}
-            >
-                <div className={`text-right mb-1 ${isCurrentDay ? 'font-bold text-blue-500' : ''}`}>
-                {date.getDate()}
-                </div>
-                {isCurrentMonth && dayEvents.length > 0 && (
-                <div className="text-xs">
-                    {dayEvents.slice(0, 2).map(event => (
-                    <div 
-                        key={event.id}
-                        className={`mb-1 truncate px-1 py-0.5 rounded ${
-                        event.type === 'task' ? 'bg-amber-100 text-amber-800' : 
-                        event.type === 'event' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
-                        }`}
-                    >
-                        {event.title}
+            // Calculate offset for first day of month (Monday = 0)
+            let firstDayOffset = firstDay.getDay() - 1;
+            if (firstDayOffset < 0) firstDayOffset = 6; // Sunday becomes last
+            
+            const cells = [];
+            
+            // Add empty cells for offset
+            for (let i = 0; i < firstDayOffset; i++) {
+                cells.push(<div key={`empty-start-${i}`} className="border rounded-md p-2 min-h-16 bg-white"></div>);
+            }
+            
+            // Add date cells only for current month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+                const isCurrentDay = isToday(date);
+                
+                // Count events for this day
+                const isoDate = date.toISOString().split('T')[0];
+                const dayEvents = events.filter(event => event.date === isoDate);
+                
+                cells.push(
+                <div 
+                    key={`day-${day}`}
+                    className="border rounded-md p-2 min-h-16 bg-white"
+                    onClick={() => {
+                    selectDate(date);
+                    setCurrentView('week');
+                    setCurrentWeek(generateWeekDates(date));
+                    }}
+                >
+                    <div className={`text-right mb-1 relative ${isCurrentDay ? 'font-bold text-blue-500' : ''}`}>
+                    {day}
+                    {dayEvents.length > 0 && (
+                        <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-1 h-1 bg-blue-500 rounded-full"></span>
+                    )}
                     </div>
-                    ))}
-                    {dayEvents.length > 2 && (
-                    <div className="text-center text-gray-500">+{dayEvents.length - 2} more</div>
+                    {dayEvents.length > 0 && (
+                    <div className="text-xs">
+                        {dayEvents.slice(0, 2).map(event => (
+                        <div 
+                            key={event.id}
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            handleEventClick(event);
+                            }}
+                            className={`mb-1 truncate px-1 py-0.5 rounded cursor-pointer ${
+                            event.type === 'task' ? 'bg-amber-100 text-amber-800' : 
+                            event.type === 'event' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+                            }`}
+                        >
+                            {event.title}
+                        </div>
+                        ))}
+                        {dayEvents.length > 2 && (
+                        <div 
+                            className="text-center text-gray-500 cursor-pointer"
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDate(date);
+                            setCurrentView('week');
+                            setCurrentWeek(generateWeekDates(date));
+                            }}
+                        >
+                            +{dayEvents.length - 2} more
+                        </div>
+                        )}
+                    </div>
                     )}
                 </div>
-                )}
-            </div>
-            );
-        })}
+                );
+            }
+            
+            // Add empty cells at the end to complete the grid if needed
+            const totalCells = firstDayOffset + daysInMonth;
+            const remainingCells = Math.ceil(totalCells / 7) * 7 - totalCells;
+            
+            for (let i = 0; i < remainingCells; i++) {
+                cells.push(<div key={`empty-end-${i}`} className="border rounded-md p-2 min-h-16 bg-white"></div>);
+            }
+            
+            return cells;
+            })()}
         </div>
-    </div>
+        </div>
     );
 
     const renderYearView = () => (
@@ -769,20 +911,29 @@ const WeeklyCalendar = () => {
                 
                 {/* Mini calendar for the month */}
                 {Array.from({ length: 35 }).map((_, day) => {
-                const firstDay = new Date(selectedDate.getFullYear(), monthIndex, 1);
-                let dayOffset = firstDay.getDay() - 1; // Start from Monday
-                if (dayOffset < 0) dayOffset = 6; // Adjust Sunday
-                
-                const date = new Date(selectedDate.getFullYear(), monthIndex, day - dayOffset + 1);
-                const isMonthDay = date.getMonth() === monthIndex;
-                
-                return (
-                    <div key={day} className="text-center text-xs">
-                    {isMonthDay && day >= dayOffset && date.getDate() <= new Date(selectedDate.getFullYear(), monthIndex + 1, 0).getDate() ? 
-                        date.getDate() : ''}
-                    </div>
-                );
-                })}
+    const firstDay = new Date(selectedDate.getFullYear(), monthIndex, 1);
+    let dayOffset = firstDay.getDay() - 1; // Start from Monday
+    if (dayOffset < 0) dayOffset = 6; // Adjust Sunday
+    
+    const date = new Date(selectedDate.getFullYear(), monthIndex, day - dayOffset + 1);
+    const isMonthDay = date.getMonth() === monthIndex;
+    
+    // Check if this date has any events
+    const hasEvents = isMonthDay && events.some(event => 
+        event.date === date.toISOString().split('T')[0]
+    );
+    
+    return (
+        <div key={day} className="text-center text-xs relative">
+        {isMonthDay && day >= dayOffset && date.getDate() <= new Date(selectedDate.getFullYear(), monthIndex + 1, 0).getDate() ? (
+            <>
+                <span>{date.getDate()}</span>
+                {hasEvents && <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-blue-500 rounded-full"></div>}
+            </>
+        ) : ''}
+        </div>
+    );
+})}
             </div>
             </div>
         );

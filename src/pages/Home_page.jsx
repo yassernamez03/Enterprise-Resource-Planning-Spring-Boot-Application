@@ -179,23 +179,25 @@ export default function Home_Page() {
         </div>
       </main>
 
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
+      {/* CSS Animations - Fixed to use style element without jsx attribute */}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
           }
-          to {
-            opacity: 1;
-            transform: scale(1);
+          
+          .animate-fadeIn {
+            animation: fadeIn 0.2s ease-in-out;
           }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-in-out;
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 }
