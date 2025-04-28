@@ -1,8 +1,8 @@
-package com.secureops.employeemanagment.controller;
+package com.secureops.hr.controller;
 
 
-import com.secureops.employeemanagment.dto.TaskDTO;
-import com.secureops.employeemanagment.service.TaskService;
+import com.secureops.hr.dto.TaskDTO;
+import com.secureops.hr.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/hr/tasks")
 public class TaskController {
 
     private final TaskService taskService;

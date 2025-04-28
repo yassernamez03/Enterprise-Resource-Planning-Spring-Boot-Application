@@ -1,4 +1,4 @@
-package com.secureops.employeemanagment.model;
+package com.secureops.hr.model;
 
 public enum EmployeeStatus {
     ACTIVE,

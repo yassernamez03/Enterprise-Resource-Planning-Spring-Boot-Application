@@ -1,12 +1,10 @@
-package com.secureops.employeemanagment.dto;
+package com.secureops.hr.dto;
 
-import com.secureops.employeemanagment.model.EmployeeStatus;
-import jakarta.persistence.Transient;
+import com.secureops.hr.model.EmployeeStatus;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package com.secureops.employeemanagment.controller;
+package com.secureops.hr.controller;
 
 
-import com.secureops.employeemanagment.dto.EmployeeDTO;
-import com.secureops.employeemanagment.model.EmployeeStatus;
-import com.secureops.employeemanagment.service.EmployeeService;
+import com.secureops.hr.dto.EmployeeDTO;
+import com.secureops.hr.model.EmployeeStatus;
+import com.secureops.hr.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/employees")
+@RequestMapping("/api/hr/employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;

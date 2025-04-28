@@ -1,9 +1,10 @@
-package com.secureops.employeemanagment.model;
+package com.secureops.hr.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.context.annotation.Primary;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Primary
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,6 +81,10 @@ public class Employee {
     public void removeTask(Task task) {
         tasks.remove(task);
         task.setEmployee(null);
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
 }

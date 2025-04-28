@@ -1,6 +1,6 @@
-package com.secureops.employeemanagment.repository;
+package com.secureops.hr.repository;
 
-import com.secureops.employeemanagment.model.Address;
+import com.secureops.hr.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

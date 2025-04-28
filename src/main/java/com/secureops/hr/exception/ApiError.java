@@ -1,4 +1,4 @@
-package com.secureops.employeemanagment.exception;
+package com.secureops.hr.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;

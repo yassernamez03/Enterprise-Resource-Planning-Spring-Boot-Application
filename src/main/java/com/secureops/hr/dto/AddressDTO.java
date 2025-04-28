@@ -1,4 +1,4 @@
-package com.secureops.employeemanagment.dto;
+package com.secureops.hr.dto;
 
 import lombok.*;
 

@@ -1,8 +1,8 @@
-package com.secureops.employeemanagment.service;
+package com.secureops.hr.service;
 
 
-import com.secureops.employeemanagment.dto.AddressDTO;
-import com.secureops.employeemanagment.model.Address;
+import com.secureops.hr.dto.AddressDTO;
+import com.secureops.hr.model.Address;
 import org.springframework.stereotype.Component;
 
 @Component

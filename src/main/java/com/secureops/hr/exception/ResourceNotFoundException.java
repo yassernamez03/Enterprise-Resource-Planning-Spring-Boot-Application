@@ -1,4 +1,4 @@
-package com.secureops.employeemanagment.exception;
+package com.secureops.hr.exception;
 
 
 public class ResourceNotFoundException extends RuntimeException {

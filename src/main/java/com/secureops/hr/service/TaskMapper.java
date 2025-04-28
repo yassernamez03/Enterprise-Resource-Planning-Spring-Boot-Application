@@ -1,8 +1,8 @@
-package com.secureops.employeemanagment.service;
+package com.secureops.hr.service;
 
 
-import com.secureops.employeemanagment.dto.TaskDTO;
-import com.secureops.employeemanagment.model.Task;
+import com.secureops.hr.dto.TaskDTO;
+import com.secureops.hr.model.Task;
 import org.springframework.stereotype.Component;
 
 @Component

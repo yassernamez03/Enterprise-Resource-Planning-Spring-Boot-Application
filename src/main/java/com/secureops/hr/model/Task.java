@@ -1,4 +1,4 @@
-package com.secureops.employeemanagment.model;
+package com.secureops.hr.model;
 
 import jakarta.persistence.*;
 import lombok.*;

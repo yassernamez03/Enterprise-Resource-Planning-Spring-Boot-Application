@@ -1,9 +1,9 @@
-package com.secureops.employeemanagment.service;
+package com.secureops.hr.service;
 
-import com.secureops.employeemanagment.dto.EmployeeDTO;
-import com.secureops.employeemanagment.model.Employee;
-import com.secureops.employeemanagment.model.EmployeeStatus;
-import com.secureops.employeemanagment.repository.EmployeeRepository;
+import com.secureops.hr.dto.EmployeeDTO;
+import com.secureops.hr.model.Employee;
+import com.secureops.hr.model.EmployeeStatus;
+import com.secureops.hr.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
