@@ -28,17 +28,17 @@ public class ClientController {
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ClientResponse> createClient(@Valid @RequestBody ClientRequest request) {
         return new ResponseEntity<>(clientService.createClient(request), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<ClientResponse> updateClient(@PathVariable Long id, @Valid @RequestBody ClientRequest request) {
         return ResponseEntity.ok(clientService.updateClient(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();

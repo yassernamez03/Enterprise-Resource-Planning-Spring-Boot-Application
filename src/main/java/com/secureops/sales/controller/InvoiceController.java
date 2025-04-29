@@ -36,17 +36,17 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getInvoiceByNumber(invoiceNumber));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<InvoiceResponse> createInvoice(@Valid @RequestBody InvoiceRequest request) {
         return new ResponseEntity<>(invoiceService.createInvoice(request), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<InvoiceResponse> updateInvoice(@PathVariable Long id, @Valid @RequestBody InvoiceRequest request) {
         return ResponseEntity.ok(invoiceService.updateInvoice(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
         invoiceService.deleteInvoice(id);
         return ResponseEntity.noContent().build();

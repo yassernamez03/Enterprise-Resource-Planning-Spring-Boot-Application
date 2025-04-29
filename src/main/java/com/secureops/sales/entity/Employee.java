@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "SalesEmployee")
 @Table(name = "employees")
 @Data
 @NoArgsConstructor
@@ -17,17 +17,12 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
     private String firstName;
-
-    @Column(name = "last_name", nullable = false)
     private String lastName;
-
     private String email;
     private String phone;
     private String position;
 
-    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     private Boolean active = true;

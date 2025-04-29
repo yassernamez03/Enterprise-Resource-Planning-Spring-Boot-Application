@@ -5,7 +5,6 @@ import com.secureops.sales.entity.*;
 import com.secureops.sales.exception.ResourceNotFoundException;
 import com.secureops.sales.repository.*;
 import com.secureops.sales.service.ReportService;
-import com.secureops.sales.util.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,6 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +22,7 @@ public class ReportServiceImpl implements ReportService {
     private final QuoteRepository quoteRepository;
     private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
-    private final EmployeeRepository employeeRepository;
+    private final SalesEmployeeRepository salesEmployeeRepository;
     private final ClientRepository clientRepository;
 
     private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
@@ -105,7 +103,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public EmployeePerformanceReport getEmployeePerformance(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
         // Verify employee exists
-        Employee employee = employeeRepository.findById(employeeId)
+        Employee employee = salesEmployeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", employeeId));
 
         // Get employee quotes

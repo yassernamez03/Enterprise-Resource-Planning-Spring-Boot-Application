@@ -10,7 +10,7 @@ import com.secureops.sales.entity.*;
 import com.secureops.sales.exception.BusinessException;
 import com.secureops.sales.exception.ResourceNotFoundException;
 import com.secureops.sales.repository.ClientRepository;
-import com.secureops.sales.repository.EmployeeRepository;
+import com.secureops.sales.repository.SalesEmployeeRepository;
 import com.secureops.sales.repository.OrderRepository;
 import com.secureops.sales.repository.ProductRepository;
 import com.secureops.sales.repository.QuoteRepository;
@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final QuoteRepository quoteRepository;
     private final ClientRepository clientRepository;
-    private final EmployeeRepository employeeRepository;
+    private final SalesEmployeeRepository salesEmployeeRepository;
     private final ProductRepository productRepository;
     private final NumberGenerator numberGenerator;
 
@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
         // Get employee
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
+        Employee employee = salesEmployeeRepository.findById(request.getEmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
 
         // Get quote if provided
@@ -170,7 +170,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
         // Get employee
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
+        Employee employee = salesEmployeeRepository.findById(request.getEmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
 
         // Update order
@@ -181,7 +181,7 @@ public class OrderServiceImpl implements OrderService {
 
         // Update order items
         order.getItems().clear();
-        List<OrderItem> items = new ArrayList<>();
+
         for (OrderItemRequest itemRequest : request.getItems()) {
             Product product = productRepository.findById(itemRequest.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "id", itemRequest.getProductId()));
@@ -193,11 +193,10 @@ public class OrderServiceImpl implements OrderService {
             item.setUnitPrice(itemRequest.getUnitPrice() != null ? itemRequest.getUnitPrice() : product.getUnitPrice());
             item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
             item.setDescription(itemRequest.getDescription());
-            items.add(item);
+            order.getItems().add(item);
         }
 
-        order.setItems(items);
-        order.setTotalAmount(calculateTotal(items));
+        order.setTotalAmount(calculateTotal(order.getItems()));
 
         Order updatedOrder = orderRepository.save(order);
         return convertToResponse(updatedOrder);

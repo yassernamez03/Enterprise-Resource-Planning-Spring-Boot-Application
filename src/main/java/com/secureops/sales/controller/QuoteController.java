@@ -37,17 +37,17 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.getQuoteByNumber(quoteNumber));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<QuoteResponse> createQuote(@Valid @RequestBody QuoteRequest request) {
         return new ResponseEntity<>(quoteService.createQuote(request), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<QuoteResponse> updateQuote(@PathVariable Long id, @Valid @RequestBody QuoteRequest request) {
         return ResponseEntity.ok(quoteService.updateQuote(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteQuote(@PathVariable Long id) {
         quoteService.deleteQuote(id);
         return ResponseEntity.noContent().build();
@@ -75,7 +75,7 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.getQuotesByDateRange(startDate, endDate));
     }
 
-    @PostMapping("/{id}/convert-to-order")
+    @PostMapping("/{id}/convert")
     public ResponseEntity<OrderResponse> convertQuoteToOrder(@PathVariable Long id) {
         return ResponseEntity.ok(quoteService.convertQuoteToOrder(id));
     }

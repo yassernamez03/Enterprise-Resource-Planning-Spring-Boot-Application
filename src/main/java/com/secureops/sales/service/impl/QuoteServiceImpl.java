@@ -9,7 +9,7 @@ import com.secureops.sales.entity.*;
 import com.secureops.sales.exception.BusinessException;
 import com.secureops.sales.exception.ResourceNotFoundException;
 import com.secureops.sales.repository.ClientRepository;
-import com.secureops.sales.repository.EmployeeRepository;
+import com.secureops.sales.repository.SalesEmployeeRepository;
 import com.secureops.sales.repository.ProductRepository;
 import com.secureops.sales.repository.QuoteRepository;
 import com.secureops.sales.service.OrderService;
@@ -33,7 +33,7 @@ public class QuoteServiceImpl implements QuoteService {
 
     private final QuoteRepository quoteRepository;
     private final ClientRepository clientRepository;
-    private final EmployeeRepository employeeRepository;
+    private final SalesEmployeeRepository employeeRepository;
     private final ProductRepository productRepository;
     private final NumberGenerator numberGenerator;
 
@@ -110,28 +110,25 @@ public class QuoteServiceImpl implements QuoteService {
         Quote quote = quoteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Quote", "id", id));
 
-        // Check if quote can be updated
         if (quote.getStatus() == QuoteStatus.CONVERTED_TO_ORDER) {
             throw new BusinessException("Cannot update quote that has been converted to an order");
         }
 
-        // Get client
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
-        // Get employee
         Employee employee = employeeRepository.findById(request.getEmployeeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
 
-        // Update quote
         quote.setClient(client);
         quote.setEmployee(employee);
         quote.setNotes(request.getNotes());
         quote.setLastModifiedDate(DateUtils.getCurrentDateTime());
 
-        // Update quote items
-        quote.getItems().clear();
-        List<QuoteItem> items = new ArrayList<>();
+        // Update quote items properly
+        List<QuoteItem> items = quote.getItems();
+        items.clear();
+
         for (QuoteItemRequest itemRequest : request.getItems()) {
             Product product = productRepository.findById(itemRequest.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "id", itemRequest.getProductId()));
@@ -146,7 +143,6 @@ public class QuoteServiceImpl implements QuoteService {
             items.add(item);
         }
 
-        quote.setItems(items);
         quote.setTotalAmount(calculateTotal(items));
 
         Quote updatedQuote = quoteRepository.save(quote);

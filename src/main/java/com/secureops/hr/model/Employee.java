@@ -12,7 +12,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "HREmployee")
 @Table(name = "employees")
 @Data
 @NoArgsConstructor
