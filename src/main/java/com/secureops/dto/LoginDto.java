@@ -17,4 +17,11 @@ public class LoginDto {
     
     @NotEmpty(message = "Password is required")
     private String password;
+
+    private boolean rememberMe;
+    
+    @NotEmpty(message = "reCAPTCHA verification is required")
+    private String recaptchaResponse;
+    
+
 }

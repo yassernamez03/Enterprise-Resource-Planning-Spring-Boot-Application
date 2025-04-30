@@ -14,4 +14,7 @@ public class PasswordResetRequestDto {
     @NotEmpty(message = "Email is required")
     @Email(message = "Please provide a valid email address")
     private String email;
+
+    @NotEmpty(message = "reCAPTCHA verification is required")
+    private String recaptchaResponse;
 }
