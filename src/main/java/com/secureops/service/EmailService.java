@@ -1,8 +1,15 @@
 package com.secureops.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
@@ -50,6 +57,25 @@ public class EmailService {
                 + "Password: " + password + "\n\n"
                 + "Please change your password after logging in for security purposes.\n\n"
                 + "Regards,\nSecureOps Team");
+        
+        mailSender.send(message);
+    }
+
+    
+
+    public void sendPasswordChangedNotificationEmail(String to, String fullName) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Your Password Has Been Changed");
+        
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        
+        message.setText("Hello " + fullName + ",\n\n"
+                + "We're sending this email to notify you that your password has been reset by an administrator on our system at " + timestamp + ".\n\n"
+                + "If you did not request this change, please contact our support team immediately, as someone else may have accessed your account.\n\n"
+                + "For security purposes, you may want to change your password again to something that only you know by logging into your account and updating it from your profile settings.\n\n"
+                + "Thank you for using our service.\n\n"
+                + "Best regards,\nThe Security Ops Team");
         
         mailSender.send(message);
     }
