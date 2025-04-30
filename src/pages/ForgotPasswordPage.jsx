@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 // This component uses URL parameters to track the reset password flow state
 export default function ForgotPasswordPage() {
@@ -17,6 +18,8 @@ export default function ForgotPasswordPage() {
   const [verificationCode, setVerificationCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const recaptchaRef = useRef(null);
   
   // Get auth functions
   const { forgotPassword, verifyResetCode } = useAuth();
@@ -37,16 +40,26 @@ export default function ForgotPasswordPage() {
     }
   }, [email]);
   
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
+  };
+  
   // Request verification code
   const handleRequestCode = useCallback(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    
+    // Validate reCAPTCHA if on request step
+    if ((!stepFromUrl || stepFromUrl === 'request') && !recaptchaValue) {
+      setError('Veuillez confirmer que vous n\'êtes pas un robot');
+      return;
+    }
     
     console.log('Starting handleRequestCode with email:', email);
     setIsSubmitting(true);
     setError('');
 
     try {
-      await forgotPassword(email);
+      await forgotPassword(email, recaptchaValue);
       console.log('forgotPassword API call succeeded, navigating to verify step');
       
       // Instead of changing state, navigate to the same URL with a query parameter
@@ -56,8 +69,11 @@ export default function ForgotPasswordPage() {
       console.error('Forgot password error:', err);
       setError('Échec de la demande de réinitialisation. Veuillez réessayer.');
       setIsSubmitting(false);
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setRecaptchaValue(null);
     }
-  }, [email, forgotPassword, navigate]);
+  }, [email, forgotPassword, navigate, recaptchaValue, stepFromUrl]);
 
   // Verify code and reset password
   const handleVerifyCode = useCallback(async (e) => {
@@ -79,7 +95,7 @@ export default function ForgotPasswordPage() {
       setIsSubmitting(false);
     }
   }, [email, verificationCode, verifyResetCode, navigate]);
-
+  
   // Render loading spinner
   const renderLoadingSpinner = () => (
     <span className="flex items-center justify-center">
@@ -142,10 +158,19 @@ export default function ForgotPasswordPage() {
                 data-testid="email-input"
               />
             </div>
+            
+            {/* Add reCAPTCHA */}
+            <div className="mb-6 flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey="6Ldv1igrAAAAAEv8TVD1OeZ5UkFW3Cs_jIpYa7g4"
+                onChange={handleRecaptchaChange}
+              />
+            </div>
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !recaptchaValue}
               className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-colors"
               data-testid="request-button"
             >

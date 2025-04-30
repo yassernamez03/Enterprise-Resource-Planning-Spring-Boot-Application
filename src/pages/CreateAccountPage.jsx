@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoadingSpinner from '../Components/Common/LoadingSpinner';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function CreateAccountPage() {
   const [fullName, setFullName] = useState('');
@@ -9,16 +9,30 @@ function CreateAccountPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const recaptchaRef = useRef(null);
+  
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate reCAPTCHA
+    if (!recaptchaValue) {
+      setError('Veuillez confirmer que vous n\'êtes pas un robot');
+      return;
+    }
+    
     setIsSubmitting(true);
     setError('');
     
     try {
-      await register(fullName, email);
+      await register(fullName, email, recaptchaValue);
       setSuccess(true);
       
       // Redirect to login after a short delay
@@ -28,6 +42,9 @@ function CreateAccountPage() {
     } catch (err) {
       setError('Échec de la création du compte. Veuillez réessayer.');
       console.error('Registration error:', err);
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setRecaptchaValue(null);
     } finally {
       setIsSubmitting(false);
     }
@@ -102,10 +119,19 @@ function CreateAccountPage() {
               </p>
             </div>
             
+            {/* Add reCAPTCHA */}
+            <div className="mb-6 flex justify-center">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey="6Ldv1igrAAAAAEv8TVD1OeZ5UkFW3Cs_jIpYa7g4"
+                onChange={handleRecaptchaChange}
+              />
+            </div>
+            
             <button 
               type="submit" 
               className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !recaptchaValue}
             >
               {isSubmitting ? (
                 <span className="flex items-center justify-center">

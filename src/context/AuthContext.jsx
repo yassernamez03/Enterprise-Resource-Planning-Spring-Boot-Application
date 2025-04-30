@@ -53,10 +53,10 @@ export const AuthProvider = ({ children }) => {
   }, [showErrorToast]);
 
   // Login method
-  const login = async (email, password, rememberMe = false) => {
+  const login = async (email, password, rememberMe = false, recaptchaResponse) => {
     setLoading(true);
     try {
-      const data = await authService.login(email, password, rememberMe);
+      const data = await authService.login(email, password, rememberMe, recaptchaResponse);
       setUser(data.user || {});
       setLoading(false);
       
@@ -72,10 +72,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Register method
-  const register = async (fullName, email) => {
+  const register = async (fullName, email, recaptchaResponse) => {
     setLoading(true);
     try {
-      const data = await authService.register(fullName, email);
+      const data = await authService.register(fullName, email, recaptchaResponse);
       setLoading(false);
       showSuccessToast('Registration successful! Please check your email for further instructions.');
       return data;
@@ -87,11 +87,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Step 1: Request password reset verification code
-  const forgotPassword = async (email) => {
+  const forgotPassword = async (email, recaptchaResponse) => {
     setLoading(true);
     try {
       console.log('AuthContext: Calling forgotPassword API for email:', email);
-      const data = await authService.forgotPassword(email);
+      const data = await authService.forgotPassword(email, recaptchaResponse);
       setLoading(false);
       showSuccessToast('Verification code sent. Please check your email.');
       console.log('AuthContext.forgotPassword success:', data);

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LoadingSpinner from '../Components/Common/LoadingSpinner';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -9,20 +9,37 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const recaptchaRef = useRef(null);
+  
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleRecaptchaChange = (value) => {
+    setRecaptchaValue(value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate reCAPTCHA
+    if (!recaptchaValue) {
+      setError('Veuillez confirmer que vous n\'êtes pas un robot');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
-      await login(email, password, rememberMe);
+      await login(email, password, rememberMe, recaptchaValue);
       navigate('/'); // Redirect to home page on successful login
     } catch (err) {
       setError('Échec de la connexion. Veuillez vérifier vos identifiants.');
       console.error('Login error:', err);
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
+      setRecaptchaValue(null);
     } finally {
       setIsLoading(false);
     }
@@ -102,11 +119,20 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
+          
+          {/* Add reCAPTCHA */}
+          <div className="mb-6 flex justify-center">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey="6Ldv1igrAAAAAEv8TVD1OeZ5UkFW3Cs_jIpYa7g4"
+              onChange={handleRecaptchaChange}
+            />
+          </div>
 
           <button
             type="submit"
             className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors disabled:bg-indigo-400"
-            disabled={isLoading}
+            disabled={isLoading || !recaptchaValue}
           >
             {isLoading ? (
               <span className="flex items-center justify-center">

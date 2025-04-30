@@ -1,14 +1,13 @@
-// Updated authService.js with verification code methods
-
 import { apiService } from './apiInterceptor';
 
 const authService = {
-  login: async (email, password, rememberMe = false) => {
+  login: async (email, password, rememberMe = false, recaptchaResponse) => {
     try {
       const data = await apiService.post('/auth/login', { 
         email, 
         password,
-        rememberMe 
+        rememberMe,
+        recaptchaResponse
       });
       
       // If rememberMe is true, store token in localStorage, otherwise in sessionStorage
@@ -24,9 +23,13 @@ const authService = {
     }
   },
 
-  register: async (fullName, email) => {
+  register: async (fullName, email, recaptchaResponse) => {
     try {
-      return await apiService.post('/auth/register', { fullName, email });
+      return await apiService.post('/auth/register', { 
+        fullName, 
+        email,
+        recaptchaResponse
+      });
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -34,9 +37,12 @@ const authService = {
   },
 
   // Step 1: Request verification code for password reset
-  forgotPassword: async (email) => {
+  forgotPassword: async (email, recaptchaResponse) => {
     try {
-      return await apiService.post('/auth/forgot-password', { email });
+      return await apiService.post('/auth/forgot-password', { 
+        email,
+        recaptchaResponse
+      });
     } catch (error) {
       console.error('Forgot password error:', error);
       throw error;
