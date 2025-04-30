@@ -68,15 +68,15 @@ const AdminUserActions = ({ userId, currentRole, onActionComplete }) => {
     setConfirmDialog({
       isOpen: true,
       title: 'Reset User Password',
-      message: 'Are you sure you want to reset this user\'s password? They will receive an email with instructions to set a new password.',
+      message: 'Are you sure you want to reset this user\'s password? They will receive an email with a new temporary password.',
       type: 'warning',
       onConfirm: async () => {
         setLoading(true);
         setError(null);
         
         try {
-          // Implement actual reset password functionality here
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Mock API call
+          // Call the API endpoint to reset the user's password
+          await userService.resetUserPassword(user.id);
           
           // Close dropdown
           setIsOpen(false);

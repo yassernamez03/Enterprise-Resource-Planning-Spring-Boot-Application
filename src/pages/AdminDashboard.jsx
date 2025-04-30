@@ -4,7 +4,6 @@ import { ArrowLeft } from 'lucide-react';
 import userService from '../services/userService';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import AdminUserActions from '../Components/AdminUserActions';
 import ConfirmDialog from '../Components/Common/ConfirmDialog';
 import LoadingSpinner from '../Components/Common/LoadingSpinner';
 import EmptyState from '../Components/Common/EmptyState';
@@ -28,6 +27,14 @@ const AdminDashboard = () => {
     type: 'danger'
   });
 
+  // State for password reset dialog
+  const [passwordResetState, setPasswordResetState] = useState({
+    isOpen: false,
+    userId: null,
+    userName: '',
+    newPassword: '',
+  });
+
   // Load data based on active tab
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +47,7 @@ const AdminDashboard = () => {
           setPendingUsers(data);
         } else if (activeTab === 'all') {
           const data = await userService.getAllUsers();
+
           setAllUsers(data);
         }
       } catch (err) {
@@ -126,6 +134,117 @@ const AdminDashboard = () => {
         }
       }
     });
+  };
+
+  // Handle password reset flow
+  const handleResetPasswordClick = (userId, userName) => {
+    setPasswordResetState({
+      isOpen: true,
+      userId,
+      userName,
+      newPassword: '',
+    });
+  };
+
+  const handlePasswordInputChange = (e) => {
+    setPasswordResetState({
+      ...passwordResetState,
+      newPassword: e.target.value
+    });
+  };
+
+  const handlePasswordResetSubmit = () => {
+    // Close the password input dialog
+    setPasswordResetState({
+      ...passwordResetState,
+      isOpen: false
+    });
+    
+    // Show confirmation dialog
+    setConfirmDialog({
+      isOpen: true,
+      title: 'Confirm Password Reset',
+      message: `Are you sure you want to reset the password for ${passwordResetState.userName}?`,
+      type: 'warning',
+      onConfirm: async () => {
+        try {
+          // Call API to reset password
+          await userService.resetUserPassword(
+            passwordResetState.userId, 
+            passwordResetState.newPassword
+          );
+          
+          setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+          showSuccessToast('Password has been reset successfully');
+          
+          // Refresh data
+          if (activeTab === 'all') {
+            setActiveTab('');
+            setTimeout(() => setActiveTab('all'), 10);
+          }
+        } catch (err) {
+          console.error('Error resetting password:', err);
+          showErrorToast('Failed to reset password. Please try again.');
+        }
+      }
+    });
+  };
+
+  // Function to get status badge color
+  const getStatusBadgeColor = (approvalStatus) => {
+    // Make sure approvalStatus is a string (if it's a number, convert it)
+    const statusVal = String(approvalStatus).toUpperCase();
+    
+    // Match both numeric and string values
+    switch (statusVal) {
+      case 'APPROVED':
+      case '1':
+        return 'bg-green-100 text-green-800'; // Green for approved
+      
+      case 'PENDING':
+      case '0':
+        return 'bg-gray-100 text-gray-800'; // Gray for pending
+      
+      case 'REJECTED':
+      case '-1':
+        return 'bg-red-100 text-red-800'; // Red for rejected
+      
+      case 'INACTIVE':
+      case 'SUSPENDED':
+      case '2':
+        return 'bg-yellow-100 text-yellow-800'; // Yellow for other statuses
+      
+      default:
+        return 'bg-gray-100 text-gray-800'; // Default to gray
+    }
+  };
+  
+  // Function to get readable status text
+  const getStatusText = (approvalStatus) => {
+    const statusVal = String(approvalStatus).toUpperCase();
+    
+    switch (statusVal) {
+      case 'APPROVED':
+      case '1':
+        return 'Approved';
+      
+      case 'PENDING':
+      case '0':
+        return 'Pending';
+      
+      case 'REJECTED':
+      case '-1':
+        return 'Rejected';
+      
+      case 'INACTIVE':
+      case 'SUSPENDED':
+      case '2':
+        return 'Inactive';
+      
+      default:
+        // If it's a number or unknown value, return a more readable form
+        return isNaN(approvalStatus) ? approvalStatus : `Status: ${approvalStatus}`;
+    }
   };
 
   // If the user is not an admin, show an access denied message
@@ -319,7 +438,7 @@ const AdminDashboard = () => {
           </>
         )}
 
-        {/* All Users Table */}
+        {/* All Users Table - With Responsive Design */}
         {!loading && activeTab === 'all' && (
           <>
             {allUsers.length === 0 ? (
@@ -334,135 +453,145 @@ const AdminDashboard = () => {
               />
             ) : (
               <div className="bg-white shadow overflow-hidden rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        User
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Email
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Role
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Joined
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {allUsers.map((user) => (
-                      <tr key={user.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                              <span className="text-indigo-800 font-medium">{user.fullName.charAt(0)}</span>
-                            </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{user.email}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.role === 'ADMIN' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {user.role}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.status === 'ACTIVE' 
-                              ? 'bg-green-100 text-green-800' 
-                              : user.status === 'PENDING'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {user.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(user.createdAt).toLocaleDateString('fr-FR')}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          {/* Display user actions inline in the table */}
-                          <div className="flex space-x-2">
-                            <button 
-                              onClick={() => {
-                                // Change role logic
-                                const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
-                                setConfirmDialog({
-                                  isOpen: true,
-                                  title: 'Change User Role',
-                                  message: `Are you sure you want to change ${user.fullName}'s role to ${newRole}?`,
-                                  type: 'warning',
-                                  onConfirm: async () => {
-                                    try {
-                                      await userService.changeUserRole(user.id, newRole);
-                                      setConfirmDialog(prev => ({ ...prev, isOpen: false }));
-                                      showSuccessToast(`User role changed to ${newRole}`);
-                                      // Refresh data
-                                      setActiveTab('');
-                                      setTimeout(() => setActiveTab('all'), 10);
-                                    } catch (err) {
-                                      showErrorToast('Failed to change user role');
-                                    }
-                                  }
-                                });
-                              }}
-                              className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-medium hover:bg-indigo-200 transition-colors"
-                            >
-                              Change Role
-                            </button>
-                            <button 
-                              onClick={() => {
-                                // Reset password logic
-                                setConfirmDialog({
-                                  isOpen: true,
-                                  title: 'Reset Password',
-                                  message: `Are you sure you want to reset the password for ${user.fullName}?`,
-                                  type: 'warning',
-                                  onConfirm: async () => {
-                                    try {
-                                      // Mock implementation
-                                      await new Promise(resolve => setTimeout(resolve, 1000));
-                                      setConfirmDialog(prev => ({ ...prev, isOpen: false }));
-                                      showSuccessToast('Password reset email sent');
-                                    } catch (err) {
-                                      showErrorToast('Failed to reset password');
-                                    }
-                                  }
-                                });
-                              }}
-                              className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-medium hover:bg-yellow-200 transition-colors"
-                            >
-                              Reset Password
-                            </button>
-                          </div>
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          User
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                          Email
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Role
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {allUsers.map((user) => (
+                        <tr key={user.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                <span className="text-indigo-800 font-medium">{user.fullName.charAt(0)}</span>
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{user.fullName}</div>
+                                <div className="text-sm text-gray-500 sm:hidden">{user.email}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                            <div className="text-sm text-gray-900">{user.email}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              user.role === 'ADMIN' 
+                                ? 'bg-purple-100 text-purple-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {user.role}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeColor(user.approvalStatus)}`}>
+                              {getStatusText(user.approvalStatus)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 items-end sm:items-center justify-end">
+                              <button 
+                                onClick={() => {
+                                  // Change role logic
+                                  const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
+                                  setConfirmDialog({
+                                    isOpen: true,
+                                    title: 'Change User Role',
+                                    message: `Are you sure you want to change ${user.fullName}'s role to ${newRole}?`,
+                                    type: 'warning',
+                                    onConfirm: async () => {
+                                      try {
+                                        await userService.changeUserRole(user.id, newRole);
+                                        setConfirmDialog(prev => ({ ...prev, isOpen: false }));
+                                        showSuccessToast(`User role changed to ${newRole}`);
+                                        // Refresh data
+                                        setActiveTab('');
+                                        setTimeout(() => setActiveTab('all'), 10);
+                                      } catch (err) {
+                                        showErrorToast('Failed to change user role');
+                                      }
+                                    }
+                                  });
+                                }}
+                                className="px-2 py-1 w-full sm:w-auto text-center bg-indigo-100 text-indigo-800 rounded text-xs font-medium hover:bg-indigo-200 transition-colors"
+                              >
+                                Change Role
+                              </button>
+                              <button 
+                                onClick={() => handleResetPasswordClick(user.id, user.fullName)}
+                                className="px-2 py-1 w-full sm:w-auto text-center bg-yellow-100 text-yellow-800 rounded text-xs font-medium hover:bg-yellow-200 transition-colors"
+                              >
+                                Reset Password
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </>
         )}
       </main>
 
-      {/* Render confirmation dialog */}
+      {/* Password Reset Dialog - Made Responsive */}
+      {passwordResetState.isOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-md">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Reset Password for {passwordResetState.userName}</h3>
+            <div className="mb-6">
+              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                New Password
+              </label>
+              <input
+                type="password"
+                id="newPassword"
+                value={passwordResetState.newPassword}
+                onChange={handlePasswordInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter new password"
+                autoFocus
+              />
+            </div>
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 sm:justify-end">
+              <button
+                onClick={() => setPasswordResetState({ ...passwordResetState, isOpen: false })}
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePasswordResetSubmit}
+                className="w-full sm:w-auto px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none disabled:bg-indigo-300 disabled:cursor-not-allowed"
+                disabled={!passwordResetState.newPassword}
+              >
+                Reset Password
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Dialog */}
       <ConfirmDialog 
         isOpen={confirmDialog.isOpen}
         title={confirmDialog.title}
