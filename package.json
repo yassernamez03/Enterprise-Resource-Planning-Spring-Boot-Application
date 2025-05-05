@@ -1,0 +1,12 @@
+{
+    "name": "fullstack-app",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "start": "concurrently \"npm run dev --prefix frontend\" \"mvn spring-boot:run --file backend/pom.xml\""
+    },
+    "devDependencies": {
+      "concurrently": "^8.2.0"
+    }
+  }
+  
