@@ -424,4 +424,58 @@ public class UserServiceImpl implements UserService {
                 .path(fileName)
                 .toUriString();
     }
+
+
+    @Override
+@Transactional
+public User changeUserRole(Long userId, User.UserRole newRole) {
+    User user = getUserById(userId);
+    
+    // Log who is making the change
+    Long currentUserId = getCurrentUserId();
+    if (currentUserId == null || currentUserId.equals(userId)) {
+        throw new BadRequestException("Administrators cannot change their own role");
+    }
+    
+    user.setRole(newRole);
+    User savedUser = userRepository.save(user);
+    
+    // Log the role change
+    logService.createLog(
+            "ROLE_CHANGE",
+            "Role changed to " + newRole + " for user: " + user.getEmail(),
+            getClientIp(),
+            AppConstants.LOG_TYPE_USER,
+            currentUserId);
+    
+    return savedUser;
+}
+
+@Override
+@Transactional
+public boolean adminResetPassword(Long userId, String newPassword) {
+    User user = getUserById(userId);
+    
+    // Check if user is active and approved
+    if (!user.isActive() || user.getApprovalStatus() != User.ApprovalStatus.APPROVED) {
+        return false;
+    }
+    
+    // Update the user's password with the admin-specified password
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
+    
+    // Send notification email to the user (optional - you can modify this based on requirements)
+    emailService.sendPasswordChangedNotificationEmail(user.getEmail(), user.getFullName());
+    
+    // Log the password reset by admin
+    logService.createLog(
+            "ADMIN_PASSWORD_RESET",
+            "Password manually reset by admin for user: " + user.getEmail(),
+            getClientIp(),
+            AppConstants.LOG_TYPE_USER,
+            getCurrentUserId());
+    
+    return true;
+}
 }
