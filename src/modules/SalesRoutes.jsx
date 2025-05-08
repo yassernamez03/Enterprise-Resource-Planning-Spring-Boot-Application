@@ -65,6 +65,7 @@ const SalesRoutes = () => {
           <Route path="invoices/:id" element={<InvoiceDetail />} />
           <Route path="invoices/:id/payment" element={<PaymentForm />} />
 
+          {/* Reports */}
           <Route path="reports" element={<ReportsDashboard />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
