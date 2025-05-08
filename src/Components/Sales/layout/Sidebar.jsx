@@ -82,7 +82,7 @@ const Sidebar = () => {
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
         <div className={`${sidebarCollapsed ? "hidden" : "block"}`}>
-          <h1 className="text-xl font-bold text-primary-700">ERP Sales</h1>
+          <h1 className="text-xl font-bold text-primary-700">Sales</h1>
         </div>
         <button
           onClick={toggleSidebar}
