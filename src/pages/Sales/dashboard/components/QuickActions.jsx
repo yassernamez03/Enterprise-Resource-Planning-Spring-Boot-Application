@@ -35,14 +35,14 @@ const QuickActions = () => {
         <h3 className="text-lg font-medium text-gray-800">Quick Actions</h3>
       </div>
 
-      <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 ">
         {actions.map((action, index) => (
           <a
             key={index}
             href={action.path}
             className={`flex flex-col items-center justify-center p-4 rounded-lg ${action.color} text-white transition-all transform hover:scale-105`}
           >
-            <div className="bg-white bg-opacity-20 rounded-full p-2 mb-2">
+            <div className={`"bg-white bg-opacity-20 rounded-full p-2 mb-2 ${action.color}"`}>
               {action.icon}
             </div>
             <span className="text-sm font-medium">{action.title}</span>

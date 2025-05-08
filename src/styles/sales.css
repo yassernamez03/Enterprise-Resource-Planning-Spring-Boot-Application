@@ -1,79 +1,336 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Sales Module CSS - Complete version with all Tailwind config equivalents */
 
-html, body {
-  @apply font-sans antialiased text-gray-800;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Custom scrollbar for Sales Module */
+.sales-module ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+.sales-module ::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* gray-100 */
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-md;
+.sales-module ::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* gray-300 */
+  border-radius: 0.375rem;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+.sales-module ::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af; /* gray-400 */
 }
 
-/* Inputs and form elements */
-input, select, textarea {
-  @apply shadow-sm border-gray-300 rounded-md;
+/* Inputs and form elements for Sales Module */
+.sales-module input, 
+.sales-module select, 
+.sales-module textarea {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-color: #d1d5db;
+  border-radius: 0.375rem;
 }
 
-input:focus, select:focus, textarea:focus {
-  @apply ring-2 ring-primary-500 ring-opacity-50 border-primary-500;
+.sales-module input:focus, 
+.sales-module select:focus, 
+.sales-module textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6;
 }
 
-/* Subtle animation for cards */
-.shadow-card {
-  @apply transition-shadow duration-300;
+/* Card styles */
+.sales-module .shadow-card {
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
-/* Animation for the sidebar toggle */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.sales-module .shadow-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
-/* Custom styles for DataTable hover state */
-.data-table-row:hover {
-  @apply bg-gray-50;
-}
-
-/* Custom focus styles for buttons */
-button:focus {
-  @apply outline-none ring-2 ring-offset-2 ring-primary-500;
+/* Data table hover */
+.sales-module .data-table-row:hover {
+  background-color: #f9fafb; /* gray-50 */
 }
 
 /* Toast notifications */
-.toast {
-  @apply fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg text-white;
+.sales-module .toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  color: white;
+  animation: salesModuleSlideIn 0.3s ease-out forwards;
+}
+
+.sales-module .toast-success {
+  background-color: #16a34a; /* success-600 */
+}
+
+.sales-module .toast-error {
+  background-color: #dc2626; /* error-600 */
+}
+
+.sales-module .toast-info {
+  background-color: #2563eb; /* primary-600 */
+}
+
+.sales-module .toast-warning {
+  background-color: #d97706; /* warning-600 */
+}
+
+@keyframes salesModuleSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Color palette classes - Primary */
+.sales-module .bg-primary-50 { background-color: #eff6ff; }
+.sales-module .bg-primary-100 { background-color: #dbeafe; }
+.sales-module .bg-primary-200 { background-color: #bfdbfe; }
+.sales-module .bg-primary-300 { background-color: #93c5fd; }
+.sales-module .bg-primary-400 { background-color: #60a5fa; }
+.sales-module .bg-primary-500 { background-color: #3b82f6; }
+.sales-module .bg-primary-600 { background-color: #2563eb; }
+.sales-module .bg-primary-700 { background-color: #1d4ed8; }
+.sales-module .bg-primary-800 { background-color: #1e40af; }
+.sales-module .bg-primary-900 { background-color: #1e3a8a; }
+.sales-module .bg-primary-950 { background-color: #172554; }
+
+.sales-module .text-primary-50 { color: #eff6ff; }
+.sales-module .text-primary-100 { color: #dbeafe; }
+.sales-module .text-primary-200 { color: #bfdbfe; }
+.sales-module .text-primary-300 { color: #93c5fd; }
+.sales-module .text-primary-400 { color: #60a5fa; }
+.sales-module .text-primary-500 { color: #3b82f6; }
+.sales-module .text-primary-600 { color: #2563eb; }
+.sales-module .text-primary-700 { color: #1d4ed8; }
+.sales-module .text-primary-800 { color: #1e40af; }
+.sales-module .text-primary-900 { color: #1e3a8a; }
+.sales-module .text-primary-950 { color: #172554; }
+
+.sales-module .border-primary-50 { border-color: #eff6ff; }
+.sales-module .border-primary-100 { border-color: #dbeafe; }
+.sales-module .border-primary-200 { border-color: #bfdbfe; }
+.sales-module .border-primary-300 { border-color: #93c5fd; }
+.sales-module .border-primary-400 { border-color: #60a5fa; }
+.sales-module .border-primary-500 { border-color: #3b82f6; }
+.sales-module .border-primary-600 { border-color: #2563eb; }
+.sales-module .border-primary-700 { border-color: #1d4ed8; }
+.sales-module .border-primary-800 { border-color: #1e40af; }
+.sales-module .border-primary-900 { border-color: #1e3a8a; }
+.sales-module .border-primary-950 { border-color: #172554; }
+
+/* Color palette classes - Secondary */
+.sales-module .bg-secondary-50 { background-color: #f0fdfa; }
+.sales-module .bg-secondary-100 { background-color: #ccfbf1; }
+.sales-module .bg-secondary-200 { background-color: #99f6e4; }
+.sales-module .bg-secondary-300 { background-color: #5eead4; }
+.sales-module .bg-secondary-400 { background-color: #2dd4bf; }
+.sales-module .bg-secondary-500 { background-color: #14b8a6; }
+.sales-module .bg-secondary-600 { background-color: #0d9488; }
+.sales-module .bg-secondary-700 { background-color: #0f766e; }
+.sales-module .bg-secondary-800 { background-color: #115e59; }
+.sales-module .bg-secondary-900 { background-color: #134e4a; }
+.sales-module .bg-secondary-950 { background-color: #042f2e; }
+
+/* Color palette classes - Accent */
+.sales-module .bg-accent-50 { background-color: #fdf2f8; }
+.sales-module .bg-accent-100 { background-color: #fce7f3; }
+.sales-module .bg-accent-200 { background-color: #fbcfe8; }
+.sales-module .bg-accent-300 { background-color: #f9a8d4; }
+.sales-module .bg-accent-400 { background-color: #f472b6; }
+.sales-module .bg-accent-500 { background-color: #ec4899; }
+.sales-module .bg-accent-600 { background-color: #db2777; }
+.sales-module .bg-accent-700 { background-color: #be185d; }
+.sales-module .bg-accent-800 { background-color: #9d174d; }
+.sales-module .bg-accent-900 { background-color: #831843; }
+.sales-module .bg-accent-950 { background-color: #500724; }
+
+/* Color palette classes - Success */
+.sales-module .bg-success-50 { background-color: #f0fdf4; }
+.sales-module .bg-success-100 { background-color: #dcfce7; }
+.sales-module .bg-success-200 { background-color: #bbf7d0; }
+.sales-module .bg-success-300 { background-color: #86efac; }
+.sales-module .bg-success-400 { background-color: #4ade80; }
+.sales-module .bg-success-500 { background-color: #22c55e; }
+.sales-module .bg-success-600 { background-color: #16a34a; }
+.sales-module .bg-success-700 { background-color: #15803d; }
+.sales-module .bg-success-800 { background-color: #166534; }
+.sales-module .bg-success-900 { background-color: #14532d; }
+.sales-module .bg-success-950 { background-color: #052e16; }
+
+/* Color palette classes - Warning */
+.sales-module .bg-warning-50 { background-color: #fffbeb; }
+.sales-module .bg-warning-100 { background-color: #fef3c7; }
+.sales-module .bg-warning-200 { background-color: #fde68a; }
+.sales-module .bg-warning-300 { background-color: #fcd34d; }
+.sales-module .bg-warning-400 { background-color: #fbbf24; }
+.sales-module .bg-warning-500 { background-color: #f59e0b; }
+.sales-module .bg-warning-600 { background-color: #d97706; }
+.sales-module .bg-warning-700 { background-color: #b45309; }
+.sales-module .bg-warning-800 { background-color: #92400e; }
+.sales-module .bg-warning-900 { background-color: #78350f; }
+.sales-module .bg-warning-950 { background-color: #451a03; }
+
+/* Color palette classes - Error */
+.sales-module .bg-error-50 { background-color: #fef2f2; }
+.sales-module .bg-error-100 { background-color: #fee2e2; }
+.sales-module .bg-error-200 { background-color: #fecaca; }
+.sales-module .bg-error-300 { background-color: #fca5a5; }
+.sales-module .bg-error-400 { background-color: #f87171; }
+.sales-module .bg-error-500 { background-color: #ef4444; }
+.sales-module .bg-error-600 { background-color: #dc2626; }
+.sales-module .bg-error-700 { background-color: #b91c1c; }
+.sales-module .bg-error-800 { background-color: #991b1b; }
+.sales-module .bg-error-900 { background-color: #7f1d1d; }
+.sales-module .bg-error-950 { background-color: #450a0a; }
+
+/* Color palette classes - Gray */
+.sales-module .bg-gray-50 { background-color: #f9fafb; }
+.sales-module .bg-gray-100 { background-color: #f3f4f6; }
+.sales-module .bg-gray-200 { background-color: #e5e7eb; }
+.sales-module .bg-gray-300 { background-color: #d1d5db; }
+.sales-module .bg-gray-400 { background-color: #9ca3af; }
+.sales-module .bg-gray-500 { background-color: #6b7280; }
+.sales-module .bg-gray-600 { background-color: #4b5563; }
+.sales-module .bg-gray-700 { background-color: #374151; }
+.sales-module .bg-gray-800 { background-color: #1f2937; }
+.sales-module .bg-gray-900 { background-color: #111827; }
+.sales-module .bg-gray-950 { background-color: #030712; }
+
+/* Font family */
+.sales-module .font-sans {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Border radius */
+.sales-module .rounded {
+  border-radius: 0.375rem;
+}
+
+/* Shadows */
+.sales-module .shadow-input {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sales-module .shadow-focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.sales-module .shadow-toast {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Animation */
+.sales-module .animate-slide-in {
+  animation: salesModuleSlideIn 0.3s ease-out forwards;
+}
+
+/* Base styles equivalent to @tailwind base */
+.sales-module,
+.sales-module *,
+.sales-module ::before,
+.sales-module ::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb; /* gray-200 */
+}
+
+
+/* Custom scrollbar */
+.sales-module ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.sales-module ::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.sales-module ::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* gray-300 */
+  border-radius: 0.375rem; /* rounded-md */
+}
+
+.sales-module ::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af; /* gray-400 */
+}
+
+/* Inputs and form elements */
+.sales-module input,
+.sales-module select,
+.sales-module textarea {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  border-color: #d1d5db; /* gray-300 */
+  border-radius: 0.375rem; /* rounded-md */
+}
+
+.sales-module input:focus,
+.sales-module select:focus,
+.sales-module textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* ring-2 ring-primary-500 ring-opacity-50 */
+  border-color: #3b82f6; /* primary-500 */
+}
+
+/* Card animation */
+.sales-module .shadow-card {
+  transition: box-shadow 0.3s ease; /* transition-shadow duration-300 */
+}
+
+/* DataTable hover state */
+.sales-module .data-table-row:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+/* Button focus styles */
+.sales-module button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.5); /* ring-2 ring-offset-2 ring-primary-500 */
+}
+
+/* Toast notifications */
+.sales-module .toast {
+  position: fixed;
+  top: 1rem; /* top-4 */
+  right: 1rem; /* right-4 */
+  z-index: 50;
+  padding: 1rem; /* p-4 */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+  color: white;
   animation: slideIn 0.3s ease-out forwards;
 }
 
-.toast-success {
-  @apply bg-success-600;
+.sales-module .toast-success {
+  background-color: #16a34a; /* success-600 */
 }
 
-.toast-error {
-  @apply bg-error-600;
+.sales-module .toast-error {
+  background-color: #dc2626; /* error-600 */
 }
 
-.toast-info {
-  @apply bg-primary-600;
+.sales-module .toast-info {
+  background-color: #2563eb; /* primary-600 */
 }
 
-.toast-warning {
-  @apply bg-warning-600;
+.sales-module .toast-warning {
+  background-color: #d97706; /* warning-600 */
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideIn {
@@ -86,3 +343,13 @@ button:focus {
     opacity: 1;
   }
 }
+
+/* Utility classes for animations */
+.sales-module .animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.sales-module .animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
