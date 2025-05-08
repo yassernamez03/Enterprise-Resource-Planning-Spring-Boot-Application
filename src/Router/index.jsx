@@ -6,6 +6,7 @@ import { ChatProvider } from '../context/ChatContext';
 import { ToastProvider } from '../context/ToastContext';
 import ProtectedRoute from '../Components/ProtectedRoute';
 import PublicRoute from '../Components/PublicRoute';
+import SalesModule from '../modules/SalesModule'; // Adjust the import path as necessary
 
 // Pages
 import LoginPage from '../pages/Login';
@@ -37,6 +38,7 @@ const AppRoutes = () => {
                 <Route path="/account_details" element={<AccountPage />} />
                 <Route path="/calander_page" element={<WeeklyCalendar />} />
                 <Route path="/chat_page" element={<ChatApp />} />
+                <Route path="/sales/*" element={<SalesModule />} />
                 <Route path="/admin" element={<AdminDashboard />} />
               </Route>
             </Routes>

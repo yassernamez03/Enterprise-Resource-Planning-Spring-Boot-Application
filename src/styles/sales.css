@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  @apply font-sans antialiased text-gray-800;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-md;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Inputs and form elements */
+input, select, textarea {
+  @apply shadow-sm border-gray-300 rounded-md;
+}
+
+input:focus, select:focus, textarea:focus {
+  @apply ring-2 ring-primary-500 ring-opacity-50 border-primary-500;
+}
+
+/* Subtle animation for cards */
+.shadow-card {
+  @apply transition-shadow duration-300;
+}
+
+/* Animation for the sidebar toggle */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Custom styles for DataTable hover state */
+.data-table-row:hover {
+  @apply bg-gray-50;
+}
+
+/* Custom focus styles for buttons */
+button:focus {
+  @apply outline-none ring-2 ring-offset-2 ring-primary-500;
+}
+
+/* Toast notifications */
+.toast {
+  @apply fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg text-white;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.toast-success {
+  @apply bg-success-600;
+}
+
+.toast-error {
+  @apply bg-error-600;
+}
+
+.toast-info {
+  @apply bg-primary-600;
+}
+
+.toast-warning {
+  @apply bg-warning-600;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

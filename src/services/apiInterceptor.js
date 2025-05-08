@@ -3,7 +3,7 @@
 import authService from './authService';
 import { parseErrorResponse, getDefaultErrorMessage } from './apiErrorHandler';
 
-const API_URL = "http://localhost:8080/api";
+const API_URL = "http://localhost:8081/api";
 
 // Function to handle API requests with automatic token inclusion
 export const apiRequest = async (endpoint, options = {}) => {

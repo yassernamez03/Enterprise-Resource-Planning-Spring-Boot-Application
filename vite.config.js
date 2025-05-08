@@ -15,6 +15,5 @@ export default defineConfig({
     port: 5174, // This should match the port allowed in your backend CORS config
     host: true
   }
-  
 })
 
