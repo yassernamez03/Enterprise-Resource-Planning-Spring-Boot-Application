@@ -17,6 +17,8 @@ import Home_Page from '../pages/Home_page';
 import WeeklyCalendar from '../pages/CalandrePage';
 import ChatApp from '../pages/ChatApp';
 import AdminDashboard from '../pages/AdminDashboard';
+import EmployeeManagement from '../pages/EmployePage';
+import TaskManagement from '../pages/TaskManagementPage';
 
 const AppRoutes = () => {
   return (
@@ -40,7 +42,9 @@ const AppRoutes = () => {
                 <Route path="/chat_page" element={<ChatApp />} />
                 <Route path="/sales/*" element={<SalesModule />} />
                 <Route path="/admin" element={<AdminDashboard />} />
-              </Route>
+                <Route path="/Employe" element={<EmployeeManagement />} />
+                <Route path="/TaskManagement/:id" element={<TaskManagement />} />
+             </Route>
             </Routes>
           </ChatProvider>
         </AuthProvider>

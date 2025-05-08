@@ -16,7 +16,7 @@ export default function Home_Page() {
     { id: 2, name: 'Chat', color: 'bg-indigo-500', icon: '💬', path: '/chat_page' },
     { id: 3, name: 'Sales', color: 'bg-pink-500', icon: '🏷️', path: '/sales' },
     { id: 4, name: 'Finance', color: 'bg-green-500', icon: '💲', path: '/finance' },
-    { id: 5, name: 'Human Resources', color: 'bg-yellow-500', icon: '👥', path: '/hr' },
+    { id: 5, name: 'Human Resources', color: 'bg-yellow-500', icon: '👥', path: '/Employe' },
     { id: 6, name: 'Integration', color: 'bg-orange-500', icon: '🗄️', path: '/integration' },
     { id: 7, name: 'Shared Services', color: 'bg-cyan-500', icon: '🔄', path: '/services' },
   ];
