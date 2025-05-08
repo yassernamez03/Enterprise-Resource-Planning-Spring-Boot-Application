@@ -24,6 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins(
                         "http://localhost:5175",  // Your React app's origin
                         "http://localhost:5174",  // Your React app's origin
+                        "https://localhost:3000",  // Your React app's origin
                         "http://localhost:5173",
                         "http://192.168.0.*:5174")
                 .withSockJS();
