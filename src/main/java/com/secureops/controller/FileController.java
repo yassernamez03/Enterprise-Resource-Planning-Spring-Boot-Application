@@ -10,6 +10,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -69,53 +71,75 @@ public class FileController {
     }
 
     @GetMapping("/download/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        // Validate the filename before processing
-        if (!isValidFilename(fileName)) {
-            return ResponseEntity.badRequest().build();
-        }
-        
-        // Load file as Resource
-        Resource resource;
-        try {
-            resource = fileStorageService.loadFileAsResource(fileName);
-            // Verify the resource is within the expected directory
-            if (!isResourceInAllowedDirectory(resource)) {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
+public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    // Validate the filename before processing
+    if (!isValidFilename(fileName)) {
+        return ResponseEntity.badRequest().build();
+    }
+    
+    // Load file as Resource
+    Resource resource;
+    try {
+        resource = fileStorageService.loadFileAsResource(fileName);
+        // Verify the resource is within the expected directory
+        if (!isResourceInAllowedDirectory(resource)) {
             return ResponseEntity.notFound().build();
         }
-        
-        // Try to determine file's content type
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-            // Log the error
-            System.err.println("Could not determine file type: " + ex.getMessage());
-        }
-        
-        // Fallback to the default content type if type could not be determined
-        if(contentType == null) {
-            contentType = "application/octet-stream";
-        }
-        
-        // Log the download
-        Long currentUserId = userService.getCurrentUser().getId();
-        logService.createLog(
-            AppConstants.LOG_ACTION_READ,
-            "File downloaded: " + fileName,
-            getClientIpSafely(request),
-            AppConstants.LOG_TYPE_FILE,
-            currentUserId
-        );
-        
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+    } catch (Exception e) {
+        return ResponseEntity.notFound().build();
     }
+    
+    // Try to determine file's content type
+    String contentType = null;
+    try {
+        contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+    } catch (IOException ex) {
+        // Log the error
+        System.err.println("Could not determine file type: " + ex.getMessage());
+    }
+    
+    // Fallback to the default content type if type could not be determined
+    if(contentType == null) {
+        contentType = "application/octet-stream";
+    }
+    
+    // Log the download - but check authentication status first
+    try {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        // Only try to log with user ID if we have a non-anonymous authenticated user
+        if (authentication != null && authentication.isAuthenticated() && 
+            !authentication.getPrincipal().toString().equals("anonymousUser")) {
+            
+            // User is authenticated, so we can safely get their ID
+            Long currentUserId = userService.getCurrentUser().getId();
+            logService.createLog(
+                AppConstants.LOG_ACTION_READ,
+                "File downloaded: " + fileName,
+                getClientIpSafely(request),
+                AppConstants.LOG_TYPE_FILE,
+                currentUserId
+            );
+        } else {
+            // For anonymous users, log without a user ID
+            logService.createLog(
+                AppConstants.LOG_ACTION_READ,
+                "File downloaded by anonymous user: " + fileName,
+                getClientIpSafely(request),
+                AppConstants.LOG_TYPE_FILE,
+                null  // No user ID for anonymous users
+            );
+        }
+    } catch (Exception e) {
+        // Just log the error but still return the file
+        System.err.println("Could not log file download: " + e.getMessage());
+    }
+    
+    return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+            .body(resource);
+}
     
     @DeleteMapping("/{fileName:.+}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {

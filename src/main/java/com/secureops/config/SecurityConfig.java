@@ -47,6 +47,7 @@ public class SecurityConfig {
 
                 // All other endpoints require authentication
                 .requestMatchers("/api/users/{id}").authenticated()
+                .requestMatchers("/api/users/").authenticated()
                 .anyRequest().authenticated()
             );
 
