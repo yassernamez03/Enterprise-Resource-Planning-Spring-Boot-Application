@@ -14,11 +14,13 @@ import CreateAccountPage from '../pages/CreateAccountPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import AccountPage from '../pages/AccountApp';
 import Home_Page from '../pages/Home_page';
-import WeeklyCalendar from '../pages/CalandrePage';
+// import WeeklyCalendar from '../pages/CalandrePage';
 import ChatApp from '../pages/ChatApp';
 import AdminDashboard from '../pages/AdminDashboard';
 import EmployeeManagement from '../pages/EmployePage';
 import TaskManagement from '../pages/TaskManagementPage';
+import { CalendarProvider } from '../context/CalendarContext';
+import CalendarPage from '../pages/CalanderPage';
 
 const AppRoutes = () => {
   return (
@@ -38,7 +40,13 @@ const AppRoutes = () => {
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<Home_Page />} />
                 <Route path="/account_details" element={<AccountPage />} />
-                <Route path="/calander_page" element={<WeeklyCalendar />} />
+                
+                <Route path="/calander_page" element={
+                  <CalendarProvider>
+                    <CalendarPage />
+                  </CalendarProvider>
+                  }
+                />                
                 <Route path="/chat_page" element={<ChatApp />} />
                 <Route path="/sales/*" element={<SalesModule />} />
                 <Route path="/admin" element={<AdminDashboard />} />

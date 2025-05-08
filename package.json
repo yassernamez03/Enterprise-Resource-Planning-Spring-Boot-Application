@@ -32,6 +32,7 @@
     "recharts": "^2.15.3",
     "secureopsfrontend": "file:",
     "sockjs-client": "^1.6.1",
+    "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
