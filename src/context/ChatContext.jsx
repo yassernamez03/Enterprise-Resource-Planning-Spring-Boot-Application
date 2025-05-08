@@ -1,4 +1,4 @@
-// src/context/ChatContext.jsx
+// src/context/ChatContext.jsx - modified createNewChat function
 import React, { createContext, useState, useEffect, useContext, useRef } from 'react';
 import websocketService from '../services/websocketService';
 import authService from '../services/authService';
@@ -23,7 +23,7 @@ export const ChatProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [activeChat, setActiveChat] = useState(null);
   const [typingUsers, setTypingUsers] = useState({});
-  const { showErrorToast } = useToast();
+  const { showErrorToast, showSuccessToast } = useToast();
   
   // Use refs to track processed messages and prevent duplicates
   const processedMessages = useRef(new Set());
@@ -303,27 +303,44 @@ export const ChatProvider = ({ children }) => {
     }
   };
   
-  // Create a new chat
+  // Modified: Create a new chat with support for group chats
   const createNewChat = async (participants, title) => {
     try {
-      const newChat = await apiService.post('/chats', {
-        title,
-        participants
-      });
+      console.log('Creating new chat with participants:', participants, 'and title:', title);
       
-      // Add the new chat to the conversations list
-      const avatarText = title.split(' ').map(word => word.charAt(0)).join('').toUpperCase().substring(0, 2);
+      // Make sure we have at least one participant
+      if (!participants || participants.length === 0) {
+        throw new Error('At least one participant is required');
+      }
       
+      // Prepare the chat data
+      const chatData = {
+        title: title,
+        participants: participants
+      };
+      
+      // Call API to create the chat
+      const newChat = await apiService.post('/chats', chatData);
+      console.log('New chat created:', newChat);
+      
+      // Add the new chat to the conversations list with UI enhancements
+      const avatarText = title ? title.split(' ').map(word => word.charAt(0)).join('').toUpperCase().substring(0, 2) : 'C';
+      
+      const isGroupChat = participants.length > 1;
+      
+      // Create enhanced chat object for UI
       const newChatWithUI = {
         ...newChat,
         messages: [],
         avatar: avatarText,
-        lastMessage: 'Chat created',
+        lastMessage: isGroupChat ? 'Group chat created' : 'Chat created',
         time: formatMessageTime(new Date()),
-        unread: 0
+        unread: 0,
+        isGroupChat: isGroupChat
       };
       
       setConversations(prev => [newChatWithUI, ...prev]);
+      showSuccessToast(isGroupChat ? 'Group chat created successfully' : 'Chat created successfully');
       
       return newChatWithUI;
     } catch (error) {

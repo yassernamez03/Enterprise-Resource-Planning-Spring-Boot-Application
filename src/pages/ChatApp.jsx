@@ -115,14 +115,16 @@ const ChatApp = () => {
     }
   };
 
+  // Modified handler for creating new chats with multiple participants
   const handleCreateNewChat = async (newConversationInfo) => {
     try {
-      // Extract participant IDs and title
-      const participantIds = [newConversationInfo.id]; // Add the target user ID
-      const chatTitle = newConversationInfo.name; // Use the user's name as chat title
+      console.log('Creating new chat with:', newConversationInfo);
+      
+      // Extract title and participants directly from the input
+      const { title, participants } = newConversationInfo;
       
       // Call API to create a new chat
-      const newChat = await createNewChat(participantIds, chatTitle);
+      const newChat = await createNewChat(participants, title);
       
       // Automatically select the new conversation
       setActiveChat(newChat);
@@ -131,6 +133,8 @@ const ChatApp = () => {
       if (mobileView) {
         setShowChatView(true);
       }
+      
+      return newChat;
     } catch (error) {
       console.error('Error creating new chat:', error);
     }

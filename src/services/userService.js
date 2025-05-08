@@ -97,6 +97,16 @@ const userService = {
       console.error('Error changing user role:', error);
       throw error;
     }
+  },
+
+  // For admin users: reset a user's password
+  resetUserPassword: async (userId, newPassword) => {
+    try {
+      return await apiService.post(`/users/${userId}/reset-password`, { newPassword });
+    } catch (error) {
+      console.error('Error resetting user password:', error);
+      throw error;
+    }
   }
 };
 

@@ -40,9 +40,6 @@ export default function Home_Page() {
     };
   }, [isMenuOpen]);
 
-  // We no longer show welcome toast on each page load
-  // The toast will be shown by the AuthContext after login
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -55,6 +52,10 @@ export default function Home_Page() {
       setIsLoggingOut(false);
     }, 500);
   };
+
+  // This function is no longer needed as we're directly using the avatar
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -74,9 +75,13 @@ export default function Home_Page() {
               <div className="flex items-center h-full">
                 <button 
                   onClick={toggleMenu} 
-                  className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center transform transition-transform duration-200 hover:scale-105"
+                  className="transform transition-transform duration-200 hover:scale-105"
                 >
-                  {user?.fullName?.charAt(0) || 'S'}
+                  <img 
+                    src={user?.avatarUrl} 
+                    alt={`${user?.fullName || 'User'}'s profile`}
+                    className="w-10 h-10 rounded-full object-cover border-2 border-white"
+                  />
                 </button>
               </div>
               
@@ -93,9 +98,11 @@ export default function Home_Page() {
                   <div className="px-4 py-3">
                     <div className="flex items-center">
                       <div className="flex-shrink-0">
-                        <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white text-xl">
-                          {user?.fullName?.charAt(0) || 'S'}
-                        </div>
+                        <img 
+                          src={user?.avatarUrl} 
+                          alt={`${user?.fullName || 'User'}'s profile`}
+                          className="w-12 h-12 rounded-full object-cover border-2 border-white"
+                        />
                       </div>
                       <div className="ml-3">
                         <div className="text-base font-medium text-gray-800">{user?.fullName || 'User'}</div>
