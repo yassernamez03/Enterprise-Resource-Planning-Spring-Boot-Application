@@ -53,7 +53,7 @@ const accountService = {
       // This is a placeholder - you would need to implement this endpoint
       return await apiService.get('/tasks');
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      // console.error('Error fetching tasks:', error);
       // Return mock data for now
       return {
         data: [
@@ -95,7 +95,7 @@ const accountService = {
       // This is a placeholder - you would need to implement this endpoint
       return await apiService.get('/events');
     } catch (error) {
-      console.error('Error fetching events:', error);
+      // console.error('Error fetching events:', error);
       // Return mock data for now
       return {
         data: [
@@ -131,7 +131,7 @@ const accountService = {
       // This is a placeholder - you would need to implement this endpoint
       return await apiService.put(`/tasks/${taskId}/status`, { status });
     } catch (error) {
-      console.error('Error updating task status:', error);
+      // console.error('Error updating task status:', error);
       throw error;
     }
   }

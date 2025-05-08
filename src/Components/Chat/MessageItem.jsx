@@ -32,9 +32,25 @@ const MessageItem = ({
   useEffect(() => {
     // If message is already in UI format (has sender as "user" or "contact")
     if (message.sender === "user" || message.sender === "contact") {
-      uiMessage.current = message;
+      uiMessage.current = {
+        ...message,
+        // Add sender name and avatar even for UI format messages
+        senderName: message.sender === "user" ? "You" : message.senderName || "Unknown",
+        senderAvatar: message.sender === "user" ? null : 
+                     (message.senderName ? message.senderName.charAt(0).toUpperCase() : "?")
+      };
       return;
     }
+    
+    // Extract sender information
+    const senderName = message.sender.id === currentUserId ? 
+                     "You" : 
+                     (message.sender.fullName || message.sender.username || "Unknown");
+    
+    const senderAvatar = message.sender.id === currentUserId ? 
+                       null : 
+                       (message.sender.fullName ? message.sender.fullName.charAt(0).toUpperCase() : 
+                        message.sender.username ? message.sender.username.charAt(0).toUpperCase() : "?");
     
     // Convert backend format to UI format
     if (message.messageType === 'TEXT' || message.messageType === 'FILE') {
@@ -43,6 +59,9 @@ const MessageItem = ({
         text: message.messageType === 'TEXT' ? message.content : 
               message.messageType === 'FILE' ? `📎 ${message.fileName}` : 'Unknown message type',
         sender: message.sender.id === currentUserId ? "user" : "contact",
+        senderName: senderName,
+        senderAvatar: senderAvatar,
+        senderId: message.sender.id,
         time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         readStatus: message.readStatus,
         isAttachment: message.messageType === 'FILE',
@@ -57,6 +76,9 @@ const MessageItem = ({
         id: message.id,
         text: 'Unsupported message type',
         sender: message.sender.id === currentUserId ? "user" : "contact",
+        senderName: senderName,
+        senderAvatar: senderAvatar,
+        senderId: message.sender.id,
         time: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         readStatus: message.readStatus
       };
@@ -198,9 +220,41 @@ const MessageItem = ({
 
   if (!uiMessage.current) return null;
 
+  // Generate sender avatar color based on sender ID or name
+  const getSenderAvatarColor = () => {
+    if (!uiMessage.current.senderId && !uiMessage.current.senderName) return 'bg-gray-500';
+    
+    // Simple hash function to determine a consistent color
+    const hashSource = uiMessage.current.senderId 
+                      ? uiMessage.current.senderId.toString() 
+                      : uiMessage.current.senderName;
+    
+    const nameHash = hashSource.split('').reduce(
+      (acc, char) => acc + char.charCodeAt(0), 0
+    );
+    
+    const colors = [
+      'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 
+      'bg-red-500', 'bg-purple-500', 'bg-pink-500', 
+      'bg-indigo-500', 'bg-teal-500'
+    ];
+    
+    return colors[nameHash % colors.length];
+  };
+
+  // Check if this is a group chat - always show sender for non-user messages in chats with more than 2 participants
+  const isGroupChat = currentChat && 
+                      currentChat.participants && 
+                      currentChat.participants.length > 2;
+  
+  // Always show the sender name for contact messages in group chats
+  const showSenderName = isGroupChat && 
+                         uiMessage.current.sender === "contact" && 
+                         uiMessage.current.senderName;
+
   return (
     <div
-      className={`flex ${uiMessage.current.sender === "user" ? "justify-end" : "justify-start"} group`}
+      className={`flex flex-col ${uiMessage.current.sender === "user" ? "items-end" : "items-start"} my-2 group`}
       ref={(node) => {
         messageRef.current = node;
         if (isHighlighted && highlightedMessageRef) {
@@ -208,84 +262,100 @@ const MessageItem = ({
         }
       }}
     >
-      <div
-        className={`relative max-w-xs md:max-w-md rounded-lg p-3 ${
-          isHighlighted ? 'ring-2 ring-teal-500 ring-offset-2' : ''
-        } ${
-          uiMessage.current.sender === "user"
-            ? `${darkMode ? 'bg-green-800 text-white' : 'bg-green-100 text-gray-800'}`
-            : `${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'}`
-        }`}
-        style={highlightAnimation}
-      >
-        {originalMessage && (
-          <div 
-            className={`mb-2 p-2 text-sm rounded-md ${
-              darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-600'
-            } border-l-2 border-teal-500`}
-          >
-            <div className="font-medium text-xs">
-              {originalMessage.sender === "user" ? "You" : 
-                (originalMessage.sender.fullName || currentChat.title)}
+      {/* Always show sender name for non-user messages in group chats */}
+      {showSenderName && (
+        <div className="flex items-center mb-1 px-2">
+          {uiMessage.current.senderAvatar && (
+            <div className={`flex-shrink-0 w-6 h-6 rounded-full ${getSenderAvatarColor()} flex items-center justify-center text-white text-xs font-medium mr-2`}>
+              {uiMessage.current.senderAvatar}
             </div>
-            <div className="truncate">
-              {typeof originalMessage.text === 'string' ? 
-                (originalMessage.text.length > 50 
-                  ? `${originalMessage.text.substring(0, 50)}...` 
-                  : originalMessage.text)
-                : (typeof originalMessage.content === 'string' ? 
-                  (originalMessage.content.length > 50
-                    ? `${originalMessage.content.substring(0, 50)}...`
-                    : originalMessage.content)
-                  : 'Attachment')
-              }
-            </div>
-          </div>
-        )}
-        
-        {uiMessage.current.isVoice ? (
-          renderVoiceMessage()
-        ) : uiMessage.current.isAttachment || uiMessage.current.fileUrl ? (
-          renderAttachment()
-        ) : (
-          <p>{uiMessage.current.text}</p>
-        )}
-        
-        <div className="flex items-center justify-end mt-1">
-          <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mr-1`}>{uiMessage.current.time}</span>
-          {uiMessage.current.sender === "user" && (
-            uiMessage.current.readStatus ? (
-              <CheckCheck 
-                className="text-teal-500" 
-                size={14} 
-              />
-            ) : (
-              <Check 
-                className={darkMode ? "text-gray-400" : "text-gray-500"} 
-                size={14} 
-              />
-            )
           )}
+          <span className={`text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            {uiMessage.current.senderName}
+          </span>
         </div>
-        
-        {/* Message actions on hover */}
-        <div className={`absolute -left-10 top-0 h-full flex items-center ${uiMessage.current.sender === "user" ? "hidden" : ""}`}>
-          <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
-            <Reply 
-              size={16} 
-              className={darkMode ? 'text-gray-300' : 'text-gray-600'}
-              onClick={() => handleReplyToMessage(uiMessage.current.id)}
-            />
+      )}
+      
+      <div className={`flex ${uiMessage.current.sender === "user" ? "justify-end" : "justify-start"} max-w-full`}>
+        <div
+          className={`relative max-w-xs md:max-w-md rounded-lg p-3 ${
+            isHighlighted ? 'ring-2 ring-teal-500 ring-offset-2' : ''
+          } ${
+            uiMessage.current.sender === "user"
+              ? `${darkMode ? 'bg-green-800 text-white' : 'bg-green-100 text-gray-800'}`
+              : `${darkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-800'}`
+          }`}
+          style={highlightAnimation}
+        >
+          {originalMessage && (
+            <div 
+              className={`mb-2 p-2 text-sm rounded-md ${
+                darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-600'
+              } border-l-2 border-teal-500`}
+            >
+              <div className="font-medium text-xs">
+                {originalMessage.sender === "user" ? "You" : 
+                  (originalMessage.sender.fullName || currentChat.title)}
+              </div>
+              <div className="truncate">
+                {typeof originalMessage.text === 'string' ? 
+                  (originalMessage.text.length > 50 
+                    ? `${originalMessage.text.substring(0, 50)}...` 
+                    : originalMessage.text)
+                  : (typeof originalMessage.content === 'string' ? 
+                    (originalMessage.content.length > 50
+                      ? `${originalMessage.content.substring(0, 50)}...`
+                      : originalMessage.content)
+                    : 'Attachment')
+                }
+              </div>
+            </div>
+          )}
+          
+          {uiMessage.current.isVoice ? (
+            renderVoiceMessage()
+          ) : uiMessage.current.isAttachment || uiMessage.current.fileUrl ? (
+            renderAttachment()
+          ) : (
+            <p>{uiMessage.current.text}</p>
+          )}
+          
+          <div className="flex items-center justify-end mt-1">
+            <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mr-1`}>{uiMessage.current.time}</span>
+            {uiMessage.current.sender === "user" && (
+              uiMessage.current.readStatus ? (
+                <CheckCheck 
+                  className="text-teal-500" 
+                  size={14} 
+                />
+              ) : (
+                <Check 
+                  className={darkMode ? "text-gray-400" : "text-gray-500"} 
+                  size={14} 
+                />
+              )
+            )}
           </div>
-        </div>
-        
-        <div className={`absolute -right-10 top-0 h-full flex items-center ${uiMessage.current.sender === "contact" ? "hidden" : ""}`}>
-          <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
-            <Reply 
-              size={16}
-              className={darkMode ? 'text-gray-300' : 'text-gray-600'}
-              onClick={() => handleReplyToMessage(uiMessage.current.id)}
-            />
+          
+          {/* Message actions on hover */}
+          <div className={`absolute -left-10 top-0 h-full flex items-center ${uiMessage.current.sender === "user" ? "hidden" : ""}`}>
+            <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
+              <Reply 
+                size={16} 
+                className={darkMode ? 'text-gray-300' : 'text-gray-600'}
+                onClick={() => handleReplyToMessage(uiMessage.current.id)}
+              />
+            </div>
+          </div>
+          
+          <div className={`absolute -right-10 top-0 h-full flex items-center ${uiMessage.current.sender === "contact" ? "hidden" : ""}`}>
+            <div className={`p-1 rounded-full ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'} opacity-0 group-hover:opacity-100 cursor-pointer`}>
+              <Reply 
+                size={16}
+                className={darkMode ? 'text-gray-300' : 'text-gray-600'}
+                onClick={() => handleReplyToMessage(uiMessage.current.id)}
+              />
+            </div>
           </div>
         </div>
       </div>
