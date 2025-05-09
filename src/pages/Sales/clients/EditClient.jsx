@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import ClientForm from "./components/ClientForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
+import { clientService } from "../../../services/Sales/clientService";
 
 // Mock client for development
 const MOCK_CLIENT = {
@@ -22,60 +23,47 @@ const MOCK_CLIENT = {
 }
 
 const EditClient = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { showNotification } = useAppContext()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { showNotification } = useAppContext();
 
-  const [client, setClient] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        setLoading(true)
-
-        // In a real app, use the API service
-        // const data = await getClient(Number(id));
-        // setClient(data);
-
-        // Using mock data for development
-        setTimeout(() => {
-          setClient(MOCK_CLIENT)
-          setLoading(false)
-        }, 500)
+        setLoading(true);
+        const data = await clientService.getClient(id);
+        setClient(data);
       } catch (error) {
-        console.error("Error fetching client:", error)
-        showNotification("Failed to load client details", "error")
-        setLoading(false)
+        console.error("Error fetching client:", error);
+        showNotification("Failed to load client details", "error");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
     if (id) {
-      fetchClient()
+      fetchClient();
     }
-  }, [id])
+  }, [id]);
 
   const handleSubmit = async data => {
-    if (!client) return
+    if (!client) return;
 
     try {
-      setSaving(true)
-
-      // In a real app, call the update API
-      // await updateClient(client.id, data);
-
-      // For development, just wait a bit then redirect
-      setTimeout(() => {
-        showNotification("Client updated successfully", "success")
-        navigate(`/sales/clients/${client.id}`)
-      }, 1000)
+      setSaving(true);
+      await clientService.updateClient(client.id, data);
+      showNotification("Client updated successfully", "success");
+      navigate(`/sales/clients/${client.id}`);
     } catch (error) {
-      console.error("Error updating client:", error)
-      showNotification("Failed to update client", "error")
-      setSaving(false)
+      console.error("Error updating client:", error);
+      showNotification(error.message || "Failed to update client", "error");
+      setSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
     navigate(`/sales/clients/${client?.id || ""}`)

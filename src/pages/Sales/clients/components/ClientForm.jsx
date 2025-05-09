@@ -6,43 +6,35 @@ import * as yup from "yup"
 const schema = yup
   .object({
     name: yup.string().required("Client name is required"),
+    contactPerson: yup.string(),
     email: yup
       .string()
       .email("Invalid email address")
       .required("Email is required"),
     phone: yup.string().required("Phone number is required"),
     address: yup.string().required("Address is required"),
-    city: yup.string().required("City is required"),
-    state: yup.string().required("State/Province is required"),
-    zipCode: yup.string().required("Zip/Postal code is required"),
-    country: yup.string().required("Country is required"),
-    taxId: yup.string(),
     notes: yup.string()
   })
-  .required()
+  .required();
 
-const ClientForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: initialData
-      ? {
-          name: initialData.name,
-          email: initialData.email,
-          phone: initialData.phone,
-          address: initialData.address,
-          city: initialData.city,
-          state: initialData.state,
-          zipCode: initialData.zipCode,
-          country: initialData.country,
-          taxId: initialData.taxId || "",
-          notes: initialData.notes || ""
-        }
-      : {}
-  })
+  const ClientForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
+    const {
+      register,
+      handleSubmit,
+      formState: { errors }
+    } = useForm({
+      resolver: yupResolver(schema),
+      defaultValues: initialData
+        ? {
+            name: initialData.name,
+            contactPerson: initialData.contactPerson || "",
+            email: initialData.email,
+            phone: initialData.phone,
+            address: initialData.address,
+            notes: initialData.notes || ""
+          }
+        : {}
+    });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -1,34 +1,21 @@
-import React, { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { format } from "date-fns"
-import {
-  Edit,
-  ArrowLeft,
-  Trash2,
-  FileText,
-  ClipboardList,
-  CreditCard
-} from "lucide-react"
-import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
-import { useAppContext } from "../../../context/Sales/AppContext"
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { Edit, ArrowLeft, Trash2, FileText, ClipboardList, CreditCard } from "lucide-react";
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
+import { useAppContext } from "../../../context/Sales/AppContext";
+import { clientService } from "../../../services/Sales/clientService";
 
-// Mock client for development
-const MOCK_CLIENT = {
-  id: 1,
-  name: "Acme Corporation",
-  email: "contact@acme.com",
-  phone: "+1 (555) 123-4567",
-  address: "123 Main St, Suite 101",
-  city: "San Francisco",
-  state: "CA",
-  zipCode: "94105",
-  country: "United States",
-  taxId: "US1234567890",
-  notes:
-    "Major technology client with multiple divisions. They have been a customer for over 5 years and typically purchase our premium service packages.",
-  createdAt: "2023-01-15T08:30:00.000Z",
-  updatedAt: "2023-05-20T14:45:00.000Z"
-}
+// Helper function for safe date formatting
+const safeFormatDate = (dateString, formatStr) => {
+  if (!dateString) return "N/A";
+  try {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? "Invalid date" : format(date, formatStr);
+  } catch (e) {
+    return "Invalid date";
+  }
+};
 
 // Mock activity data
 const MOCK_ACTIVITIES = [
@@ -67,39 +54,34 @@ const MOCK_ACTIVITIES = [
 ]
 
 const ClientDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { showNotification } = useAppContext()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { showNotification } = useAppContext();
 
-  const [client, setClient] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        setLoading(true)
-
-        // In a real app, use the API service
-        // const data = await getClient(Number(id));
-        // setClient(data);
-
-        // Using mock data for development
-        setTimeout(() => {
-          setClient(MOCK_CLIENT)
-          setLoading(false)
-        }, 500)
+        setLoading(true);
+        const data = await clientService.getClient(id);
+        setClient(data);
       } catch (error) {
-        console.error("Error fetching client:", error)
-        showNotification("Failed to load client details", "error")
-        setLoading(false)
+        console.error("Error fetching client:", error);
+        showNotification("Failed to load client details", "error");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
     if (id) {
-      fetchClient()
+      fetchClient();
     }
-  }, [id])
+  }, [id, showNotification]);
 
   const handleBack = () => {
     navigate("/sales/clients")
@@ -115,21 +97,36 @@ const ClientDetail = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      // In a real app, call the delete API
-      // await deleteClient(Number(id));
-
-      showNotification(`Client ${client?.name} deleted successfully`, "success")
-      navigate("/sales/clients")
+      await clientService.deleteClient(client.id);
+      showNotification(`Client ${client.name} deleted successfully`, "success");
+      navigate("/sales/clients");
     } catch (error) {
-      console.error("Error deleting client:", error)
-      showNotification("Failed to delete client", "error")
+      console.error("Error deleting client:", error);
+      
+      // Check for foreign key constraint violation error
+      if (error.response && 
+          error.response.data && 
+          (error.response.data.includes("violates foreign key constraint") || 
+           error.response.data.includes("fkgbnmc624hyny4k4q8etbxxmu1"))) {
+        setErrorMessage(
+          `Cannot delete ${client.name} because they have associated quotes, orders, or invoices. ` +
+          `Please delete all associated documents before removing this client.`
+        );
+        setErrorDialogOpen(true);
+      } else {
+        showNotification("Failed to delete client", "error");
+      }
     } finally {
-      setDeleteDialogOpen(false)
+      setDeleteDialogOpen(false);
     }
-  }
+  };
 
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false)
+  }
+  
+  const handleErrorDialogClose = () => {
+    setErrorDialogOpen(false);
   }
 
   if (loading) {
@@ -217,7 +214,7 @@ const ClientDetail = () => {
         <div>
           <p className="text-gray-600">
             Client ID: {client.id} • Created on{" "}
-            {format(new Date(client.createdAt), "PPP")}
+            {safeFormatDate(client.createdAt, "PPP")}
           </p>
         </div>
 
@@ -279,7 +276,7 @@ const ClientDetail = () => {
                 <div className="mb-4">
                   <p className="text-sm text-gray-500">Last Updated</p>
                   <p className="text-gray-800">
-                    {format(new Date(client.updatedAt), "PPP")}
+                    {safeFormatDate(client.updatedAt, "PPP")}
                   </p>
                 </div>
 
@@ -328,7 +325,7 @@ const ClientDetail = () => {
                           {activity.number}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {format(new Date(activity.date), "MMM d, yyyy")}
+                          {safeFormatDate(activity.date, "MMM d, yyyy")}
                         </p>
                       </div>
                     </div>
@@ -425,6 +422,17 @@ const ClientDetail = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+      
+      <ConfirmDialog
+        isOpen={errorDialogOpen}
+        title="Cannot Delete Client"
+        message={errorMessage}
+        confirmText="OK"
+        onConfirm={handleErrorDialogClose}
+        onCancel={handleErrorDialogClose}
+        type="warning"
+        showCancelButton={false}
       />
     </div>
   )

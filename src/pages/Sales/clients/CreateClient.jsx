@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import ClientForm from "./components/ClientForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
+import { clientService } from "../../../services/Sales/clientService";
 
 const CreateClient = () => {
   const navigate = useNavigate()
@@ -15,8 +16,8 @@ const CreateClient = () => {
       setLoading(true)
 
       // In a real app, call the create API
-      // const newClient = await createClient(data);
-      // navigate(`/clients/${newClient.id}`);
+      const newClient = await clientService.createClient(data);
+      navigate(`/clients/create/${newClient.id}`);
 
       // For development, just wait a bit then redirect
       setTimeout(() => {

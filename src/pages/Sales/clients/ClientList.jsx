@@ -83,7 +83,7 @@ const ClientList = () => {
   };
 
   const handleAddClient = () => {
-    navigate("/sales/clients/create");
+    navigate("/sales/clients/new");
   };
 
   const handleViewClient = (id) => {
