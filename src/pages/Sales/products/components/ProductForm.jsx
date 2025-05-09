@@ -1,118 +1,106 @@
-import React, { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { productService } from "../../../../services/Sales/productService";
 
 const schema = yup
   .object({
     name: yup.string().required("Product name is required"),
-    description: yup.string().required("Description is required"),
-    sku: yup.string().required("SKU is required"),
-    price: yup
+    description: yup.string(),
+    unitPrice: yup
       .number()
       .positive("Price must be positive")
       .required("Price is required"),
-    cost: yup
-      .number()
-      .positive("Cost must be positive")
-      .required("Cost is required"),
-    categoryId: yup.number().required("Category is required"),
-    inStock: yup
-      .number()
-      .min(0, "In stock must be non-negative")
-      .required("In stock quantity is required"),
-    minStock: yup
-      .number()
-      .min(0, "Minimum stock must be non-negative")
-      .required("Minimum stock is required"),
-    isActive: yup.boolean()
+    category: yup.string(),
+    active: yup.boolean(),
+    // Add fields that exist in your form but not in backend as optional
+    sku: yup.string(),
+    cost: yup.number().positive("Cost must be positive"),
+    inStock: yup.number().min(0, "Stock cannot be negative"),
+    minStock: yup.number().min(0, "Minimum stock cannot be negative")
   })
-  .required()
-
-// Mock categories for development
-const MOCK_CATEGORIES = [
-  {
-    id: 1,
-    name: "Electronics",
-    description: "Electronic devices and accessories"
-  },
-  {
-    id: 2,
-    name: "Office Supplies",
-    description: "Office essentials and supplies"
-  },
-  { id: 3, name: "Furniture", description: "Office and home furniture" },
-  {
-    id: 4,
-    name: "Software",
-    description: "Software licenses and subscriptions"
-  }
-]
+  .required();
 
 const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
-  const [categories, setCategories] = useState([])
-  const [categoriesLoading, setCategoriesLoading] = useState(true)
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
+    setValue
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialData
       ? {
           name: initialData.name,
-          description: initialData.description,
-          sku: initialData.sku,
-          price: initialData.price,
-          cost: initialData.cost,
-          categoryId: initialData.categoryId,
-          inStock: initialData.inStock,
-          minStock: initialData.minStock,
-          isActive: initialData.isActive
+          description: initialData.description || "",
+          unitPrice: initialData.price || 0, // Map price to unitPrice
+          category: initialData.category?.name || "",
+          active: initialData.isActive ?? true,
+          // Set mock/default values for frontend-only fields
+          sku: initialData.sku || "",
+          cost: 19.99, // Mock cost value
+          inStock: initialData.inStock || 0,
+          minStock: initialData.minStock || 0
         }
       : {
-          isActive: true
+          active: true,
+          cost: 19.99, // Default mock cost
+          inStock: 0,
+          minStock: 0
         }
-  })
+  });
 
-  const price = watch("price") || 0
-  const cost = watch("cost") || 0
-  const margin = price - cost
-  const marginPercentage = price > 0 ? (margin / price) * 100 : 0
+  // Watch form values for calculations
+  const unitPrice = watch("unitPrice") || 0;
+  const cost = watch("cost") || 0;
+  const margin = unitPrice - cost;
+  const marginPercentage = unitPrice > 0 ? (margin / unitPrice) * 100 : 0;
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        setCategoriesLoading(true)
-
-        // In a real app, use the API service
-        // const categoriesData = await getProductCategories();
-        // setCategories(categoriesData);
-
-        // Using mock data for development
-        setTimeout(() => {
-          setCategories(MOCK_CATEGORIES)
-          setCategoriesLoading(false)
-        }, 500)
+        setCategoriesLoading(true);
+        
+        // First try to get categories from backend
+        try {
+          const categoriesData = await productService.getProductCategories();
+          if (categoriesData && categoriesData.length > 0) {
+            setCategories(categoriesData);
+            return;
+          }
+        } catch (apiError) {
+          console.log("Using mock categories due to:", apiError);
+        }
+        
+        // Fallback to mock categories if API fails
+        const MOCK_CATEGORIES = [
+          { id: 1, name: "Electronics" },
+          { id: 2, name: "Office Supplies" },
+          { id: 3, name: "Furniture" },
+          { id: 4, name: "Software" }
+        ];
+        setCategories(MOCK_CATEGORIES);
       } catch (error) {
-        console.error("Error fetching product categories:", error)
-        setCategoriesLoading(false)
+        console.error("Error loading categories:", error);
+      } finally {
+        setCategoriesLoading(false);
       }
-    }
+    };
 
-    fetchCategories()
-  }, [])
+    fetchCategories();
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Name Field */}
         <div className="space-y-1">
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Product Name <span className="text-error-500">*</span>
           </label>
           <input
@@ -121,7 +109,6 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
               errors.name ? "border-error-500" : ""
             }`}
-            placeholder="Premium Widget"
             {...register("name")}
             disabled={loading}
           />
@@ -130,12 +117,10 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           )}
         </div>
 
+        {/* SKU Field (frontend-only) */}
         <div className="space-y-1">
-          <label
-            htmlFor="sku"
-            className="block text-sm font-medium text-gray-700"
-          >
-            SKU <span className="text-error-500">*</span>
+          <label htmlFor="sku" className="block text-sm font-medium text-gray-700">
+            SKU
           </label>
           <input
             id="sku"
@@ -143,7 +128,6 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
               errors.sku ? "border-error-500" : ""
             }`}
-            placeholder="WDG-001"
             {...register("sku")}
             disabled={loading}
           />
@@ -152,12 +136,10 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           )}
         </div>
 
+        {/* Description Field */}
         <div className="space-y-1 md:col-span-2">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Description <span className="text-error-500">*</span>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            Description
           </label>
           <textarea
             id="description"
@@ -165,35 +147,30 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
               errors.description ? "border-error-500" : ""
             }`}
-            placeholder="Detailed product description..."
             {...register("description")}
             disabled={loading}
-          ></textarea>
+          />
           {errors.description && (
-            <p className="text-xs text-error-500">
-              {errors.description.message}
-            </p>
+            <p className="text-xs text-error-500">{errors.description.message}</p>
           )}
         </div>
 
+        {/* Category Field */}
         <div className="space-y-1">
-          <label
-            htmlFor="categoryId"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Category <span className="text-error-500">*</span>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            Category
           </label>
           <select
-            id="categoryId"
+            id="category"
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
-              errors.categoryId ? "border-error-500" : ""
+              errors.category ? "border-error-500" : ""
             }`}
-            {...register("categoryId", { valueAsNumber: true })}
+            {...register("category")}
             disabled={loading || categoriesLoading}
           >
             <option value="">Select a category</option>
             {categories.map(category => (
-              <option key={category.id} value={category.id}>
+              <option key={category.id} value={category.name}>
                 {category.name}
               </option>
             ))}
@@ -201,66 +178,54 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           {categoriesLoading && (
             <p className="text-xs text-gray-500">Loading categories...</p>
           )}
-          {errors.categoryId && (
-            <p className="text-xs text-error-500">
-              {errors.categoryId.message}
-            </p>
+          {errors.category && (
+            <p className="text-xs text-error-500">{errors.category.message}</p>
           )}
         </div>
 
+        {/* Active Status Field */}
         <div className="space-y-1">
-          <label
-            htmlFor="isActive"
-            className="flex items-center text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="active" className="flex items-center text-sm font-medium text-gray-700">
             <input
-              id="isActive"
+              id="active"
               type="checkbox"
               className="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-500 focus:ring-primary-500 h-4 w-4 mr-2"
-              {...register("isActive")}
+              {...register("active")}
               disabled={loading}
             />
             Active Product
           </label>
-          <p className="text-xs text-gray-500">
-            Inactive products won't appear in quotes or orders
-          </p>
         </div>
 
+        {/* Unit Price Field (maps to backend's unitPrice) */}
         <div className="space-y-1">
-          <label
-            htmlFor="price"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Selling Price <span className="text-error-500">*</span>
+          <label htmlFor="unitPrice" className="block text-sm font-medium text-gray-700">
+            Unit Price <span className="text-error-500">*</span>
           </label>
           <div className="mt-1 relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span className="text-gray-500 sm:text-sm">$</span>
             </div>
             <input
-              id="price"
+              id="unitPrice"
               type="number"
               step="0.01"
               className={`pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
-                errors.price ? "border-error-500" : ""
+                errors.unitPrice ? "border-error-500" : ""
               }`}
-              placeholder="0.00"
-              {...register("price", { valueAsNumber: true })}
+              {...register("unitPrice", { valueAsNumber: true })}
               disabled={loading}
             />
           </div>
-          {errors.price && (
-            <p className="text-xs text-error-500">{errors.price.message}</p>
+          {errors.unitPrice && (
+            <p className="text-xs text-error-500">{errors.unitPrice.message}</p>
           )}
         </div>
 
+        {/* Cost Field (frontend-only) */}
         <div className="space-y-1">
-          <label
-            htmlFor="cost"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Cost <span className="text-error-500">*</span>
+          <label htmlFor="cost" className="block text-sm font-medium text-gray-700">
+            Cost
           </label>
           <div className="mt-1 relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -273,7 +238,6 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
               className={`pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 ${
                 errors.cost ? "border-error-500" : ""
               }`}
-              placeholder="0.00"
               {...register("cost", { valueAsNumber: true })}
               disabled={loading}
             />
@@ -283,6 +247,7 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           )}
         </div>
 
+        {/* Margin Calculation (frontend-only) */}
         <div className="space-y-1 md:col-span-2">
           <div className="bg-gray-50 p-3 rounded-md">
             <p className="text-sm font-medium text-gray-700 mb-2">
@@ -311,12 +276,10 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           </div>
         </div>
 
+        {/* In Stock Field (frontend-only) */}
         <div className="space-y-1">
-          <label
-            htmlFor="inStock"
-            className="block text-sm font-medium text-gray-700"
-          >
-            In Stock <span className="text-error-500">*</span>
+          <label htmlFor="inStock" className="block text-sm font-medium text-gray-700">
+            In Stock
           </label>
           <input
             id="inStock"
@@ -332,12 +295,10 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
           )}
         </div>
 
+        {/* Min Stock Field (frontend-only) */}
         <div className="space-y-1">
-          <label
-            htmlFor="minStock"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Minimum Stock <span className="text-error-500">*</span>
+          <label htmlFor="minStock" className="block text-sm font-medium text-gray-700">
+            Minimum Stock
           </label>
           <input
             id="minStock"
@@ -354,6 +315,7 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
         </div>
       </div>
 
+      {/* Form Actions */}
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
         <button
           type="button"
@@ -398,7 +360,7 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default ProductForm
+export default ProductForm;

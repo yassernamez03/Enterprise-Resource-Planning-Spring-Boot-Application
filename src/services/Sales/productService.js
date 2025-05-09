@@ -1,47 +1,131 @@
-import { get, getPaginated, post, put, del } from "./api"
+// src/services/Sales/productService.js
+import { apiService } from "../apiInterceptor";
 
-const BASE_URL = "/sales/products"
-const CATEGORY_URL = "/sales/product-categories"
+const BASE_URL = "/sales/products";
 
-export const getProducts = async (pagination, filters) => {
-  const response = await getPaginated(BASE_URL, pagination, filters)
-  return response.data
-}
+const productService = {
+  getProducts: async (pagination, filters) => {
+    const params = new URLSearchParams({
+      page: pagination.page,
+      size: pagination.pageSize,
+      ...filters
+    });
+    
+    try {
+      const response = await apiService.get(`${BASE_URL}?${params.toString()}`);
+      // Handle different response structures (page object or array)
+      let products = [];
+      let total = 0;
+      
+      if (response.content) {
+        // Spring Data pagination response
+        products = response.content;
+        total = response.totalElements;
+      } else if (Array.isArray(response)) {
+        // Direct array response
+        products = response;
+        total = response.length;
+      } else if (response.data) {
+        // Generic wrapped response
+        products = response.data;
+        total = response.total || products.length;
+      }
+      
+      // Transform backend response to match frontend property names
+      const transformedProducts = products.map(product => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.unitPrice, // Map unitPrice to price
+        sku: product.sku || "N/A",
+        inStock: product.stock || 0,
+        minStock: product.minStock || 0,
+        isActive: product.active, // Map active to isActive
+        category: {
+          name: product.category || "Uncategorized" // Handle category as string or object
+        }
+      }));
+      
+      return {
+        data: transformedProducts,
+        total: total,
+        page: response.number || response.page || pagination.page,
+        pageSize: response.size || response.pageSize || pagination.pageSize
+      };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw error;
+    }
+  },
 
-export const getProduct = async id => {
-  const response = await get(`${BASE_URL}/${id}`)
-  return response.data.data
-}
+  getProduct: async (id) => {
+    try {
+      const product = await apiService.get(`${BASE_URL}/${id}`);
+      
+      // Transform backend response to match frontend property names
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.unitPrice,
+        sku: product.sku || "N/A",
+        inStock: product.stock || 0,
+        minStock: product.minStock || 0,
+        isActive: product.active,
+        category: {
+          name: product.category || "Uncategorized"
+        }
+      };
+    } catch (error) {
+      console.error(`Error fetching product ${id}:`, error);
+      throw error;
+    }
+  },
 
-export const createProduct = async productData => {
-  const response = await post(BASE_URL, productData)
-  return response.data.data
-}
+  createProduct: async (productData) => {
+    // Transform frontend data to match backend expected properties
+    const backendProduct = {
+      name: productData.name,
+      description: productData.description,
+      unitPrice: productData.price,
+      sku: productData.sku,
+      stock: productData.inStock,
+      minStock: productData.minStock,
+      active: productData.isActive,
+      category: productData.category?.name || productData.category
+    };
+    
+    return apiService.post(`${BASE_URL}/create`, backendProduct);
+  },
 
-export const updateProduct = async (id, productData) => {
-  const response = await put(`${BASE_URL}/${id}`, productData)
-  return response.data.data
-}
+  updateProduct: async (id, productData) => {
+    // Transform frontend data to match backend expected properties
+    const backendProduct = {
+      name: productData.name,
+      description: productData.description,
+      unitPrice: productData.price,
+      sku: productData.sku,
+      stock: productData.inStock,
+      minStock: productData.minStock,
+      active: productData.isActive,
+      category: productData.category?.name || productData.category
+    };
+    
+    return apiService.put(`${BASE_URL}/update/${id}`, backendProduct);
+  },
 
-export const deleteProduct = async id => {
-  await del(`${BASE_URL}/${id}`)
-}
+  deleteProduct: async (id) => {
+    return apiService.delete(`${BASE_URL}/delete/${id}`);
+  },
 
-export const getProductCategories = async () => {
-  const response = await get(CATEGORY_URL)
-  return response.data.data
-}
+  checkProductHasOrders: async (productId) => {
+    const response = await apiService.get(`/api/sales/orders?productId=${productId}`);
+    return response.length > 0; // or adjust based on your API response
+  },
+  
+  searchProducts: async (query) => {
+    return apiService.get(`${BASE_URL}/search?query=${encodeURIComponent(query)}`);
+  }
+};
 
-export const createProductCategory = async category => {
-  const response = await post(CATEGORY_URL, category)
-  return response.data.data
-}
-
-export const updateProductCategory = async (id, category) => {
-  const response = await put(`${CATEGORY_URL}/${id}`, category)
-  return response.data.data
-}
-
-export const deleteProductCategory = async id => {
-  await del(`${CATEGORY_URL}/${id}`)
-}
+export { productService };

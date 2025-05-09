@@ -1,285 +1,188 @@
-import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { Plus, Search, Edit, Trash2, Eye } from "lucide-react"
-import PageHeader from "../../../Components/Sales/common/PageHeader"
-import DataTable from "../../../Components/Sales/common/DataTable"
-import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
-import { useAppContext } from "../../../context/Sales/AppContext"
-
-// Mock data for development
-const MOCK_PRODUCTS = [
-  {
-    id: 1,
-    name: "Premium Widget",
-    description: "High-quality widget with premium features",
-    sku: "WDG-001",
-    price: 49.99,
-    cost: 19.99,
-    categoryId: 1,
-    category: { id: 1, name: "Electronics" },
-    inStock: 150,
-    minStock: 20,
-    isActive: true,
-    createdAt: "2023-02-15T08:30:00.000Z",
-    updatedAt: "2023-05-20T14:45:00.000Z"
-  },
-  {
-    id: 2,
-    name: "Standard Widget",
-    description: "Reliable widget for everyday use",
-    sku: "WDG-002",
-    price: 29.99,
-    cost: 12.99,
-    categoryId: 1,
-    category: { id: 1, name: "Electronics" },
-    inStock: 200,
-    minStock: 30,
-    isActive: true,
-    createdAt: "2023-02-15T09:15:00.000Z",
-    updatedAt: "2023-04-18T11:30:00.000Z"
-  },
-  {
-    id: 3,
-    name: "Basic Widget",
-    description: "Affordable widget with essential features",
-    sku: "WDG-003",
-    price: 19.99,
-    cost: 7.99,
-    categoryId: 1,
-    category: { id: 1, name: "Electronics" },
-    inStock: 300,
-    minStock: 50,
-    isActive: true,
-    createdAt: "2023-03-05T10:45:00.000Z",
-    updatedAt: "2023-06-12T16:20:00.000Z"
-  },
-  {
-    id: 4,
-    name: "Deluxe Gadget",
-    description: "Feature-rich gadget for professionals",
-    sku: "GDT-001",
-    price: 89.99,
-    cost: 39.99,
-    categoryId: 1,
-    category: { id: 1, name: "Electronics" },
-    inStock: 75,
-    minStock: 15,
-    isActive: true,
-    createdAt: "2023-01-20T12:00:00.000Z",
-    updatedAt: "2023-05-25T09:10:00.000Z"
-  },
-  {
-    id: 5,
-    name: "Office Chair",
-    description: "Ergonomic office chair with lumbar support",
-    sku: "FRN-001",
-    price: 199.99,
-    cost: 89.99,
-    categoryId: 3,
-    category: { id: 3, name: "Furniture" },
-    inStock: 25,
-    minStock: 5,
-    isActive: true,
-    createdAt: "2023-02-25T11:30:00.000Z",
-    updatedAt: "2023-04-30T13:45:00.000Z"
-  }
-]
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
+import PageHeader from "../../../Components/Sales/common/PageHeader";
+import DataTable from "../../../Components/Sales/common/DataTable";
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
+import { useAppContext } from "../../../context/Sales/AppContext";
+import { productService } from "../../../services/Sales/productService";
 
 const ProductList = () => {
-  const navigate = useNavigate()
-  const { showNotification } = useAppContext()
+  const navigate = useNavigate();
+  const { showNotification } = useAppContext();
 
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
-    page: 1,
+    page: 0, // Spring uses 0-based indexing
     pageSize: 10,
-    total: 0
-  })
+    total: 0,
+  });
   const [filters, setFilters] = useState({
     search: "",
     sortBy: "name",
     sortOrder: "asc",
-    categoryId: "",
-    isActive: "true"
-  })
+    category: "",
+    active: "true",
+  });
 
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     productId: 0,
-    productName: ""
-  })
+    productName: "",
+  });
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await productService.getProducts(pagination, filters);
+
+      // Data is now properly transformed in the service
+      setProducts(response.data);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.total,
+        page: response.page || pagination.page, // Use returned page if available
+        pageSize: response.pageSize || pagination.pageSize,
+      }));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      showNotification(error.message || "Failed to load products", "error");
+      setProducts([]); // Set empty array on error
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true)
+    fetchProducts();
+  }, [pagination.page, pagination.pageSize, filters.sortBy, filters.sortOrder]);
 
-        // In a real app, use the API service
-        // const response = await getProducts(pagination, filters);
-        // setProducts(response.data);
-        // setPagination({ ...pagination, total: response.total });
+  const handleSearch = (e) => {
+    const search = e.target.value;
+    setFilters((prev) => ({ ...prev, search }));
+    // Reset to first page when searching
+    setPagination((prev) => ({ ...prev, page: 0 }));
 
-        // Using mock data for development
-        setTimeout(() => {
-          // Apply filters to mock data
-          let filteredProducts = [...MOCK_PRODUCTS]
+    // Trigger fetch with updated search parameter
+    fetchProducts();
+  };
 
-          if (filters.search) {
-            const search = filters.search.toLowerCase()
-            filteredProducts = filteredProducts.filter(
-              product =>
-                product.name.toLowerCase().includes(search) ||
-                product.sku.toLowerCase().includes(search) ||
-                product.description.toLowerCase().includes(search)
-            )
-          }
+  const handleSearchDebounced = debounce(handleSearch, 500);
 
-          if (filters.categoryId) {
-            filteredProducts = filteredProducts.filter(
-              product => product.categoryId === Number(filters.categoryId)
-            )
-          }
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
+    // Reset to first page when filtering
+    setPagination((prev) => ({ ...prev, page: 0 }));
 
-          if (filters.isActive === "true") {
-            filteredProducts = filteredProducts.filter(
-              product => product.isActive
-            )
-          } else if (filters.isActive === "false") {
-            filteredProducts = filteredProducts.filter(
-              product => !product.isActive
-            )
-          }
-
-          // Sort
-          filteredProducts.sort((a, b) => {
-            const field = filters.sortBy || "name"
-            const order = filters.sortOrder === "desc" ? -1 : 1
-
-            // @ts-ignore
-            if (a[field] < b[field]) return -1 * order
-            // @ts-ignore
-            if (a[field] > b[field]) return 1 * order
-            return 0
-          })
-
-          setProducts(filteredProducts)
-          setPagination({ ...pagination, total: filteredProducts.length })
-          setLoading(false)
-        }, 500)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-        showNotification("Failed to load products", "error")
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [pagination.page, pagination.pageSize, filters])
-
-  const handleSearch = e => {
-    const search = e.target.value
-    setFilters({ ...filters, search })
-  }
-
-  const handleFilterChange = e => {
-    const { name, value } = e.target
-    setFilters({ ...filters, [name]: value })
-  }
+    // Trigger fetch with updated filter
+    fetchProducts();
+  };
 
   const handleSort = (field, direction) => {
-    setFilters({ ...filters, sortBy: field, sortOrder: direction })
-  }
+    // Map frontend field names to backend field names
+    const fieldMap = {
+      price: "unitPrice",
+      isActive: "active",
+      inStock: "stock",
+    };
 
-  const handlePageChange = page => {
-    setPagination({ ...pagination, page })
-  }
+    const backendField = fieldMap[field] || field;
+    setFilters((prev) => ({
+      ...prev,
+      sortBy: backendField,
+      sortOrder: direction,
+    }));
+  };
+
+  // Fixed handlePageChange function - convert from 1-based to 0-based for Spring
+  const handlePageChange = (page) => {
+    // Adjust page to 0-based for Spring
+    setPagination((prev) => ({ ...prev, page: page - 1 }));
+  };
 
   const handleAddProduct = () => {
-    navigate("/sales/products/new")
-  }
+    navigate("/sales/products/new");
+  };
 
-  const handleViewProduct = id => {
-    navigate(`/sales/products/${id}`)
-  }
+  const handleViewProduct = (id) => {
+    navigate(`/sales/products/${id}`);
+  };
 
-  const handleEditProduct = id => {
-    navigate(`/sales/products/${id}/edit`)
-  }
+  const handleEditProduct = (id) => {
+    navigate(`/sales/products/${id}/edit`);
+  };
 
-  const handleDeletePrompt = product => {
+  const handleDeletePrompt = (product) => {
     setDeleteDialog({
       open: true,
       productId: product.id,
-      productName: product.name
-    })
-  }
+      productName: product.name,
+    });
+  };
 
   const handleDeleteConfirm = async () => {
     try {
-      // In a real app, call the delete API
-      // await deleteProduct(deleteDialog.productId);
+      await productService.deleteProduct(deleteDialog.productId);
 
-      // In development, filter the product from the list
-      const updatedProducts = products.filter(
-        p => p.id !== deleteDialog.productId
-      )
-      setProducts(updatedProducts)
+      // Refresh the current page
+      fetchProducts();
 
       showNotification(
         `Product ${deleteDialog.productName} deleted successfully`,
         "success"
-      )
+      );
     } catch (error) {
-      console.error("Error deleting product:", error)
-      showNotification("Failed to delete product", "error")
+      console.error("Error deleting product:", error);
+      showNotification(error.message || "Failed to delete product", "error");
     } finally {
-      setDeleteDialog({ open: false, productId: 0, productName: "" })
+      setDeleteDialog({ open: false, productId: 0, productName: "" });
     }
-  }
+  };
 
   const handleDeleteCancel = () => {
-    setDeleteDialog({ open: false, productId: 0, productName: "" })
-  }
+    setDeleteDialog({ open: false, productId: 0, productName: "" });
+  };
 
   const productColumns = [
     {
       header: "Product Name",
       accessor: "name",
-      sortable: true
+      sortable: true,
     },
     {
       header: "SKU",
       accessor: "sku",
-      sortable: true
+      sortable: true,
     },
     {
       header: "Category",
-      accessor: "category.name"
+      accessor: "category.name",
     },
     {
       header: "Price",
       accessor: "price",
       sortable: true,
-      cell: product => `$${product.price.toFixed(2)}`
+      cell: (product) => `$${parseFloat(product.price).toFixed(2)}`,
     },
     {
       header: "In Stock",
       accessor: "inStock",
       sortable: true,
-      cell: product => {
-        const isLow = product.inStock <= product.minStock
+      cell: (product) => {
+        const isLow = product.inStock <= product.minStock;
         return (
           <span className={isLow ? "text-error-600 font-medium" : ""}>
             {product.inStock}
           </span>
-        )
-      }
+        );
+      },
     },
     {
       header: "Status",
       accessor: "isActive",
-      cell: product => (
+      cell: (product) => (
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
             product.isActive
@@ -289,9 +192,9 @@ const ProductList = () => {
         >
           {product.isActive ? "Active" : "Inactive"}
         </span>
-      )
-    }
-  ]
+      ),
+    },
+  ];
 
   return (
     <div>
@@ -310,12 +213,11 @@ const ProductList = () => {
       />
 
       <div className="mb-6 flex flex-col md:flex-row gap-4">
-        <div className="relative">
+        <div className="relative max-w-xs">
           <input
             type="text"
             placeholder="Search products..."
-            value={filters.search}
-            onChange={handleSearch}
+            onChange={(e) => handleSearchDebounced(e)}
             className="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500"
           />
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -325,21 +227,22 @@ const ProductList = () => {
 
         <div className="flex space-x-2">
           <select
-            name="categoryId"
-            value={filters.categoryId}
+            name="category"
+            value={filters.category}
             onChange={handleFilterChange}
             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-md"
           >
             <option value="">All Categories</option>
-            <option value="1">Electronics</option>
-            <option value="2">Office Supplies</option>
-            <option value="3">Furniture</option>
-            <option value="4">Software</option>
+            <option value="Stationery">Stationery</option>
+            <option value="Marketing Materials">Marketing Materials</option>
+            <option value="Signage">Signage</option>
+            <option value="Documents">Documents</option>
+            <option value="Promotional">Promotional</option>
           </select>
 
           <select
-            name="isActive"
-            value={filters.isActive}
+            name="active"
+            value={filters.active}
             onChange={handleFilterChange}
             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-md"
           >
@@ -354,18 +257,18 @@ const ProductList = () => {
         data={products}
         columns={productColumns}
         total={pagination.total}
-        currentPage={pagination.page}
+        currentPage={pagination.page + 1} // Convert 0-based to 1-based for display
         pageSize={pagination.pageSize}
         onPageChange={handlePageChange}
         onSort={handleSort}
         loading={loading}
         emptyMessage="No products found"
-        rowActions={product => (
+        rowActions={(product) => (
           <div className="flex space-x-2">
             <button
-              onClick={e => {
-                e.stopPropagation()
-                handleViewProduct(product.id)
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewProduct(product.id);
               }}
               className="text-gray-500 hover:text-primary-600"
               aria-label="View product"
@@ -373,9 +276,9 @@ const ProductList = () => {
               <Eye size={18} />
             </button>
             <button
-              onClick={e => {
-                e.stopPropagation()
-                handleEditProduct(product.id)
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditProduct(product.id);
               }}
               className="text-gray-500 hover:text-primary-600"
               aria-label="Edit product"
@@ -383,9 +286,9 @@ const ProductList = () => {
               <Edit size={18} />
             </button>
             <button
-              onClick={e => {
-                e.stopPropagation()
-                handleDeletePrompt(product)
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeletePrompt(product);
               }}
               className="text-gray-500 hover:text-error-600"
               aria-label="Delete product"
@@ -394,8 +297,8 @@ const ProductList = () => {
             </button>
           </div>
         )}
-        onRowClick={product => handleViewProduct(product.id)}
-        keyExtractor={product => product.id}
+        onRowClick={(product) => handleViewProduct(product.id)}
+        keyExtractor={(product) => product.id}
       />
 
       <ConfirmDialog
@@ -409,7 +312,17 @@ const ProductList = () => {
         type="danger"
       />
     </div>
-  )
+  );
+};
+
+// Simple debounce function to prevent excessive API calls during search
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
 }
 
-export default ProductList
+export default ProductList;

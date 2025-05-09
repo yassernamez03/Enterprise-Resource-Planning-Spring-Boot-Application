@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import ProductForm from "./components/ProductForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
+import { productService } from "../../../services/Sales/productService";
 
 // Mock product for development
 const MOCK_PRODUCT = {
@@ -22,60 +23,47 @@ const MOCK_PRODUCT = {
 }
 
 const EditProduct = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { showNotification } = useAppContext()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { showNotification } = useAppContext();
 
-  const [product, setProduct] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        setLoading(true)
-
-        // In a real app, use the API service
-        // const data = await getProduct(Number(id));
-        // setProduct(data);
-
-        // Using mock data for development
-        setTimeout(() => {
-          setProduct(MOCK_PRODUCT)
-          setLoading(false)
-        }, 500)
+        setLoading(true);
+        const data = await productService.getProduct(id);
+        setProduct(data);
       } catch (error) {
-        console.error("Error fetching product:", error)
-        showNotification("Failed to load product details", "error")
-        setLoading(false)
+        console.error("Error fetching product:", error);
+        showNotification("Failed to load product details", "error");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
     if (id) {
-      fetchProduct()
+      fetchProduct();
     }
-  }, [id])
+  }, [id]);
 
   const handleSubmit = async data => {
-    if (!product) return
+    if (!product) return;
 
     try {
-      setSaving(true)
-
-      // In a real app, call the update API
-      // await updateProduct(product.id, data);
-
-      // For development, just wait a bit then redirect
-      setTimeout(() => {
-        showNotification("Product updated successfully", "success")
-        navigate(`/sales/products/${product.id}`)
-      }, 1000)
+      setSaving(true);
+      await productService.updateProduct(product.id, data);
+      showNotification("Product updated successfully", "success");
+      navigate(`/sales/products/${product.id}`);
     } catch (error) {
-      console.error("Error updating product:", error)
-      showNotification("Failed to update product", "error")
-      setSaving(false)
+      console.error("Error updating product:", error);
+      showNotification("Failed to update product", "error");
+      setSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
     navigate(`/sales/products/${product?.id || ""}`)

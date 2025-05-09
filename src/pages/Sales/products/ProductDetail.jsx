@@ -14,24 +14,7 @@ import {
 } from "lucide-react"
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { useAppContext } from "../../../context/Sales/AppContext"
-
-// Mock product for development
-const MOCK_PRODUCT = {
-  id: 1,
-  name: "Premium Widget",
-  description:
-    "High-quality widget with premium features. This widget includes advanced technology with durable construction. Perfect for both professional and personal use.",
-  sku: "WDG-001",
-  price: 49.99,
-  cost: 19.99,
-  categoryId: 1,
-  category: { id: 1, name: "Electronics" },
-  inStock: 150,
-  minStock: 20,
-  isActive: true,
-  createdAt: "2023-02-15T08:30:00.000Z",
-  updatedAt: "2023-05-20T14:45:00.000Z"
-}
+import { productService } from "../../../services/Sales/productService";
 
 // Mock sales history
 const MOCK_SALES_HISTORY = [
@@ -64,40 +47,43 @@ const MOCK_SALES_HISTORY = [
   }
 ]
 
-const ProductDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { showNotification } = useAppContext()
+const safeFormatDate = (dateString, formatStr) => {
+  if (!dateString) return "N/A";
+  try {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? "Invalid date" : format(date, formatStr);
+  } catch (e) {
+    return "Invalid date";
+  }
+}
 
-  const [product, setProduct] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+const ProductDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { showNotification } = useAppContext();
+
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        setLoading(true)
-
-        // In a real app, use the API service
-        // const data = await getProduct(Number(id));
-        // setProduct(data);
-
-        // Using mock data for development
-        setTimeout(() => {
-          setProduct(MOCK_PRODUCT)
-          setLoading(false)
-        }, 500)
+        setLoading(true);
+        const data = await productService.getProduct(id);
+        setProduct(data);
       } catch (error) {
-        console.error("Error fetching product:", error)
-        showNotification("Failed to load product details", "error")
-        setLoading(false)
+        console.error("Error fetching product:", error);
+        showNotification("Failed to load product details", "error");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
     if (id) {
-      fetchProduct()
+      fetchProduct();
     }
-  }, [id])
+  }, [id, showNotification]);
 
   const handleBack = () => {
     navigate("/sales/products")
@@ -113,22 +99,17 @@ const ProductDetail = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      // In a real app, call the delete API
-      // await deleteProduct(Number(id));
-
-      showNotification(
-        `Product ${product?.name} deleted successfully`,
-        "success"
-      )
-      navigate("/sales/products")
+      await productService.deleteProduct(product.id);
+      showNotification(`Product ${product.name} deleted successfully`, "success");
+      navigate("/sales/products");
     } catch (error) {
-      console.error("Error deleting product:", error)
-      showNotification("Failed to delete product", "error")
+      console.error("Error deleting product:", error);
+      showNotification("Failed to delete product", "error");
     } finally {
-      setDeleteDialogOpen(false)
+      setDeleteDialogOpen(false);
     }
-  }
-
+  };
+  
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false)
   }
@@ -263,7 +244,7 @@ const ProductDetail = () => {
                   <div className="flex justify-between">
                     <p className="text-sm text-gray-600">Cost:</p>
                     <p className="text-gray-800 font-medium">
-                      ${product.cost.toFixed(2)}
+                     ${product.unitPrice?.toFixed(2) || "0.00"}
                     </p>
                   </div>
                   <div className="pt-2 mt-2 border-t border-gray-200">
@@ -341,13 +322,13 @@ const ProductDetail = () => {
                   <div className="flex justify-between">
                     <p className="text-sm text-gray-600">Created:</p>
                     <p className="text-gray-800 font-medium">
-                      {format(new Date(product.createdAt), "MMM d, yyyy")}
+                      {safeFormatDate(product.createdAt, "MMM d, yyyy")}
                     </p>
                   </div>
                   <div className="flex justify-between">
                     <p className="text-sm text-gray-600">Updated:</p>
                     <p className="text-gray-800 font-medium">
-                      {format(new Date(product.updatedAt), "MMM d, yyyy")}
+                      {safeFormatDate(product.updatedAt, "MMM d, yyyy")}
                     </p>
                   </div>
                 </div>
@@ -401,7 +382,7 @@ const ProductDetail = () => {
                     {MOCK_SALES_HISTORY.map(sale => (
                       <tr key={sale.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          {format(new Date(sale.date), "MMM d, yyyy")}
+                          {safeFormatDate(sale.date, "MMM d, yyyy")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 font-medium">
                           {sale.reference}

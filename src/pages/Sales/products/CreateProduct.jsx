@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
 import ProductForm from "./components/ProductForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
+import { productService } from "../../../services/Sales/productService";
 
 const CreateProduct = () => {
   const navigate = useNavigate()
@@ -15,8 +16,8 @@ const CreateProduct = () => {
       setLoading(true)
 
       // In a real app, call the create API
-      // const newProduct = await createProduct(data);
-      // navigate(`/products/${newProduct.id}`);
+      const newProduct = await productService.createProduct(data);
+      navigate(`/products/create/${newProduct.id}`);
 
       // For development, just wait a bit then redirect
       setTimeout(() => {

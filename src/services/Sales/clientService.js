@@ -36,12 +36,11 @@ const clientService = {
   deleteClient: async (id) => {
     return apiService.delete(`${BASE_URL}/delete/${id}`);
   },
-
+  
   checkClientHasQuotes: async (clientId) => {
     const response = await apiService.get(`/api/sales/quotes?clientId=${clientId}`);
     return response.length > 0; // or adjust based on your API response
   },
-  
   searchClients: async (query) => {
     return apiService.get(`${BASE_URL}/search?query=${encodeURIComponent(query)}`);
   }
