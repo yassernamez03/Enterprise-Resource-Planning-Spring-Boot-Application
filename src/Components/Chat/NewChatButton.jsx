@@ -36,7 +36,6 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
 
     try {
       const users = await apiService.get('/users');
-      console.log('Loaded users:', users);
       
       // Filter out the current user and transform the data as needed
       const filteredUsers = users
