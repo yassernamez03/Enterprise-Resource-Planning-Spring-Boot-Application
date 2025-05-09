@@ -20,8 +20,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://localhost:5174", "http://localhost:5175",
                         "http://localhost:5173",
                         "https://localhost:3000",
-                        "http://192.168.1.16:5174",
-                        "http://192.168.1.15:5174") 
+                        "https://192.168.1.16:3000",
+                        "https://192.168.1.15:3000") 
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)

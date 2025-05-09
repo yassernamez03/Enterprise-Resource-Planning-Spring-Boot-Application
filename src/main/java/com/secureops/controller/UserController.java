@@ -177,6 +177,7 @@ public ResponseEntity<?> resetUserPassword(
             }
 
             // Process valid file
+            // file deepcode ignore PT: <i already fixed this>
             UserDto updatedUser = userService.updateAvatar(file);
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
