@@ -44,7 +44,7 @@ export const clientService = {
   },
   
   createClient: async (clientData) => {
-    const response = await apiService.post('/sales/clients', clientData);
+    const response = await apiService.post('/sales/clients/create', clientData);
     return response;
   },
   

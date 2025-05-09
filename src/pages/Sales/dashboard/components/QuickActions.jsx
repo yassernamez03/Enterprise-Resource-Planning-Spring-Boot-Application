@@ -1,5 +1,5 @@
 import React from "react"
-import { FileText, ShoppingCart, CreditCard, Users } from "lucide-react"
+import { FileText, ShoppingCart, CreditCard, Users,Box } from "lucide-react"
 
 const QuickActions = () => {
   const actions = [
@@ -16,10 +16,10 @@ const QuickActions = () => {
       path: "/sales/orders/new"
     },
     {
-      title: "New Invoice",
-      icon: <CreditCard size={20} />,
+      title: "New Product",
+      icon: <Box size={20} />,
       color: "bg-warning-600 hover:bg-warning-700",
-      path: "/sales/invoices/new"
+      path: "/sales/products/new"
     },
     {
       title: "New Client",

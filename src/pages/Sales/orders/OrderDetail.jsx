@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
+
 import {
   getOrder,
   updateOrder,
@@ -37,6 +39,17 @@ const OrderDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [statusLoading, setStatusLoading] = useState(null)
+  
+  // Dialog states
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogConfig, setDialogConfig] = useState({
+    title: "",
+    message: "",
+    confirmText: "Confirm",
+    cancelText: "Cancel",
+    type: "info",
+    onConfirm: () => {}
+  })
 
   useEffect(() => {
     if (id) {
@@ -69,6 +82,7 @@ const OrderDetail = () => {
       console.error(err)
     } finally {
       setStatusLoading(null)
+      setDialogOpen(false)
     }
   }
 
@@ -99,6 +113,49 @@ const OrderDetail = () => {
     }
   }
 
+  // Dialog opener functions for different actions
+  const openStatusChangeDialog = (newStatus) => {
+    let title, message, type;
+    
+    if (newStatus === "cancelled") {
+      title = "Cancel Order";
+      message = `Are you sure you want to cancel order #${order.orderNumber}? This action cannot be undone.`;
+      type = "danger";
+    } else if (newStatus === "in-process") {
+      title = "Change Status to In Process";
+      message = `Are you sure you want to change the status of order #${order.orderNumber} to In Process?`;
+      type = "warning";
+    } else if (newStatus === "completed") {
+      title = "Complete Order";
+      message = `Are you sure you want to mark order #${order.orderNumber} as Completed? This will allow invoice generation.`;
+      type = "info";
+    }
+    
+    setDialogConfig({
+      title,
+      message, 
+      confirmText: "Confirm",
+      cancelText: "Cancel",
+      type,
+      onConfirm: () => handleStatusChange(newStatus)
+    });
+    
+    setDialogOpen(true);
+  };
+
+  const openInvoiceDialog = () => {
+    setDialogConfig({
+      title: "Generate Invoice",
+      message: `Are you sure you want to generate an invoice for order #${order.orderNumber}?`,
+      confirmText: "Generate Invoice",
+      cancelText: "Cancel",
+      type: "info",
+      onConfirm: handleGenerateInvoice
+    });
+    
+    setDialogOpen(true);
+  };
+
   if (loading)
     return (
       <div className="flex justify-center p-8">Loading order details...</div>
@@ -122,6 +179,18 @@ const OrderDetail = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
+      {/* Confirmation Dialog */}
+      <ConfirmDialog 
+        isOpen={dialogOpen} 
+        onCancel={() => setDialogOpen(false)}
+        onConfirm={dialogConfig.onConfirm}
+        title={dialogConfig.title}
+        message={dialogConfig.message}
+        confirmText={dialogConfig.confirmText}
+        cancelText={dialogConfig.cancelText}
+        type={dialogConfig.type}
+      />
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <div className="flex items-center mb-2">
@@ -166,7 +235,7 @@ const OrderDetail = () => {
             order.status !== "in-process" &&
             order.status !== "completed" && (
               <button
-                onClick={() => handleStatusChange(nextStatus())}
+                onClick={() => openStatusChangeDialog(nextStatus())}
                 className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center"
                 disabled={!!statusLoading}
               >
@@ -179,7 +248,7 @@ const OrderDetail = () => {
 
           {isEditable && order.status === "in-process" && (
             <button
-              onClick={() => handleStatusChange(nextStatus())}
+              onClick={() => openStatusChangeDialog(nextStatus())}
               className="btn bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md flex items-center"
               disabled={!!statusLoading}
             >
@@ -192,7 +261,7 @@ const OrderDetail = () => {
 
           {isEditable && (
             <button
-              onClick={() => handleStatusChange("cancelled")}
+              onClick={() => openStatusChangeDialog("cancelled")}
               className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md flex items-center"
               disabled={!!statusLoading}
             >
@@ -203,7 +272,7 @@ const OrderDetail = () => {
 
           {canGenerateInvoice && (
             <button
-              onClick={handleGenerateInvoice}
+              onClick={openInvoiceDialog}
               className="btn bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md flex items-center"
               disabled={loading}
             >
