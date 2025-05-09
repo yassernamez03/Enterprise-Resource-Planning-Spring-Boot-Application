@@ -64,6 +64,7 @@ const AdminDashboard = () => {
 
   // Handle user approval with confirmation
   const handleApproveUser = (userId, userName) => {
+    console.log("Opening confirm dialog...");
     setConfirmDialog({
       isOpen: true,
       title: 'Approve User',
@@ -101,6 +102,7 @@ const AdminDashboard = () => {
 
   // Handle user rejection with confirmation
   const handleRejectUser = (userId, userName) => {
+    console.log("Opening confirm dialog...");
     setConfirmDialog({
       isOpen: true,
       title: 'Reject User',
@@ -161,6 +163,7 @@ const AdminDashboard = () => {
     });
     
     // Show confirmation dialog
+    console.log("Opening confirm dialog...");
     setConfirmDialog({
       isOpen: true,
       title: 'Confirm Password Reset',
@@ -511,6 +514,7 @@ const AdminDashboard = () => {
                                 onClick={() => {
                                   // Change role logic
                                   const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN';
+                                  console.log("Opening confirm dialog...");
                                   setConfirmDialog({
                                     isOpen: true,
                                     title: 'Change User Role',
@@ -555,7 +559,7 @@ const AdminDashboard = () => {
 
       {/* Password Reset Dialog - Made Responsive */}
       {passwordResetState.isOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-900 p-4">
           <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-md">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Reset Password for {passwordResetState.userName}</h3>
             <div className="mb-6">

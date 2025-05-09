@@ -1,5 +1,5 @@
 // components/NewChatButton.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquarePlus, Users, X, ChevronLeft, Search, UserPlus, Loader } from 'lucide-react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import apiService from '../../services/apiInterceptor';
@@ -12,8 +12,13 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
   const [usersList, setUsersList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [multiSelectMode, setMultiSelectMode] = useState(false);
   const usersListRef = useOutsideClick(() => setShowUsersList(false));
-  
+
+  // Long press handling
+  const longPressTimer = useRef(null);
+  const longPressDelay = 500; // milliseconds for long press detection
+
   // Current user ID to avoid showing the current user in the list
   const currentUserId = authService.getCurrentUser()?.id;
 
@@ -23,18 +28,19 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
       loadUsers();
     }
   }, [showUsersList]);
-  
+
   // Function to load users from API
   const loadUsers = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const users = await apiService.get('/users');
+      console.log('Loaded users:', users);
       
       // Filter out the current user and transform the data as needed
       const filteredUsers = users
-        .filter(user => user.id !== currentUserId && user.status !== 'REJECTED')
+        .filter(user => user.id !== currentUserId && user.approvalStatus == 'APPROVED' )
         .map(user => ({
           id: user.id,
           name: user.fullName || (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.email),
@@ -53,17 +59,50 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
   };
 
   const filteredUsers = usersList.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Handle user selection with Ctrl key support
+  // Handle long press start
+  const handleTouchStart = (user) => {
+    // Clear any existing timer
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+    
+    // Set a new timer
+    longPressTimer.current = setTimeout(() => {
+      // Enter multi-select mode if not already in it
+      if (!multiSelectMode) {
+        setMultiSelectMode(true);
+        // Add the user to selection
+        const isAlreadySelected = selectedUsers.some(selectedUser => selectedUser.id === user.id);
+        if (!isAlreadySelected) {
+          setSelectedUsers([...selectedUsers, user]);
+        }
+      }
+    }, longPressDelay);
+  };
+
+  // Handle touch end to clear the timer
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+  };
+
+  // Handle user selection with Ctrl key support for desktop and touch for mobile
   const handleUserSelect = (event, user) => {
-    // If ctrl key is pressed, add to multiple selection
-    if (event.ctrlKey) {
+    // If already in multi-select mode or ctrl key is pressed, add to multiple selection
+    if (multiSelectMode || event.ctrlKey) {
+      // If not already in multi-select mode, enter it
+      if (!multiSelectMode && event.ctrlKey) {
+        setMultiSelectMode(true);
+      }
+      
       // Check if user is already selected
       const isAlreadySelected = selectedUsers.some(selectedUser => selectedUser.id === user.id);
-      
+
       if (isAlreadySelected) {
         // Remove from selection
         setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== user.id));
@@ -75,31 +114,38 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
       // Single selection (replace current selection)
       setSelectedUsers([user]);
       
-      // If there is only one user selected and no Ctrl key, create chat immediately
+      // If there is only one user selected and not in multi-select mode, create chat immediately
       createChat([user]);
     }
+  };
+
+  // Exit multi-select mode
+  const exitMultiSelectMode = () => {
+    setMultiSelectMode(false);
+    setSelectedUsers([]);
   };
 
   // Create chat with selected users
   const createChat = (users = selectedUsers) => {
     if (users.length === 0) return;
-    
+
     // Generate chat title based on participants
     const chatTitle = users.length === 1 
       ? users[0].name 
       : `${users[0].name}, ${users[1].name}${users.length > 2 ? ` and ${users.length - 2} others` : ''}`;
-    
+
     // Extract participant IDs
     const participantIds = users.map(user => user.id);
-    
+
     // Call the API to create a new chat
     onCreateNewChat({
       title: chatTitle,
       participants: participantIds
     });
-    
+
     // Reset selection and close modal
     setSelectedUsers([]);
+    setMultiSelectMode(false);
     setShowUsersList(false);
   };
 
@@ -112,7 +158,7 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
 
   return (
     <>
-      <div 
+      <div
         className={`p-3 ${darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} cursor-pointer flex items-center justify-between`}
         onClick={() => setShowUsersList(true)}
       >
@@ -136,13 +182,24 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
           >
             <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex items-center justify-between`}>
               <div className="flex items-center">
-                <button 
-                  className={`p-2 mr-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
-                  onClick={() => setShowUsersList(false)}
-                >
-                  <ChevronLeft size={20} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
-                </button>
-                <h2 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>New Chat</h2>
+                {multiSelectMode ? (
+                  <button 
+                    className={`p-2 mr-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
+                    onClick={exitMultiSelectMode}
+                  >
+                    <X size={20} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
+                  </button>
+                ) : (
+                  <button 
+                    className={`p-2 mr-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
+                    onClick={() => setShowUsersList(false)}
+                  >
+                    <ChevronLeft size={20} className={darkMode ? 'text-gray-300' : 'text-gray-600'} />
+                  </button>
+                )}
+                <h2 className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                  {multiSelectMode ? 'Select Contacts' : 'New Chat'}
+                </h2>
               </div>
               <button 
                 className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
@@ -246,6 +303,9 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
                           isSelected ? (darkMode ? 'bg-gray-700' : 'bg-gray-200') : ''
                         }`}
                         onClick={(e) => handleUserSelect(e, user)}
+                        onTouchStart={() => handleTouchStart(user)}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchCancel={handleTouchEnd}
                       >
                         <div className={`bg-${user.id % 5 === 0 ? 'yellow' : user.id % 4 === 0 ? 'red' : user.id % 3 === 0 ? 'purple' : user.id % 2 === 0 ? 'green' : 'blue'}-500 rounded-full h-12 w-12 flex items-center justify-center text-white font-bold`}>
                           {user.avatar}
@@ -286,7 +346,11 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
             {!loading && !error && usersList.length > 0 && (
               <div className={`p-3 border-t ${darkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-600'} text-xs`}>
                 <p>Click on a user to start a one-on-one chat</p>
-                <p>Hold Ctrl and click multiple users to create a group chat</p>
+                <p className="hidden md:block">Hold Ctrl and click multiple users to create a group chat</p>
+                <p className="md:hidden">Hold (long press) on a user to select multiple users for a group chat</p>
+                {multiSelectMode && (
+                  <p className="text-teal-500 font-medium mt-1">Multi-select mode activated</p>
+                )}
               </div>
             )}
           </div>
@@ -296,4 +360,4 @@ const NewChatButton = ({ darkMode, onCreateNewChat }) => {
   );
 };
 
-export default NewChatButton; 
+export default NewChatButton;
