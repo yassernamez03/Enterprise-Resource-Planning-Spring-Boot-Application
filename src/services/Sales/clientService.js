@@ -1,32 +1,50 @@
-import { get, getPaginated, post, put, del } from "./api"
+// src/services/Sales/clientService.js
+import { apiService } from "../apiInterceptor";
 
-const BASE_URL = "/sales/clients"
+const BASE_URL = "/sales/clients";
 
-export const getClients = async (pagination, filters) => {
-  const response = await getPaginated(BASE_URL, pagination, filters)
-  return response.data
-}
+const clientService = {
+  getClients: async (pagination, filters) => {
+    // Ensure we have all filter parameters
+    const params = new URLSearchParams({
+      page: pagination.page, // Spring uses 0-based indexing
+      size: pagination.pageSize,
+      sortBy: filters.sortBy || "name",
+      sortOrder: filters.sortOrder || "asc"
+    });
+    
+    // Only add search param if it exists
+    if (filters.search && filters.search.trim()) {
+      params.append("search", filters.search.trim());
+    }
+    
+    return apiService.get(`${BASE_URL}?${params.toString()}`);
+  },
 
-export const getClient = async id => {
-  const response = await get(`${BASE_URL}/${id}`)
-  return response.data.data
-}
+  getClient: async (id) => {
+    return apiService.get(`${BASE_URL}/${id}`);
+  },
 
-export const createClient = async clientData => {
-  const response = await post(BASE_URL, clientData)
-  return response.data.data
-}
+  createClient: async (clientData) => {
+    return apiService.post(`${BASE_URL}/create`, clientData);
+  },
 
-export const updateClient = async (id, clientData) => {
-  const response = await put(`${BASE_URL}/${id}`, clientData)
-  return response.data.data
-}
+  updateClient: async (id, clientData) => {
+    return apiService.put(`${BASE_URL}/update/${id}`, clientData);
+  },
 
-export const deleteClient = async id => {
-  await del(`${BASE_URL}/${id}`)
-}
+  deleteClient: async (id) => {
+    return apiService.delete(`${BASE_URL}/delete/${id}`);
+  },
 
-export const searchClients = async query => {
-  const response = await get(`${BASE_URL}/search`, { query })
-  return response.data.data
-}
+  checkClientHasQuotes: async (clientId) => {
+    const response = await apiService.get(`/api/sales/quotes?clientId=${clientId}`);
+    return response.length > 0; // or adjust based on your API response
+  },
+  
+  searchClients: async (query) => {
+    return apiService.get(`${BASE_URL}/search?query=${encodeURIComponent(query)}`);
+  }
+};
+
+export { clientService };

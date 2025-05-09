@@ -5,7 +5,7 @@ import PageHeader from "../../../Components/Sales/common/PageHeader";
 import DataTable from "../../../Components/Sales/common/DataTable";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { useAppContext } from "../../../context/Sales/AppContext";
-import { clientService } from "../../../services/Sales/salesApiService";
+import { clientService } from "../../../services/Sales/clientService";
 
 const ClientList = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const ClientList = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
-    page: 1,
+    page: 0, // Spring uses 0-based indexing
     pageSize: 10,
     total: 0
   });
@@ -34,17 +34,22 @@ const ClientList = () => {
     try {
       setLoading(true);
       const response = await clientService.getClients(pagination, filters);
-      setClients(response.data);
-      setPagination({
-        ...pagination,
-        total: response.total
-      });
+      
+      setClients(response.content || []);
+      setPagination(prev => ({
+        ...prev,
+        total: response.totalElements || 0,
+        page: response.number || 0, // Using Spring's returned page number
+        pageSize: response.size || 10
+      }));
+      
     } catch (error) {
       console.error("Error fetching clients:", error);
       showNotification(
         error.message || "Failed to load clients", 
         "error"
       );
+      setClients([]);
     } finally {
       setLoading(false);
     }
@@ -56,25 +61,25 @@ const ClientList = () => {
 
   const handleSearch = (e) => {
     const search = e.target.value;
-    setFilters({ ...filters, search });
+    setFilters(prev => ({ ...prev, search }));
     
     // Reset to first page when searching
-    if (pagination.page !== 1) {
-      setPagination({ ...pagination, page: 1 });
-    } else {
-      // If already on first page, fetch directly
-      fetchClients();
-    }
+    setPagination(prev => ({ ...prev, page: 0 }));
+    
+    // Trigger fetch with updated search parameter
+    fetchClients();
   };
 
   const handleSearchDebounced = debounce(handleSearch, 500);
 
   const handleSort = (field, direction) => {
-    setFilters({ ...filters, sortBy: field, sortOrder: direction });
+    setFilters(prev => ({ ...prev, sortBy: field, sortOrder: direction }));
   };
 
+  // Fixed handlePageChange function - convert from 1-based to 0-based for Spring
   const handlePageChange = (page) => {
-    setPagination({ ...pagination, page });
+    // Adjust page to 0-based for Spring
+    setPagination(prev => ({ ...prev, page: page - 1 }));
   };
 
   const handleAddClient = () => {
@@ -101,16 +106,8 @@ const ClientList = () => {
     try {
       await clientService.deleteClient(deleteDialog.clientId);
       
-      // Remove the client from the UI state
-      setClients(clients.filter((c) => c.id !== deleteDialog.clientId));
-      
-      // If we deleted the last item on the page, go back one page
-      if (clients.length === 1 && pagination.page > 1) {
-        setPagination({ ...pagination, page: pagination.page - 1 });
-      } else {
-        // Otherwise just refresh the current page
-        fetchClients();
-      }
+      // Refresh the current page
+      fetchClients();
       
       showNotification(
         `Client ${deleteDialog.clientName} deleted successfully`,
@@ -185,9 +182,9 @@ const ClientList = () => {
         data={clients}
         columns={clientColumns}
         total={pagination.total}
-        currentPage={pagination.page}
+        currentPage={pagination.page + 1} // Convert 0-based to 1-based for display
         pageSize={pagination.pageSize}
-        onPageChange={handlePageChange}
+        onPageChange={handlePageChange} // This receives 1-based index from DataTable
         onSort={handleSort}
         loading={loading}
         emptyMessage="No clients found"
