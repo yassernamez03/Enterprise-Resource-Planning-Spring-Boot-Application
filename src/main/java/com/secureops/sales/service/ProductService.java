@@ -2,6 +2,8 @@ package com.secureops.sales.service;
 
 import com.secureops.sales.dto.request.ProductRequest;
 import com.secureops.sales.dto.response.ProductResponse;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface ProductService {
@@ -12,4 +14,7 @@ public interface ProductService {
     void deleteProduct(Long id);
     List<ProductResponse> searchProducts(String query);
     List<ProductResponse> getProductsByCategory(String category);
+
+    Page<ProductResponse> getAllProducts(int page, int size);
+
 }

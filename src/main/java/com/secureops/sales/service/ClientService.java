@@ -2,6 +2,8 @@ package com.secureops.sales.service;
 
 import com.secureops.sales.dto.request.ClientRequest;
 import com.secureops.sales.dto.response.ClientResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ClientService {
@@ -11,4 +13,7 @@ public interface ClientService {
     ClientResponse updateClient(Long id, ClientRequest request);
     void deleteClient(Long id);
     List<ClientResponse> searchClients(String query);
+
+
+    Page<ClientResponse> getAllClients(int page, int size);
 }

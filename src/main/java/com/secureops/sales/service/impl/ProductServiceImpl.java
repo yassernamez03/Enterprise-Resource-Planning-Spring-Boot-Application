@@ -8,12 +8,14 @@ import com.secureops.sales.repository.ProductRepository;
 import com.secureops.sales.service.ProductService;
 import com.secureops.sales.util.DateUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,13 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<ProductResponse> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable)
+                .map(this::convertToResponse);
     }
 
     @Override
