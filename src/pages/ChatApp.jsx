@@ -1,4 +1,4 @@
-// src/pages/ChatApp.js
+// src/pages/ChatApp.js (Updated)
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, MoreVertical } from "lucide-react";
 import ConversationList from "../Components/Chat/ConversationList";
@@ -13,19 +13,21 @@ import websocketService from "../services/websocketService";
 import authService from "../services/authService";
 
 const ChatApp = () => {
-  const { 
-    conversations, 
-    loading, 
-    activeChat, 
+  const {
+    conversations,
+    loading,
+    activeChat,
     setActiveChat,
     typingUsers,
-    sendTextMessage, 
+    sendTextMessage,
     markMessageAsRead,
     updateTypingStatus,
     archiveChat,
-    createNewChat
+    unarchiveChat,
+    leaveChat,
+    createNewChat,
   } = useChat();
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -33,7 +35,8 @@ const ChatApp = () => {
     unread: false,
     recent: true,
     all: false,
-    archived: false
+    archived: false,
+    closed: false,
   });
   const [mobileView, setMobileView] = useState(window.innerWidth < 768);
   const [showChatView, setShowChatView] = useState(false);
@@ -52,8 +55,8 @@ const ChatApp = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Connect to WebSocket when component mounts
@@ -61,7 +64,7 @@ const ChatApp = () => {
     if (!websocketService.isConnected()) {
       websocketService.connect();
     }
-    
+
     return () => {
       // Disconnect when component unmounts
       websocketService.disconnect();
@@ -72,24 +75,29 @@ const ChatApp = () => {
   useEffect(() => {
     if (searchQuery) {
       let results = [];
-      
-      conversations.forEach(conv => {
+
+      conversations.forEach((conv) => {
         // Find messages that match the search query
-        const matchedMessages = conv.messages.filter(msg => {
-          if (msg.messageType === 'TEXT') {
-            return msg.content.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchedMessages = conv.messages.filter((msg) => {
+          if (msg.messageType === "TEXT") {
+            return msg.content
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase());
           }
           return false;
         });
-        
-        if (matchedMessages.length > 0 || conv.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+
+        if (
+          matchedMessages.length > 0 ||
+          conv.title.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
           results.push({
             conversation: conv,
-            matchedMessages
+            matchedMessages,
           });
         }
       });
-      
+
       setSearchResults(results);
     } else {
       setSearchResults([]);
@@ -97,17 +105,17 @@ const ChatApp = () => {
   }, [searchQuery, conversations]);
 
   const handleChatSelect = (id) => {
-    const selected = conversations.find(conv => conv.id === id);
+    const selected = conversations.find((conv) => conv.id === id);
     setActiveChat(selected);
     setHighlightedMessageId(null);
-    
+
     if (mobileView) {
       setShowChatView(true);
     }
-    
+
     // Mark unread messages as read
     if (selected && selected.messages) {
-      selected.messages.forEach(message => {
+      selected.messages.forEach((message) => {
         if (!message.readStatus && message.sender.id !== currentUserId) {
           markMessageAsRead(message.id);
         }
@@ -118,25 +126,25 @@ const ChatApp = () => {
   // Modified handler for creating new chats with multiple participants
   const handleCreateNewChat = async (newConversationInfo) => {
     try {
-      console.log('Creating new chat with:', newConversationInfo);
-      
+      console.log("Creating new chat with:", newConversationInfo);
+
       // Extract title and participants directly from the input
       const { title, participants } = newConversationInfo;
-      
+
       // Call API to create a new chat
       const newChat = await createNewChat(participants, title);
-      
+
       // Automatically select the new conversation
       setActiveChat(newChat);
-      
+
       // On mobile, show the chat view
       if (mobileView) {
         setShowChatView(true);
       }
-      
+
       return newChat;
     } catch (error) {
-      console.error('Error creating new chat:', error);
+      console.error("Error creating new chat:", error);
     }
   };
 
@@ -145,7 +153,7 @@ const ChatApp = () => {
       unread: false,
       recent: false,
       all: false,
-      archived: false
+      archived: false,
     };
     newFilters[filterType] = true;
     setFilterOptions(newFilters);
@@ -156,34 +164,40 @@ const ChatApp = () => {
     if (loading) {
       return [];
     }
-    
+
     let filtered = [...conversations];
-    
+
     // Apply search filter
     if (searchQuery) {
-      filtered = filtered.filter(conv => 
-        conv.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        conv.messages.some(msg => {
-          if (msg.messageType === 'TEXT') {
-            return msg.content.toLowerCase().includes(searchQuery.toLowerCase());
-          }
-          return false;
-        })
+      filtered = filtered.filter(
+        (conv) =>
+          conv.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          conv.messages.some((msg) => {
+            if (msg.messageType === "TEXT") {
+              return msg.content
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase());
+            }
+            return false;
+          })
       );
     }
-    
+
     // Apply other filters
     if (filterOptions.unread) {
-      filtered = filtered.filter(conv => conv.unread > 0);
+      filtered = filtered.filter((conv) => conv.unread > 0);
     } else if (filterOptions.archived) {
-      filtered = filtered.filter(conv => conv.status === 'ARCHIVED');
+      filtered = filtered.filter((conv) => conv.status === "ARCHIVED");
+    } else if (filterOptions.closed) {
+      filtered = filtered.filter((conv) => conv.status === "CLOSED");
+    } else if (filterOptions.all) {
+      // All filter shows everything including archived conversations
+      // No additional filtering needed
     } else {
-      // All filter doesn't need additional filtering, but exclude archived by default
-      if (!filterOptions.archived) {
-        filtered = filtered.filter(conv => conv.status !== 'ARCHIVED');
-      }
+      // Default case (recent filter) - exclude archived and closed conversations
+       filtered = filtered.filter(conv => conv.status !== 'ARCHIVED' && conv.status !== 'CLOSED');
     }
-    
+
     // Sort by recent message
     if (filterOptions.recent) {
       filtered = filtered.sort((a, b) => {
@@ -192,16 +206,16 @@ const ChatApp = () => {
           const lastMessage = conv.messages[conv.messages.length - 1];
           return new Date(lastMessage.timestamp).getTime();
         };
-        
+
         return getLastMessageTime(b) - getLastMessageTime(a);
       });
     }
-    
+
     return filtered;
   };
 
   const handleGlobalSearchSelect = (convId, msgId) => {
-    setActiveChat(conversations.find(conv => conv.id === convId));
+    setActiveChat(conversations.find((conv) => conv.id === convId));
     setHighlightedMessageId(msgId);
     if (mobileView) {
       setShowChatView(true);
@@ -210,22 +224,33 @@ const ChatApp = () => {
 
   const toggleArchiveChat = async (id) => {
     try {
-      await archiveChat(id);
+      // Get the current chat from the conversations list
+      const chat = conversations.find((conv) => conv.id === id);
+      if (!chat) return;
+
+      // Check current status to determine action
+      const isArchived = chat.status === "ARCHIVED";
+
+      if (isArchived) {
+        await unarchiveChat(id);
+      } else {
+        await archiveChat(id);
+      }
     } catch (error) {
-      console.error('Error archiving chat:', error);
+      console.error("Error toggling chat archive status:", error);
     }
   };
 
   const handleSendMessage = async (newMessage) => {
     if (!activeChat) return;
-    
+
     try {
       // Send message via WebSocket
       sendTextMessage(activeChat.id, newMessage.text);
-      
+
       // No need to add message to state manually, as it will come back through WebSocket
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     }
   };
 
@@ -235,42 +260,94 @@ const ChatApp = () => {
     }
   };
 
+  const handleLeaveChat = async (id) => {
+    try {
+      await leaveChat(id);
+
+      // If we're currently viewing this chat, go back to the conversation list on mobile
+      if (activeChat && activeChat.id === id && mobileView) {
+        setShowChatView(false);
+      }
+    } catch (error) {
+      console.error("Error leaving chat:", error);
+    }
+  };
+
   const renderSearchResults = () => {
     if (!searchQuery) return null;
-    
+
     return (
-      <div className={`absolute top-full left-0 right-0 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg z-10 border ${darkMode ? 'border-gray-700' : 'border-gray-200'} mt-1 max-h-64 overflow-y-auto`}>
+      <div
+        className={`absolute top-full left-0 right-0 ${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } shadow-lg z-10 border ${
+          darkMode ? "border-gray-700" : "border-gray-200"
+        } mt-1 max-h-64 overflow-y-auto`}
+      >
         {searchResults.length > 0 ? (
-          searchResults.map(result => (
-            <div key={result.conversation.id} className="p-2 border-b border-gray-100">
-              <div className={`font-medium text-sm mb-1 ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+          searchResults.map((result) => (
+            <div
+              key={result.conversation.id}
+              className="p-2 border-b border-gray-100"
+            >
+              <div
+                className={`font-medium text-sm mb-1 ${
+                  darkMode ? "text-gray-200" : "text-gray-800"
+                }`}
+              >
                 {result.conversation.title}
               </div>
-              {result.matchedMessages.map(msg => (
-                <div 
+              {result.matchedMessages.map((msg) => (
+                <div
                   key={msg.id}
-                  className={`text-sm ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'} p-2 rounded cursor-pointer`}
-                  onClick={() => handleGlobalSearchSelect(result.conversation.id, msg.id)}
+                  className={`text-sm ${
+                    darkMode
+                      ? "text-gray-300 hover:bg-gray-700"
+                      : "text-gray-600 hover:bg-gray-100"
+                  } p-2 rounded cursor-pointer`}
+                  onClick={() =>
+                    handleGlobalSearchSelect(result.conversation.id, msg.id)
+                  }
                 >
                   <div className="flex justify-between mb-1">
-                    <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      {msg.sender.id === currentUserId ? "You" : msg.sender.fullName}
+                    <span
+                      className={`text-xs ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {msg.sender.id === currentUserId
+                        ? "You"
+                        : msg.sender.fullName}
                     </span>
-                    <span className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <span
+                      className={`text-xs ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </span>
                   </div>
                   <div>
-                    {msg.messageType === 'TEXT' && (
-                      msg.content.length > 50 ? `${msg.content.substring(0, 50)}...` : msg.content
-                    )}
+                    {msg.messageType === "TEXT" &&
+                      (msg.content.length > 50
+                        ? `${msg.content.substring(0, 50)}...`
+                        : msg.content)}
                   </div>
                 </div>
               ))}
             </div>
           ))
         ) : (
-          <div className={`p-3 text-center ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>No results found</div>
+          <div
+            className={`p-3 text-center ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            }`}
+          >
+            No results found
+          </div>
         )}
       </div>
     );
@@ -288,61 +365,89 @@ const ChatApp = () => {
   }
 
   return (
-    <div className={`flex h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}>
+    <div
+      className={`flex h-screen ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100"
+      }`}
+    >
       {/* Left sidebar with conversation list - hidden on mobile when chat is open */}
       {(!mobileView || !showChatView) && (
-        <div className={`${mobileView ? 'w-full' : 'w-1/3'} ${darkMode ? 'bg-gray-800' : 'bg-white'} border-r ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex flex-col`}>
+        <div
+          className={`${mobileView ? "w-full" : "w-1/3"} ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          } border-r ${
+            darkMode ? "border-gray-700" : "border-gray-200"
+          } flex flex-col`}
+        >
           {/* Header */}
-          <div className={`p-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center`}>
+          <div
+            className={`p-4 ${
+              darkMode ? "bg-gray-800" : "bg-gray-50"
+            } border-b ${
+              darkMode ? "border-gray-700" : "border-gray-200"
+            } flex justify-between items-center`}
+          >
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
-                <button className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}>
-                  <ArrowLeft className={darkMode ? 'text-gray-300' : 'text-gray-600'} size={20} />
+                <button
+                  className={`p-2 rounded-full ${
+                    darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"
+                  }`}
+                >
+                  <ArrowLeft
+                    className={darkMode ? "text-gray-300" : "text-gray-600"}
+                    size={20}
+                  />
                 </button>
               </Link>
             </div>
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <button 
-                  className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`}
+                <button
+                  className={`p-2 rounded-full ${
+                    darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200"
+                  }`}
                   onClick={() => setShowMainMenu(!showMainMenu)}
                 >
-                  <MoreVertical className={darkMode ? 'text-gray-300' : 'text-gray-600'} size={20} />
+                  <MoreVertical
+                    className={darkMode ? "text-gray-300" : "text-gray-600"}
+                    size={20}
+                  />
                 </button>
-                
+
                 {showMainMenu && (
-                  <MainMenu 
-                    darkMode={darkMode} 
-                    setDarkMode={setDarkMode} 
-                    setShowMainMenu={setShowMainMenu} 
+                  <MainMenu
+                    darkMode={darkMode}
+                    setDarkMode={setDarkMode}
+                    setShowMainMenu={setShowMainMenu}
                   />
                 )}
               </div>
             </div>
           </div>
-          
+
           {/* Search */}
-          <SearchBar 
-            darkMode={darkMode} 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery} 
-            renderSearchResults={renderSearchResults} 
+          <SearchBar
+            darkMode={darkMode}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            renderSearchResults={renderSearchResults}
           />
-          
+
           {/* Filter */}
-          <FilterMenu 
-            darkMode={darkMode} 
+          <FilterMenu
+            darkMode={darkMode}
             filterOpen={filterOpen}
             setFilterOpen={setFilterOpen}
             filterOptions={filterOptions}
             handleApplyFilter={handleApplyFilter}
           />
-          
+
           {/* Conversation list */}
-          <ConversationList 
-            conversations={getFilteredConversations()} 
-            activeChat={activeChat ? activeChat.id : null} 
-            handleChatSelect={handleChatSelect} 
+          <ConversationList
+            conversations={getFilteredConversations()}
+            activeChat={activeChat ? activeChat.id : null}
+            handleChatSelect={handleChatSelect}
             darkMode={darkMode}
             onCreateNewChat={handleCreateNewChat}
           />
@@ -351,19 +456,21 @@ const ChatApp = () => {
 
       {/* Right side - active chat */}
       {(!mobileView || showChatView) && activeChat && !showAccountPage && (
-        <ChatView 
-          currentChat={activeChat} 
-          darkMode={darkMode} 
+        <ChatView
+          currentChat={activeChat}
+          darkMode={darkMode}
           mobileView={mobileView}
           setShowChatView={setShowChatView}
           setShowAccountPage={setShowAccountPage}
           toggleArchiveChat={toggleArchiveChat}
+          handleLeaveChat={handleLeaveChat}
           highlightedMessageId={highlightedMessageId}
           setHighlightedMessageId={setHighlightedMessageId}
           handleSendMessage={handleSendMessage}
           onTypingStatusChange={handleTypingStatusChange}
-          isUserTyping={Object.keys(typingUsers).some(userId => 
-            typingUsers[userId] && typingUsers[userId][activeChat.id]
+          isUserTyping={Object.keys(typingUsers).some(
+            (userId) =>
+              typingUsers[userId] && typingUsers[userId][activeChat.id]
           )}
           currentUserId={currentUserId}
         />
@@ -371,11 +478,15 @@ const ChatApp = () => {
 
       {/* Account Page */}
       {showAccountPage && activeChat && (
-        <div className={`${mobileView ? 'w-full' : 'w-2/3'} flex flex-col ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
-          <AccountPage 
-            currentChat={activeChat} 
-            darkMode={darkMode} 
-            setShowAccountPage={setShowAccountPage} 
+        <div
+          className={`${mobileView ? "w-full" : "w-2/3"} flex flex-col ${
+            darkMode ? "bg-gray-900" : "bg-white"
+          }`}
+        >
+          <AccountPage
+            currentChat={activeChat}
+            darkMode={darkMode}
+            setShowAccountPage={setShowAccountPage}
           />
         </div>
       )}

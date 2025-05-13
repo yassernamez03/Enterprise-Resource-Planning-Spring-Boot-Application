@@ -1,24 +1,25 @@
 // components/ChatView.js
-import React, { useState, useEffect, useRef } from 'react';
-import ChatHeader from './ChatHeader';
-import ChatSearch from './ChatSearch';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
-import { useChat } from '../../context/ChatContext';
+import React, { useState, useEffect, useRef } from "react";
+import ChatHeader from "./ChatHeader";
+import ChatSearch from "./ChatSearch";
+import MessageList from "./MessageList";
+import MessageInput from "./MessageInput";
+import { useChat } from "../../context/ChatContext";
 
-const ChatView = ({ 
-  currentChat, 
-  darkMode, 
-  mobileView, 
-  setShowChatView, 
-  setShowAccountPage, 
-  toggleArchiveChat, 
-  highlightedMessageId, 
+const ChatView = ({
+  currentChat,
+  darkMode,
+  mobileView,
+  setShowChatView,
+  setShowAccountPage,
+  toggleArchiveChat,
+  handleLeaveChat,
+  highlightedMessageId,
   setHighlightedMessageId,
   handleSendMessage,
   onTypingStatusChange,
   isUserTyping,
-  currentUserId
+  currentUserId,
 }) => {
   const [showSearchInChat, setShowSearchInChat] = useState(false);
   const [chatSearchQuery, setChatSearchQuery] = useState("");
@@ -26,21 +27,21 @@ const ChatView = ({
   const [currentSearchIndex, setCurrentSearchIndex] = useState(0);
   const [showReplyTo, setShowReplyTo] = useState(null);
   const { markMessageAsRead } = useChat();
-  
+
   // Ref to track if messages have been marked as read
   const messagesMarkedRef = useRef({});
 
   // Mark messages as read when chat is viewed
   useEffect(() => {
     if (currentChat && currentChat.messages) {
-      currentChat.messages.forEach(message => {
+      currentChat.messages.forEach((message) => {
         // Mark message as read if:
         // 1. It's not from the current user
         // 2. It's not already marked as read
         // 3. It hasn't been processed in this session yet
         if (
-          message.sender.id !== currentUserId && 
-          !message.readStatus && 
+          message.sender.id !== currentUserId &&
+          !message.readStatus &&
           !messagesMarkedRef.current[message.id]
         ) {
           markMessageAsRead(message.id);
@@ -53,17 +54,19 @@ const ChatView = ({
 
   // Search functionality in current chat
   useEffect(() => {
-    if (chatSearchQuery && chatSearchQuery.trim() !== '' && currentChat) {
-      const results = currentChat.messages.filter(msg => {
-        if (msg.messageType === 'TEXT') {
-          return msg.content.toLowerCase().includes(chatSearchQuery.toLowerCase());
+    if (chatSearchQuery && chatSearchQuery.trim() !== "" && currentChat) {
+      const results = currentChat.messages.filter((msg) => {
+        if (msg.messageType === "TEXT") {
+          return msg.content
+            .toLowerCase()
+            .includes(chatSearchQuery.toLowerCase());
         }
         return false;
       });
-      
+
       setSearchResults(results);
       setCurrentSearchIndex(0);
-      
+
       if (results.length > 0) {
         setHighlightedMessageId(results[0].id);
       } else {
@@ -78,14 +81,15 @@ const ChatView = ({
 
   const navigateSearchResults = (direction) => {
     if (searchResults.length === 0) return;
-    
+
     let newIndex;
-    if (direction === 'next') {
+    if (direction === "next") {
       newIndex = (currentSearchIndex + 1) % searchResults.length;
     } else {
-      newIndex = (currentSearchIndex - 1 + searchResults.length) % searchResults.length;
+      newIndex =
+        (currentSearchIndex - 1 + searchResults.length) % searchResults.length;
     }
-    
+
     setCurrentSearchIndex(newIndex);
     setHighlightedMessageId(searchResults[newIndex].id);
   };
@@ -97,22 +101,34 @@ const ChatView = ({
   if (!currentChat) return null;
 
   return (
-    <div className={`${mobileView ? 'w-full' : 'w-2/3'} flex flex-col`}>
+    <div className={`${mobileView ? "w-full" : "w-2/3"} flex flex-col`}>
       {/* Chat header */}
-      <ChatHeader 
+      <ChatHeader
         currentChat={currentChat}
         darkMode={darkMode}
         mobileView={mobileView}
         setShowChatView={setShowChatView}
         setShowAccountPage={setShowAccountPage}
         toggleArchiveChat={toggleArchiveChat}
+        handleLeaveChat={handleLeaveChat}
         setShowSearchInChat={setShowSearchInChat}
         isUserTyping={isUserTyping}
       />
 
+      {/* Add notification if chat is closed */}
+      {currentChat.status === "CLOSED" && (
+        <div
+          className={`p-3 text-center ${
+            darkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"
+          } border-b ${darkMode ? "border-gray-600" : "border-gray-200"}`}
+        >
+          This chat has been closed because a participant has left.
+        </div>
+      )}
+
       {/* Chat search */}
       {showSearchInChat && (
-        <ChatSearch 
+        <ChatSearch
           darkMode={darkMode}
           chatSearchQuery={chatSearchQuery}
           setChatSearchQuery={setChatSearchQuery}
@@ -125,7 +141,7 @@ const ChatView = ({
       )}
 
       {/* Chat messages */}
-      <MessageList 
+      <MessageList
         currentChat={currentChat}
         darkMode={darkMode}
         highlightedMessageId={highlightedMessageId}
@@ -134,15 +150,18 @@ const ChatView = ({
         currentUserId={currentUserId}
       />
 
+      {/* Only show input if chat is not closed */}
       {/* Message input */}
-      <MessageInput 
-        darkMode={darkMode}
-        handleSendMessage={handleSendMessage}
-        currentChat={currentChat}
-        showReplyTo={showReplyTo}
-        setShowReplyTo={setShowReplyTo}
-        onTypingStatusChange={onTypingStatusChange}
-      />
+      {currentChat.status !== "CLOSED" && (
+        <MessageInput
+          darkMode={darkMode}
+          handleSendMessage={handleSendMessage}
+          currentChat={currentChat}
+          showReplyTo={showReplyTo}
+          setShowReplyTo={setShowReplyTo}
+          onTypingStatusChange={onTypingStatusChange}
+        />
+      )}
     </div>
   );
 };

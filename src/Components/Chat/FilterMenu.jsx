@@ -10,60 +10,76 @@ const FilterMenu = ({ darkMode, filterOpen, setFilterOpen, filterOptions, handle
   });
   
   return (
-    <div 
-      ref={filterContainerRef}
-      className={`p-2 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'} border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex items-center justify-center relative`}
-    >
-      <button 
-        className={`flex items-center text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}
+    <div className="relative" ref={filterContainerRef}>
+      <div 
+        className={`p-2 mx-3 my-2 flex items-center justify-between ${darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'} rounded-lg cursor-pointer`}
         onClick={() => setFilterOpen(!filterOpen)}
       >
-        <Filter className={darkMode ? 'text-gray-400' : 'text-gray-500'} size={14} />
-        <span>
-          {filterOptions.unread ? "Unread" : filterOptions.recent ? "Recent" : filterOptions.archived ? "Archived" : "All"}
-        </span>
-        <ChevronDown className={darkMode ? 'text-gray-400' : 'text-gray-500'} size={14} />
-      </button>
+        <div className="flex items-center">
+          <Filter size={18} className="mr-2" />
+          <span>
+            {filterOptions.unread ? "Unread" : 
+             filterOptions.recent ? "Recent" : 
+             filterOptions.archived ? "Archived" : 
+             filterOptions.closed ? "Closed" : "All"}
+          </span>
+        </div>
+        <ChevronDown size={18} />
+      </div>
       
       {filterOpen && (
         <div 
+          className={`absolute left-0 right-0 mx-3 mt-1 z-10 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-700'} overflow-hidden`}
           ref={filterMenuRef}
-          className={`absolute top-full left-0 right-0 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg z-10 border ${darkMode ? 'border-gray-700' : 'border-gray-200'} mt-1`}>
+        >
           <div 
-            className={`p-3 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer ${filterOptions.unread ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : ''}`}
+            className={`p-3 flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer`}
             onClick={() => handleApplyFilter('unread')}
           >
             <div className="flex items-center">
               <span>Unread</span>
-              {filterOptions.unread && <Check size={16} className="ml-2" />}
             </div>
+            {filterOptions.unread && <Check size={18} className="text-teal-500" />}
           </div>
+          
           <div 
-            className={`p-3 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer ${filterOptions.recent ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : ''}`}
+            className={`p-3 flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer`}
             onClick={() => handleApplyFilter('recent')}
           >
             <div className="flex items-center">
               <span>Recent</span>
-              {filterOptions.recent && <Check size={16} className="ml-2" />}
             </div>
+            {filterOptions.recent && <Check size={18} className="text-teal-500" />}
           </div>
+          
           <div 
-            className={`p-3 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer ${filterOptions.archived ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : ''}`}
+            className={`p-3 flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer`}
+            onClick={() => handleApplyFilter('closed')}
+          >
+            <div className="flex items-center">
+              <span>Closed</span>
+            </div>
+            {filterOptions.closed && <Check size={18} className="text-teal-500" />}
+          </div>
+          
+          <div 
+            className={`p-3 flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer`}
             onClick={() => handleApplyFilter('archived')}
           >
             <div className="flex items-center">
               <span>Archived</span>
-              {filterOptions.archived && <Check size={16} className="ml-2" />}
             </div>
+            {filterOptions.archived && <Check size={18} className="text-teal-500" />}
           </div>
+          
           <div 
-            className={`p-3 ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer ${filterOptions.all ? (darkMode ? 'bg-gray-700' : 'bg-gray-100') : ''}`}
+            className={`p-3 flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} cursor-pointer`}
             onClick={() => handleApplyFilter('all')}
           >
             <div className="flex items-center">
               <span>All</span>
-              {filterOptions.all && <Check size={16} className="ml-2" />}
             </div>
+            {filterOptions.all && <Check size={18} className="text-teal-500" />}
           </div>
         </div>
       )}

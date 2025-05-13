@@ -30,6 +30,7 @@ const ConversationList = ({ conversations, activeChat, handleChatSelect, darkMod
             <div className="flex justify-between items-center">
               <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate max-w-xs`}>
                 {conversation.status === 'ARCHIVED' && <Archive size={12} className="inline mr-1" />}
+                {conversation.status === 'CLOSED' && <span className="text-red-500">[Closed] </span>}
                 {conversation.lastMessage}
               </p>
               {conversation.unread > 0 && (
