@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
 /**
  * Utility class for generating unique sequential numbers for quotes, orders, and invoices
  */
