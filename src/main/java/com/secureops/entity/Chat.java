@@ -56,6 +56,7 @@ public class Chat {
 
     public enum ChatStatus {
         ACTIVE,
-        ARCHIVED
+        ARCHIVED,
+        CLOSED
     }
 }

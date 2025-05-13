@@ -35,4 +35,12 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             "WHERE cp.user_id = :userId", 
             nativeQuery = true)
     List<Long> findChatIdsByUserId(@Param("userId") Long userId);
+
+
+    @Modifying
+    @Query(value = "DELETE FROM chat_participants WHERE chat_id = :chatId AND user_id = :userId", nativeQuery = true)
+    void removeParticipant(@Param("chatId") Long chatId, @Param("userId") Long userId);
+    
+    @Query("SELECT COUNT(p) FROM Chat c JOIN c.participants p WHERE c.id = :chatId")
+    int countParticipants(@Param("chatId") Long chatId);
 }

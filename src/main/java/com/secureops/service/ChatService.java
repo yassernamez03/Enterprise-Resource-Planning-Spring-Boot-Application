@@ -10,4 +10,6 @@ public interface ChatService {
     List<Chat> getUserChats(Long userId);
     Chat getChatById(Long id);
     Chat archiveChat(Long id);
+    Chat unarchiveChat(Long id);
+    Chat leaveChat(Long chatId);
 }
