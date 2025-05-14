@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ef6dec54-18f8-4c59-8c7e-83f4d91ba209" name="Changes" comment="diagrams">
+      <change beforePath="$PROJECT_DIR$/Diagrams/Employee Managment.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/HR Class Diagram.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/HR Usecase.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/HR seq2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/Sales Class Diagram.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/Sales Usecase.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/Sales app.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diagrams/Sales seq2.jpg" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;yassernamez03&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/yassernamez03/Enterprise-Resource-Planning-Spring-Boot-Application.git&quot;,
+    &quot;accountId&quot;: &quot;2cb617bd-e1a3-424e-b584-d7980ac197de&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2we6EVfQuBIouqEOUaerPw8eVuZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.SecureOpsApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.SecureOpsApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/admin/IdeaProjects/secureops-platform&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\admin\IdeaProjects\secureops-platform" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.SecureOpsApplication">
+    <configuration name="SecureOpsApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.secureops.SecureOpsApplication" />
+      <module name="secureops" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.secureops.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SecureOpsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="secureops" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.secureops.SecureOpsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SecureOpsApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.39" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.39" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ef6dec54-18f8-4c59-8c7e-83f4d91ba209" name="Changes" comment="" />
+      <created>1746389582258</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746389582258</updated>
+      <workItem from="1746389584584" duration="1273000" />
+      <workItem from="1746394688150" duration="1991000" />
+      <workItem from="1746468880414" duration="366000" />
+      <workItem from="1747175821318" duration="1882000" />
+      <workItem from="1747181019563" duration="353000" />
+      <workItem from="1747181431421" duration="662000" />
+    </task>
+    <task id="LOCAL-00001" summary="diagrams">
+      <option name="closed" value="true" />
+      <created>1747176272932</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747176272932</updated>
+    </task>
+    <task id="LOCAL-00002" summary="diagrams">
+      <option name="closed" value="true" />
+      <created>1747181061160</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747181061160</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="diagrams" />
+    <option name="LAST_COMMIT_MESSAGE" value="diagrams" />
+  </component>
+</project>
