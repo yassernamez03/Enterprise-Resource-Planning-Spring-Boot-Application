@@ -118,25 +118,25 @@ public class UserController {
     }
 
     // Update the reset password endpoint to accept a specified password
-@PostMapping("/{id}/reset-password")
-@PreAuthorize("hasRole('ADMIN')")
-public ResponseEntity<?> resetUserPassword(
-        @PathVariable Long id,
-        @RequestBody Map<String, String> passwordData) {
-    
-    String newPassword = passwordData.get("newPassword");
-    if (newPassword == null || newPassword.isEmpty()) {
-        return ResponseEntity.badRequest().body(Map.of("message", "New password cannot be empty"));
+    @PostMapping("/{id}/reset-password")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> resetUserPassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> passwordData) {
+
+        String newPassword = passwordData.get("newPassword");
+        if (newPassword == null || newPassword.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "New password cannot be empty"));
+        }
+
+        boolean success = userService.adminResetPassword(id, newPassword);
+        if (success) {
+            return ResponseEntity.ok().body(Map.of("message", "Password reset successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to reset password"));
+        }
     }
-    
-    boolean success = userService.adminResetPassword(id, newPassword);
-    if (success) {
-        return ResponseEntity.ok().body(Map.of("message", "Password reset successfully"));
-    } else {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("message", "Failed to reset password"));
-    }
-}
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
