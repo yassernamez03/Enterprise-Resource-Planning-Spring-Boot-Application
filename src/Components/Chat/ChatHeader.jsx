@@ -9,7 +9,8 @@ const ChatHeader = ({
   mobileView, 
   setShowChatView, 
   setShowAccountPage, 
-  toggleArchiveChat, 
+  toggleArchiveChat,
+  handleLeaveChat,
   setShowSearchInChat,
   isUserTyping
 }) => {
@@ -111,9 +112,15 @@ const ChatHeader = ({
                 <Archive size={16} className="mr-2" />
                 <span>{currentChat.status === 'ARCHIVED' ? 'Unarchive Chat' : 'Archive Chat'}</span>
               </div>
-              <div className={`p-3 ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'} cursor-pointer flex items-center`}>
+              <div 
+                className={`p-3 ${darkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-gray-100 text-red-500'} cursor-pointer flex items-center`}
+                onClick={() => {
+                  handleLeaveChat(currentChat.id);
+                  setShowChatMenu(false);
+                }}
+              >
                 <Trash2 size={16} className="mr-2" />
-                <span>Delete Chat</span>
+                <span>Leave Chat</span>
               </div>
             </div>
           )}
