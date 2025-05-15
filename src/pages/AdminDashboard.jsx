@@ -887,53 +887,6 @@ const AdminDashboard = () => {
           </>
         )}
 
-        {/* Floating export buttons container - enhanced */}
-        <div className="fixed right-4 top-24 z-10 flex flex-col gap-2">
-          <button
-            onClick={exportToJson}
-            className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-1 sm:gap-2 shadow-lg transition-all"
-            title="Export to JSON"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 sm:h-5 sm:w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-              />
-            </svg>
-            <span className="hidden sm:inline">JSON</span>
-          </button>
-
-          <button
-            onClick={exportToCsv}
-            className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-1 sm:gap-2 shadow-lg transition-all"
-            title="Export to CSV"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 sm:h-5 sm:w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-              />
-            </svg>
-            <span className="hidden sm:inline">CSV</span>
-          </button>
-        </div>
-
         {!loading && activeTab === "logs" && (
           <div className="bg-white shadow overflow-hidden rounded-lg">
             {/* Filter controls */}
@@ -1021,6 +974,52 @@ const AdminDashboard = () => {
             {/* Logs table */}
             {!loading && filteredLogs.length > 0 && (
               <>
+                {/* Floating export buttons container - enhanced */}
+                <div className="fixed right-4 top-24 z-10 flex flex-col gap-2">
+                  <button
+                    onClick={exportToJson}
+                    className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-1 sm:gap-2 shadow-lg transition-all"
+                    title="Export to JSON"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                      />
+                    </svg>
+                    <span className="hidden sm:inline">JSON</span>
+                  </button>
+
+                  <button
+                    onClick={exportToCsv}
+                    className="px-3 py-2 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-1 sm:gap-2 shadow-lg transition-all"
+                    title="Export to CSV"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                      />
+                    </svg>
+                    <span className="hidden sm:inline">CSV</span>
+                  </button>
+                </div>
                 <div className="overflow-x-auto">
                   <div className="px-6 py-3 flex justify-between items-center border-t border-gray-200">
                     <div className="text-sm text-gray-700">Items per page:</div>
