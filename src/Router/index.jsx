@@ -50,7 +50,7 @@ const AppRoutes = () => {
                 <Route path="/chat_page" element={<ChatApp />} />
                 <Route path="/sales/*" element={<SalesModule />} />
                 <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/Employe" element={<EmployeeManagement />} />
+                <Route path="/Employee" element={<EmployeeManagement />} />
                 <Route path="/TaskManagement/:id" element={<TaskManagement />} />
              </Route>
             </Routes>

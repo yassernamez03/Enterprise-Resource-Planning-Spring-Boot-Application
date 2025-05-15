@@ -239,7 +239,7 @@ return (
         <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
                 <div className="flex items-center w-full md:w-auto mb-4 md:mb-0">
-                    <Link to="/Employe" className="flex items-center">
+                    <Link to="/Employee" className="flex items-center">
                         <button className="p-2 rounded-lg hover:bg-gray-100 mr-2">
                         <ArrowLeft className="h-5 w-5 text-gray-600" />
                         </button>
