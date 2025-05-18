@@ -314,13 +314,13 @@ export const ChatProvider = ({ children }) => {
   };
 
   // Send a text message
-  const sendTextMessage = (chatId, text) => {
+  const sendMessage = (chatId, messageData) => {
     if (!websocketService.isConnected()) {
       websocketService.connect(() => {
-        websocketService.sendTextMessage(chatId, text);
+        websocketService.sendMessage(chatId, messageData);
       });
     } else {
-      websocketService.sendTextMessage(chatId, text);
+      websocketService.sendMessage(chatId, messageData);
     }
   };
 
@@ -522,7 +522,12 @@ export const ChatProvider = ({ children }) => {
     activeChat,
     setActiveChat,
     typingUsers,
-    sendTextMessage,
+    sendMessage,
+    sendTextMessage: (chatId, text) =>
+      sendMessage(chatId, {
+        content: text,
+        messageType: "TEXT",
+      }),
     createNewChat,
     updateTypingStatus,
     markMessageAsRead,

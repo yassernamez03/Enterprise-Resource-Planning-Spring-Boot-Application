@@ -19,6 +19,7 @@ const ChatApp = () => {
     activeChat,
     setActiveChat,
     typingUsers,
+    sendMessage,
     sendTextMessage,
     markMessageAsRead,
     updateTypingStatus,
@@ -241,18 +242,46 @@ const ChatApp = () => {
     }
   };
 
-  const handleSendMessage = async (newMessage) => {
-    if (!activeChat) return;
+  const handleSendMessage = (message) => {
+  if (!activeChat) return;
 
-    try {
-      // Send message via WebSocket
-      sendTextMessage(activeChat.id, newMessage.text);
+  try {
+    let messageData;
+    console.log("Sending message:", message);
+    console.log("  isAttachment:", message.isAttachment);
 
-      // No need to add message to state manually, as it will come back through WebSocket
-    } catch (error) {
-      console.error("Error sending message:", error);
+    if (message.isAttachment) {
+      // File message
+      messageData = {
+        fileUrl: message.fileUrl,
+        fileName: message.fileName,
+        fileType: message.fileType,
+        fileSize: message.fileSize,
+        messageType: 'FILE'
+      };
+    } else if (message.isVoice) {
+      // Voice message
+      messageData = {
+        audioUrl: message.audioUrl,
+        duration: message.duration,
+        messageType: 'VOICE'
+      };
+    } else {
+      // Text message
+      messageData = {
+        content: message.text,
+        messageType: 'TEXT',
+        replyTo: message.replyTo
+      };
     }
-  };
+
+    // Send via WebSocket
+    sendMessage(activeChat.id, messageData);
+
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
 
   const handleTypingStatusChange = (isTyping) => {
     if (activeChat) {

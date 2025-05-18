@@ -239,28 +239,35 @@ class WebSocketService {
     this.subscriptions.clear();
   }
 
-  // Send a text message
-  sendTextMessage(chatId, message) {
-    if (!this.stompClient || !this.connected) {
-      console.warn('Cannot send message, WebSocket not connected');
-      return false;
-    }
-
-    try {
-      this.stompClient.send(
-        `/app/chat/${chatId}/sendMessage`, 
-        {}, 
-        JSON.stringify({
-          content: message,
-          messageType: 'TEXT'
-        })
-      );
-      return true;
-    } catch (error) {
-      console.error('Error sending message:', error);
-      return false;
-    }
+  // Add this method to WebSocketService class
+sendMessage(chatId, messageData) {
+  if (!this.stompClient || !this.connected) {
+    console.warn('Cannot send message, WebSocket not connected');
+    return false;
   }
+
+  console.log(`Sending message to chat ${chatId}:`, messageData);
+
+  try {
+    this.stompClient.send(
+      `/app/chat/${chatId}/sendMessage`, 
+      {}, 
+      JSON.stringify(messageData)
+    );
+    return true;
+  } catch (error) {
+    console.error('Error sending message:', error);
+    return false;
+  }
+}
+
+// Deprecate the old sendTextMessage method or modify it to use the new one
+sendTextMessage(chatId, text) {
+  return this.sendMessage(chatId, {
+    content: text,
+    messageType: 'TEXT'
+  });
+}
 
   // Send typing status update
   sendTypingStatus(chatId, isTyping) {
