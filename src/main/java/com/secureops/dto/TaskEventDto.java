@@ -1,5 +1,6 @@
 package com.secureops.dto;
 
+import com.secureops.entity.TaskEvent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,30 +13,34 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventDto {
+public class TaskEventDto {
     
     private Long id;
     
-    @NotEmpty(message = "Event title cannot be empty")
+    @NotEmpty(message = "Title cannot be empty")
     private String title;
     
     private String description;
     
-    @NotNull(message = "Start time cannot be null")
+    @NotNull(message = "Status cannot be null")
+    private TaskEvent.TaskEventStatus status;
+    
+    @NotNull(message = "Type cannot be null")
+    private TaskEvent.TaskEventType type;
+    
     private Date startTime;
-    
-    @NotNull(message = "End time cannot be null")
-    private Date endTime;
-    
-    private boolean allDay;
-    
+    private Date dueDate;
     private String location;
+    private boolean isGlobal;
+    private Date completedDate;
     
+    // Event specific fields
+    private boolean allDay;
     private String recurrencePattern;
-    
     private String color;
     
-    private boolean isGlobal;
+    // Task specific fields
+    private String priority;
     
     private Set<Long> assignedUserIds;
 }
