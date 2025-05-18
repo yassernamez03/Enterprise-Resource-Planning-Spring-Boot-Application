@@ -42,6 +42,16 @@ const EditAccountDetails = ({ user, onSave, onCancel }) => {
     return strength;
   };
 
+  // Validate if password meets all requirements
+  const isPasswordValid = (password) => {
+    if (!password) return false;
+    return password.length >= 8 && 
+           /[0-9]/.test(password) && 
+           /[a-z]/.test(password) && 
+           /[A-Z]/.test(password) && 
+           /[^A-Za-z0-9]/.test(password);
+  };
+
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,6 +136,12 @@ const EditAccountDetails = ({ user, onSave, onCancel }) => {
     if (formData.newPassword !== formData.confirmPassword) {
       setError('New passwords do not match.');
       showErrorToast('New passwords do not match.');
+      return;
+    }
+
+     if (!isPasswordValid(formData.newPassword)) {
+      setError('Password must have at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character');
+      showErrorToast('Password does not meet security requirements.');
       return;
     }
     
@@ -332,6 +348,12 @@ const EditAccountDetails = ({ user, onSave, onCancel }) => {
                      passwordStrength === 4 ? 'Strong' :
                      'Very strong'}
                   </p>
+                  {formData.newPassword && !isPasswordValid(formData.newPassword) && (
+                    <p className="text-xs text-red-500 mt-1">
+                      Password must have at least 8 characters, including 1 uppercase letter, 
+                      1 lowercase letter, 1 number, and 1 special character
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -359,7 +381,7 @@ const EditAccountDetails = ({ user, onSave, onCancel }) => {
             <div className="pt-4">
               <button 
                 type="submit"
-                disabled={isLoading || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword || !passwordsMatch}
+                disabled={isLoading || !formData.currentPassword || !formData.newPassword || !formData.confirmPassword || !passwordsMatch || !isPasswordValid(formData.newPassword)}
                 className="w-full px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isLoading ? (

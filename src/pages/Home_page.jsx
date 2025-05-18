@@ -77,7 +77,7 @@ export default function Home_Page() {
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
                 <div className="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center font-bold">
-                  B
+                  S
                 </div>
                 <h1 className="ml-2 text-lg font-semibold text-gray-900">
                   SecureOps
@@ -178,26 +178,48 @@ export default function Home_Page() {
                       Settings
                     </Link>
                     {user?.role === "ADMIN" && (
-                      <Link
-                        to="/admin"
-                        className="px-4 py-2 text-sm text-indigo-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
-                      >
-                        <svg
-                          className="mr-2 h-5 w-5 text-indigo-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
+                      <>
+                        <Link
+                          to="/admin"
+                          className="px-4 py-2 text-sm text-indigo-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          ></path>
-                        </svg>
-                        Admin Dashboard
-                      </Link>
+                          <svg
+                            className="mr-2 h-5 w-5 text-indigo-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path>
+                          </svg>
+                          Admin Dashboard
+                        </Link>
+                        <Link
+                          to="/security"
+                          className="px-4 py-2 text-sm text-indigo-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
+                        >
+                          <svg
+                            className="mr-2 h-5 w-5 text-indigo-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path>
+                          </svg>
+                          Security Dashboard
+                        </Link>
+                      </>
                     )}
                     <button
                       onClick={handleLogout}

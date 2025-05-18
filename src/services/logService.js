@@ -24,6 +24,27 @@ const logService = {
       throw error;
     }
   },
+
+  // New method for logging security events
+  logSecurityEvent: async (userId, action, details, logType) => {
+    try {
+      const logData = {
+        userId: userId,
+        action: action,
+        details: details,
+        logType: logType
+      };
+      
+      const response = await apiService.post('/security/logs', logData);
+      console.log('Security event logged:', response);
+      return response;
+    } catch (error) {
+      console.error('Error logging security event:', error);
+      // Don't rethrow the error - we don't want to interrupt the user flow
+      // Just log it to the console
+      return { success: false, error: error.message };
+    }
+  }
 };
 
 export default logService;
