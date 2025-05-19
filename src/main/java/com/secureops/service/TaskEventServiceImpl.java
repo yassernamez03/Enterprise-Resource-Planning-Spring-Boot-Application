@@ -346,7 +346,7 @@ public class TaskEventServiceImpl implements TaskEventService {
                 throw new UnauthorizedException("You don't have permission to view these tasks");
             }
 
-            List<TaskEvent> tasks = taskEventRepository.findAssignedTasksByUserIdAndDateRange(userId, null, null);
+            List<TaskEvent> tasks = taskEventRepository.findAssignedTasksByUserId(userId);
             logger.info("Retrieved {} assigned tasks for userId: {} by currentUserId: {}", tasks.size(), userId, currentUserId);
             return tasks;
 
@@ -406,7 +406,7 @@ public class TaskEventServiceImpl implements TaskEventService {
         logger.debug("Retrieving all visible tasks for userId: {}", userId);
 
         try {
-            List<TaskEvent> tasks = taskEventRepository.findAllVisibleTasksBetween(userId, null, null);
+            List<TaskEvent> tasks = taskEventRepository.findAllVisibleTasks(userId);
             logger.info("Retrieved {} visible tasks for userId: {}", tasks.size(), userId);
             return tasks;
 
@@ -601,7 +601,7 @@ public class TaskEventServiceImpl implements TaskEventService {
                 throw new UnauthorizedException("You don't have permission to view these events");
             }
 
-            List<TaskEvent> events = taskEventRepository.findAssignedEventsByUserIdAndDateRange(userId, null, null);
+            List<TaskEvent> events = taskEventRepository.findAssignedEventsByUserId(userId);
             logger.info("Retrieved {} assigned events for userId: {} by currentUserId: {}", events.size(), userId, currentUserId);
             return events;
 
@@ -661,7 +661,7 @@ public class TaskEventServiceImpl implements TaskEventService {
         logger.debug("Retrieving all visible events for userId: {}", userId);
 
         try {
-            List<TaskEvent> events = taskEventRepository.findAllVisibleEventsBetween(userId, null, null);
+            List<TaskEvent> events = taskEventRepository.findAllVisibleEvents(userId);
             logger.info("Retrieved {} visible events for userId: {}", events.size(), userId);
             return events;
 
@@ -898,3 +898,213 @@ public class TaskEventServiceImpl implements TaskEventService {
         return maskedUsername + "@" + maskedDomain + "." + tld;
     }
 }
+
+
+
+// package com.secureops.service;
+
+// import com.secureops.dto.TaskEventDto;
+// import com.secureops.entity.TaskEvent;
+// import com.secureops.entity.User;
+// import com.secureops.repository.TaskEventRepository;
+// import com.secureops.repository.UserRepository;
+// import org.springframework.stereotype.Service;
+// import org.springframework.transaction.annotation.Transactional;
+
+// import java.util.Date;
+// import java.util.List;
+// import java.util.Set;
+// import java.util.stream.Collectors;
+
+// @Service
+// public class TaskEventServiceImpl implements TaskEventService {
+
+//     private final TaskEventRepository taskEventRepository;
+//     private final UserRepository userRepository;
+//     private final LogService logService;
+//     private final Long HARDCODED_USER_ID = 14L;
+
+//     public TaskEventServiceImpl(TaskEventRepository taskEventRepository,
+//             UserRepository userRepository,
+//             LogService logService) {
+//         this.taskEventRepository = taskEventRepository;
+//         this.userRepository = userRepository;
+//         this.logService = logService;
+//     }
+
+//     @Override
+//     @Transactional
+//     public TaskEvent createTaskEvent(TaskEventDto taskEventDto) {
+//         User currentUser = userRepository.findById(HARDCODED_USER_ID).get();
+
+//         TaskEvent taskEvent = new TaskEvent();
+//         taskEvent.setTitle(taskEventDto.getTitle());
+//         taskEvent.setDescription(taskEventDto.getDescription());
+//         taskEvent.setStatus(taskEventDto.getStatus());
+//         taskEvent.setType(taskEventDto.getType());
+//         taskEvent.setStartTime(taskEventDto.getStartTime());
+//         taskEvent.setDueDate(taskEventDto.getDueDate());
+//         taskEvent.setLocation(taskEventDto.getLocation());
+//         taskEvent.setGlobal(taskEventDto.isGlobal());
+//         taskEvent.setUser(currentUser);
+
+//         if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
+//                 taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+//             taskEvent.setCompletedDate(new Date());
+//         }
+
+//         if (!taskEvent.isGlobal() && taskEventDto.getAssignedUserIds() != null
+//                 && !taskEventDto.getAssignedUserIds().isEmpty()) {
+//             Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
+//                     .map(userId -> userRepository.findById(userId).get())
+//                     .collect(Collectors.toSet());
+//             taskEvent.setAssignedUsers(assignedUsers);
+//         }
+
+//         return taskEventRepository.save(taskEvent);
+//     }
+
+//     @Override
+//     @Transactional
+//     public TaskEvent updateTaskEvent(Long id, TaskEventDto taskEventDto) {
+//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
+
+//         taskEvent.setTitle(taskEventDto.getTitle());
+//         taskEvent.setDescription(taskEventDto.getDescription());
+//         taskEvent.setStatus(taskEventDto.getStatus());
+//         taskEvent.setStartTime(taskEventDto.getStartTime());
+//         taskEvent.setDueDate(taskEventDto.getDueDate());
+//         taskEvent.setLocation(taskEventDto.getLocation());
+//         taskEvent.setGlobal(taskEventDto.isGlobal());
+
+//         if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
+//                 taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+//             taskEvent.setCompletedDate(new Date());
+//         }
+
+//         if (!taskEvent.isGlobal()) {
+//             taskEvent.getAssignedUsers().clear();
+//             if (taskEventDto.getAssignedUserIds() != null && !taskEventDto.getAssignedUserIds().isEmpty()) {
+//                 Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
+//                         .map(userId -> userRepository.findById(userId).get())
+//                         .collect(Collectors.toSet());
+//                 taskEvent.setAssignedUsers(assignedUsers);
+//             }
+//         } else {
+//             taskEvent.getAssignedUsers().clear();
+//         }
+
+//         return taskEventRepository.save(taskEvent);
+//     }
+
+//     @Override
+//     @Transactional
+//     public void deleteTaskEvent(Long id) {
+//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
+//         taskEventRepository.delete(taskEvent);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllTasks() {
+//         return taskEventRepository.findByType(TaskEvent.TaskEventType.TASK);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllTasksByDateRange(Date start, Date end) {
+//         return taskEventRepository.findByTypeAndDueDateBetween(TaskEvent.TaskEventType.TASK, start, end);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getUserAssignedTasks(Long userId) {
+//         return taskEventRepository.findAssignedTasksByUserId(userId);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getUserAssignedTasksByDateRange(Long userId, Date start, Date end) {
+//         return taskEventRepository.findAssignedTasksByUserIdAndDateRange(userId, start, end);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllVisibleTasks(Long userId) {
+//         return taskEventRepository.findAllVisibleTasks(userId);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllVisibleTasksByDateRange(Long userId, Date start, Date end) {
+//         return taskEventRepository.findAllVisibleTasksBetween(userId, start, end);
+//     }
+
+//     @Override
+//     public TaskEvent getTaskById(Long id) {
+//         return taskEventRepository.findById(id).get();
+//     }
+
+//     @Override
+//     @Transactional
+//     public TaskEvent toggleTaskCompletion(Long id) {
+//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
+
+//         if (taskEvent.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+//             taskEvent.setStatus(TaskEvent.TaskEventStatus.PENDING);
+//             taskEvent.setCompletedDate(null);
+//         } else {
+//             taskEvent.setStatus(TaskEvent.TaskEventStatus.COMPLETED);
+//             taskEvent.setCompletedDate(new Date());
+//         }
+
+//         return taskEventRepository.save(taskEvent);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllEvents() {
+//         return taskEventRepository.findByType(TaskEvent.TaskEventType.EVENT);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllEventsByDateRange(Date start, Date end) {
+//         return taskEventRepository.findByTypeAndStartTimeBetween(TaskEvent.TaskEventType.EVENT, start, end);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getUserAssignedEvents(Long userId) {
+//         return taskEventRepository.findAssignedEventsByUserId(userId);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getUserAssignedEventsByDateRange(Long userId, Date start, Date end) {
+//         return taskEventRepository.findAssignedEventsByUserIdAndDateRange(userId, start, end);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllVisibleEvents(Long userId) {
+//         return taskEventRepository.findAllVisibleEvents(userId);
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllVisibleEventsByDateRange(Long userId, Date start, Date end) {
+//         return taskEventRepository.findAllVisibleEventsBetween(userId, start, end);
+//     }
+
+//     @Override
+//     public TaskEvent getEventById(Long id) {
+//         return taskEventRepository.findById(id).get();
+//     }
+
+//     @Override
+//     public TaskEvent getTaskEventById(Long id) {
+//         return taskEventRepository.findById(id).get();
+//     }
+
+//     @Override
+//     public List<TaskEvent> getAllTaskEvents() {
+//         return taskEventRepository.findAll();
+//     }
+
+//     private Long getCurrentUserId() {
+//         return HARDCODED_USER_ID;
+//     }
+
+//     private boolean checkIfAdmin() {
+//         return true;  // Always returns true, skipping admin checks
+//     }
+// }

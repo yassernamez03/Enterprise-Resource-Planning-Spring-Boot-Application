@@ -34,13 +34,13 @@ public class TaskEventDto {
     private boolean isGlobal;
     private Date completedDate;
     
-    // Event specific fields
-    private boolean allDay;
-    private String recurrencePattern;
-    private String color;
+    // // Event specific fields
+    // private boolean allDay;
+    // private String recurrencePattern;
+    // private String color;
     
-    // Task specific fields
-    private String priority;
+    // // Task specific fields
+    // private String priority;
     
     private Set<Long> assignedUserIds;
 }

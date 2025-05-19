@@ -21,6 +21,14 @@ public interface TaskEventRepository extends JpaRepository<TaskEvent, Long> {
     // Find all assigned to a specific user
     @Query("SELECT te FROM TaskEvent te JOIN te.assignedUsers u WHERE u.id = :userId")
     List<TaskEvent> findByAssignedUserId(Long userId);
+
+    // Find all assigned to a user  (for tasks)
+    @Query("SELECT te FROM TaskEvent te JOIN te.assignedUsers u WHERE u.id = :userId AND te.type = com.secureops.entity.TaskEvent$TaskEventType.TASK")
+    List<TaskEvent> findAssignedTasksByUserId(Long userId);
+    
+    // Find all assigned to a user  (for events)
+    @Query("SELECT te FROM TaskEvent te JOIN te.assignedUsers u WHERE u.id = :userId AND te.type = com.secureops.entity.TaskEvent$TaskEventType.EVENT")
+    List<TaskEvent> findAssignedEventsByUserId(Long userId);
     
     // Find all assigned to a user in date range (for tasks)
     @Query("SELECT te FROM TaskEvent te JOIN te.assignedUsers u WHERE u.id = :userId AND te.type = com.secureops.entity.TaskEvent$TaskEventType.TASK AND te.dueDate >= :start AND te.dueDate <= :end")
@@ -43,6 +51,14 @@ public interface TaskEventRepository extends JpaRepository<TaskEvent, Long> {
     @Query("SELECT te FROM TaskEvent te WHERE te.isGlobal = true OR EXISTS (SELECT u FROM te.assignedUsers u WHERE u.id = :userId)")
     List<TaskEvent> findAllVisibleToUser(Long userId);
     
+    // Find all items visible to a user (for tasks)
+    @Query("SELECT te FROM TaskEvent te WHERE (te.isGlobal = true OR EXISTS (SELECT u FROM te.assignedUsers u WHERE u.id = :userId)) AND te.type = com.secureops.entity.TaskEvent$TaskEventType.TASK ")
+    List<TaskEvent> findAllVisibleTasks(Long userId);
+    
+    // Find all items visible to a user (for events)
+    @Query("SELECT te FROM TaskEvent te WHERE (te.isGlobal = true OR EXISTS (SELECT u FROM te.assignedUsers u WHERE u.id = :userId)) AND te.type = com.secureops.entity.TaskEvent$TaskEventType.EVENT ")
+    List<TaskEvent> findAllVisibleEvents(Long userId);
+
     // Find all items visible to a user within a date range (for tasks)
     @Query("SELECT te FROM TaskEvent te WHERE (te.isGlobal = true OR EXISTS (SELECT u FROM te.assignedUsers u WHERE u.id = :userId)) AND te.type = com.secureops.entity.TaskEvent$TaskEventType.TASK AND te.dueDate >= :start AND te.dueDate <= :end")
     List<TaskEvent> findAllVisibleTasksBetween(Long userId, Date start, Date end);
