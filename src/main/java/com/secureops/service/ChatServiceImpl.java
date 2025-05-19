@@ -9,6 +9,8 @@ import com.secureops.exception.UnauthorizedException;
 import com.secureops.repository.ChatRepository;
 import com.secureops.repository.UserRepository;
 import com.secureops.util.AppConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ import java.util.Set;
 @Service
 public class ChatServiceImpl implements ChatService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
+    private static final Logger securityLogger = LoggerFactory.getLogger("com.secureops.security");
+
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final LogService logService;
@@ -39,75 +44,78 @@ public class ChatServiceImpl implements ChatService {
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
         this.logService = logService;
+        logger.info("ChatServiceImpl initialized");
     }
 
     @Override
     @Transactional
     public Chat createChat(ChatDto chatDto, List<Long> participantIds) {
-        System.out.println("DEBUG - createChat service - Starting method");
+        String clientIp = getClientIp();
+        logger.debug("Creating new chat with title: {}, participants: {}, from IP: {}", 
+                chatDto.getTitle(), participantIds, clientIp);
+
         // Validate participants
         if (participantIds == null || participantIds.isEmpty()) {
+            securityLogger.warn("Chat creation attempt with no participants from IP: {}", clientIp);
             throw new BadRequestException("Chat must have at least one participant");
         }
 
         try {
             // Get current user
             User currentUser = getCurrentUser();
-            System.out.println("DEBUG - createChat service - Current user: " + currentUser.getId() + ", "
-                    + currentUser.getEmail());
+            logger.debug("Current user creating chat - ID: {}, Email: {}", 
+                    currentUser.getId(), maskEmail(currentUser.getEmail()));
 
             // Create chat without participants first
             Chat chat = new Chat();
             chat.setTitle(chatDto.getTitle());
             chat.setStatus(Chat.ChatStatus.ACTIVE);
-            System.out.println("DEBUG - createChat service - Created chat object with title: " + chat.getTitle());
+            logger.debug("Created chat object with title: {}", chat.getTitle());
 
             // Save chat first to get an ID
             Chat savedChat = chatRepository.saveAndFlush(chat);
-            System.out.println("DEBUG - createChat service - Saved chat with ID: " + savedChat.getId());
+            logger.info("Saved new chat with ID: {}, Title: {}", savedChat.getId(), savedChat.getTitle());
 
-            // Now add participants using the join table instead of bidirectional
-            // relationships
             // Add current user
-            System.out.println("DEBUG - createChat service - Adding current user: " + currentUser.getId() + " to chat");
+            logger.debug("Adding current user to chat - UserID: {}", currentUser.getId());
             chatRepository.addParticipant(savedChat.getId(), currentUser.getId());
 
             for (Long participantId : participantIds) {
                 // Skip if it's the current user (already added)
                 if (participantId.equals(currentUser.getId())) {
-                    System.out.println("DEBUG - createChat service - Skipping current user: " + participantId);
+                    logger.debug("Skipping current user as participant - UserID: {}", participantId);
                     continue;
                 }
 
-                System.out.println("DEBUG - createChat service - Looking up participant: " + participantId);
+                logger.debug("Processing participant - UserID: {}", participantId);
                 User participant = userRepository.findById(participantId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User", "id", participantId));
-                System.out.println("DEBUG - createChat service - Found participant: " + participant.getId() + ", "
-                        + participant.getEmail());
+                        .orElseThrow(() -> {
+                            securityLogger.warn("Invalid participant ID in chat creation - RequestedID: {}, CreatorID: {}, IP: {}", 
+                                    participantId, currentUser.getId(), clientIp);
+                            return new ResourceNotFoundException("User", "id", participantId);
+                        });
 
                 // Only add active and approved users
                 if (participant.isActive() && participant.getApprovalStatus() == User.ApprovalStatus.APPROVED) {
-                    System.out
-                            .println("DEBUG - createChat service - Adding participant: " + participantId + " to chat");
+                    logger.debug("Adding valid participant - UserID: {}, Status: {}, Active: {}", 
+                            participant.getId(), participant.getApprovalStatus(), participant.isActive());
                     chatRepository.addParticipant(savedChat.getId(), participantId);
                 } else {
-                    System.out.println("DEBUG - createChat service - Participant not active or approved: "
-                            + participantId +
-                            ", isActive: " + participant.isActive() + ", approval: " + participant.getApprovalStatus());
+                    logger.warn("Skipping inactive/unapproved participant - UserID: {}, Status: {}, Active: {}", 
+                            participant.getId(), participant.getApprovalStatus(), participant.isActive());
                 }
             }
 
             // Log chat creation
-            System.out.println("DEBUG - createChat service - Logging chat creation");
             logService.createLog(
                     AppConstants.LOG_ACTION_CREATE,
                     "Chat created: " + savedChat.getTitle(),
-                    getClientIp(),
+                    clientIp,
                     AppConstants.LOG_TYPE_CHAT,
                     currentUser.getId());
+            logger.info("Logged chat creation - ChatID: {}, CreatorID: {}", savedChat.getId(), currentUser.getId());
 
-            // Manually construct the Chat object with participants to avoid lazy loading
-            // issues
+            // Manually construct the Chat object with participants to avoid lazy loading issues
             Chat resultChat = new Chat();
             resultChat.setId(savedChat.getId());
             resultChat.setTitle(savedChat.getTitle());
@@ -120,7 +128,6 @@ public class ChatServiceImpl implements ChatService {
             participants.add(currentUser);
 
             for (Long participantId : participantIds) {
-                // Skip duplicates
                 if (participantId.equals(currentUser.getId())) {
                     continue;
                 }
@@ -133,209 +140,205 @@ public class ChatServiceImpl implements ChatService {
             }
 
             resultChat.setParticipants(new java.util.HashSet<>(participants));
-            System.out.println("DEBUG - createChat service - Result chat has " + resultChat.getParticipants().size()
-                    + " participants");
+            logger.debug("Final chat object created with {} participants", resultChat.getParticipants().size());
 
             return resultChat;
-        } catch (Exception e) {
-            System.out.println("DEBUG - createChat service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (BadRequestException | ResourceNotFoundException ex) {
+            // Already logged, just rethrow
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("Unexpected error creating chat - Title: {}, IP: {}, Error: {}", 
+                    chatDto.getTitle(), clientIp, ex.getMessage(), ex);
+            securityLogger.error("Chat creation failed - IP: {}, Error: {}", clientIp, ex.getMessage());
+            throw ex;
         }
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Chat> getUserChats(Long userId) {
-        System.out.println("DEBUG - getUserChats service - Starting method for user: " + userId);
+        String clientIp = getClientIp();
+        logger.debug("Fetching chats for user - UserID: {}, IP: {}", userId, clientIp);
+
         try {
             // Verify user exists
-            System.out.println("DEBUG - getUserChats service - Verifying user exists: " + userId);
             userRepository.findById(userId)
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-            System.out.println("DEBUG - getUserChats service - User exists: " + userId);
+                    .orElseThrow(() -> {
+                        securityLogger.warn("Invalid user ID requested - UserID: {}, IP: {}", userId, clientIp);
+                        return new ResourceNotFoundException("User", "id", userId);
+                    });
+            logger.debug("Verified user exists - UserID: {}", userId);
 
             // Verify current user is requesting their own chats
             User currentUser = getCurrentUser();
-            System.out.println("DEBUG - getUserChats service - Current user: " + currentUser.getId());
-
             if (!currentUser.getId().equals(userId)) {
-                System.out.println("DEBUG - getUserChats service - Unauthorized: current user " +
-                        currentUser.getId() + " trying to access chats of user " + userId);
+                securityLogger.warn("Unauthorized chat access attempt - RequestedUserID: {}, CurrentUserID: {}, IP: {}", 
+                        userId, currentUser.getId(), clientIp);
                 throw new UnauthorizedException("You can only view your own chats");
             }
 
             // Get chat IDs only
-            System.out.println("DEBUG - getUserChats service - Fetching chat IDs for user: " + userId);
             List<Long> chatIds = chatRepository.findChatIdsByUserId(userId);
-            System.out.println("DEBUG - getUserChats service - Retrieved " + chatIds.size() + " chat IDs");
+            logger.debug("Found {} chat IDs for user - UserID: {}", chatIds.size(), userId);
 
-            // Load chats individually with basic data only (avoid loading full object
-            // graph)
+            // Load chats individually with basic data only
             List<Chat> chats = new ArrayList<>();
             for (Long chatId : chatIds) {
-                System.out.println("DEBUG - getUserChats service - Loading chat: " + chatId);
+                logger.trace("Loading chat details - ChatID: {}", chatId);
 
-                // Custom query to get chat with participants but not loading nested collections
                 Chat chat = entityManager.createQuery(
                         "SELECT c FROM Chat c LEFT JOIN FETCH c.participants WHERE c.id = :id",
                         Chat.class)
                         .setParameter("id", chatId)
                         .getSingleResult();
 
-                System.out.println("DEBUG - getUserChats service - Loaded chat: " + chat.getId() +
-                        ", Title: " + chat.getTitle() +
-                        ", Participants: " + (chat.getParticipants() != null ? chat.getParticipants().size() : "null"));
-
+                logger.trace("Loaded chat - ChatID: {}, Title: {}, Participants: {}", 
+                        chat.getId(), chat.getTitle(), chat.getParticipants().size());
                 chats.add(chat);
             }
 
+            logger.info("Returning {} chats for user - UserID: {}", chats.size(), userId);
             return chats;
-        } catch (Exception e) {
-            System.out.println("DEBUG - getUserChats service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (UnauthorizedException | ResourceNotFoundException ex) {
+            // Already logged, just rethrow
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("Error fetching user chats - UserID: {}, IP: {}, Error: {}", 
+                    userId, clientIp, ex.getMessage(), ex);
+            throw ex;
         }
     }
 
     @Override
     @Transactional(readOnly = true)
     public Chat getChatById(Long id) {
-        System.out.println("DEBUG - getChatById service - Starting method for chat: " + id);
-        try {
-            System.out.println("DEBUG - getChatById service - Finding chat: " + id);
+        String clientIp = getClientIp();
+        logger.debug("Fetching chat by ID - ChatID: {}, IP: {}", id, clientIp);
 
-            // Load chat with participants in a single query to avoid lazy loading issues
+        try {
+            // Load chat with participants in a single query
             Chat chat = entityManager.createQuery(
                     "SELECT c FROM Chat c LEFT JOIN FETCH c.participants WHERE c.id = :id",
                     Chat.class)
                     .setParameter("id", id)
                     .getSingleResult();
 
-            System.out.println(
-                    "DEBUG - getChatById service - Found chat: " + chat.getId() + ", Title: " + chat.getTitle());
+            logger.debug("Found chat - ChatID: {}, Title: {}, Participants: {}", 
+                    chat.getId(), chat.getTitle(), chat.getParticipants().size());
 
             // Verify current user is a participant
             User currentUser = getCurrentUser();
-            System.out.println("DEBUG - getChatById service - Current user: " + currentUser.getId());
-
             boolean isParticipant = chat.getParticipants().stream()
                     .anyMatch(participant -> participant.getId().equals(currentUser.getId()));
 
-            System.out.println("DEBUG - getChatById service - Is current user a participant? " + isParticipant);
-
             if (!isParticipant) {
-                System.out.println("DEBUG - getChatById service - Unauthorized: current user " +
-                        currentUser.getId() + " is not a participant in chat " + id);
+                securityLogger.warn("Unauthorized chat access - ChatID: {}, UserID: {}, IP: {}", 
+                        id, currentUser.getId(), clientIp);
                 throw new UnauthorizedException("You don't have permission to access this chat");
             }
 
+            logger.debug("Authorized access to chat - ChatID: {}, UserID: {}", id, currentUser.getId());
             return chat;
-        } catch (Exception e) {
-            System.out.println("DEBUG - getChatById service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (Exception ex) {
+            logger.error("Error fetching chat - ChatID: {}, IP: {}, Error: {}", id, clientIp, ex.getMessage(), ex);
+            throw ex;
         }
     }
 
     @Override
     @Transactional
     public Chat archiveChat(Long id) {
-        System.out.println("DEBUG - archiveChat service - Starting method for chat: " + id);
+        String clientIp = getClientIp();
+        logger.debug("Archiving chat - ChatID: {}, IP: {}", id, clientIp);
+
         try {
             Chat chat = getChatById(id);
-            System.out.println("DEBUG - archiveChat service - Found chat: " + chat.getId() +
-                    ", Title: " + chat.getTitle() + ", Status: " + chat.getStatus());
+            logger.debug("Retrieved chat for archiving - ChatID: {}, Status: {}", chat.getId(), chat.getStatus());
 
             // Only set to ARCHIVED if it's currently ACTIVE
             if (chat.getStatus() == Chat.ChatStatus.ACTIVE) {
-                System.out.println("DEBUG - archiveChat service - Archiving chat: " + chat.getId());
                 chat.setStatus(Chat.ChatStatus.ARCHIVED);
                 chat = chatRepository.save(chat);
-                System.out.println("DEBUG - archiveChat service - Chat archived: " + chat.getId() +
-                        ", New status: " + chat.getStatus());
+                logger.info("Chat archived - ChatID: {}, NewStatus: {}", chat.getId(), chat.getStatus());
 
                 // Log chat archiving
-                System.out.println("DEBUG - archiveChat service - Logging chat archiving");
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
                         "Chat archived: " + chat.getTitle(),
-                        getClientIp(),
+                        clientIp,
                         AppConstants.LOG_TYPE_CHAT,
                         getCurrentUser().getId());
             } else {
-                System.out.println("DEBUG - archiveChat service - Chat already archived: " + chat.getId());
+                logger.debug("Chat already in non-active status - ChatID: {}, Status: {}", chat.getId(), chat.getStatus());
             }
 
             return chat;
-        } catch (Exception e) {
-            System.out.println("DEBUG - archiveChat service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (Exception ex) {
+            logger.error("Error archiving chat - ChatID: {}, IP: {}, Error: {}", id, clientIp, ex.getMessage(), ex);
+            throw ex;
         }
     }
 
     @Override
     @Transactional
     public Chat unarchiveChat(Long id) {
-        System.out.println("DEBUG - unarchiveChat service - Starting method for chat: " + id);
+        String clientIp = getClientIp();
+        logger.debug("Unarchiving chat - ChatID: {}, IP: {}", id, clientIp);
+
         try {
             Chat chat = getChatById(id);
-            System.out.println("DEBUG - unarchiveChat service - Found chat: " + chat.getId() +
-                    ", Title: " + chat.getTitle() + ", Status: " + chat.getStatus());
+            logger.debug("Retrieved chat for unarchiving - ChatID: {}, Status: {}", chat.getId(), chat.getStatus());
 
             // Only set to ACTIVE if it's currently ARCHIVED
             if (chat.getStatus() == Chat.ChatStatus.ARCHIVED) {
-                System.out.println("DEBUG - unarchiveChat service - Unarchiving chat: " + chat.getId());
                 chat.setStatus(Chat.ChatStatus.ACTIVE);
                 chat = chatRepository.save(chat);
-                System.out.println("DEBUG - unarchiveChat service - Chat unarchived: " + chat.getId() +
-                        ", New status: " + chat.getStatus());
+                logger.info("Chat unarchived - ChatID: {}, NewStatus: {}", chat.getId(), chat.getStatus());
 
                 // Log chat unarchiving
-                System.out.println("DEBUG - unarchiveChat service - Logging chat unarchiving");
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
                         "Chat unarchived: " + chat.getTitle(),
-                        getClientIp(),
+                        clientIp,
                         AppConstants.LOG_TYPE_CHAT,
                         getCurrentUser().getId());
             } else {
-                System.out.println("DEBUG - unarchiveChat service - Chat already active: " + chat.getId());
+                logger.debug("Chat already in active status - ChatID: {}, Status: {}", chat.getId(), chat.getStatus());
             }
 
             return chat;
-        } catch (Exception e) {
-            System.out.println("DEBUG - unarchiveChat service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (Exception ex) {
+            logger.error("Error unarchiving chat - ChatID: {}, IP: {}, Error: {}", id, clientIp, ex.getMessage(), ex);
+            throw ex;
         }
     }
 
     @Override
     @Transactional
     public Chat leaveChat(Long chatId) {
-        System.out.println("DEBUG - leaveChat service - Starting method for chat: " + chatId);
+        String clientIp = getClientIp();
+        logger.debug("Processing leave chat request - ChatID: {}, IP: {}", chatId, clientIp);
+
         try {
             // Get the chat with participants
             Chat chat = getChatById(chatId);
-            System.out.println("DEBUG - leaveChat service - Found chat: " + chat.getId() +
-                    ", Title: " + chat.getTitle() + ", Status: " + chat.getStatus() +
-                    ", Participants: " + chat.getParticipants().size());
+            logger.debug("Retrieved chat for leaving - ChatID: {}, Participants: {}, Status: {}", 
+                    chat.getId(), chat.getParticipants().size(), chat.getStatus());
 
             // Get current user
             User currentUser = getCurrentUser();
-            System.out.println("DEBUG - leaveChat service - Current user: " + currentUser.getId() + ", " + currentUser.getEmail());
+            logger.debug("Current user leaving chat - UserID: {}", currentUser.getId());
 
-            // Check if user is a participant (getChatById already checks this)
+            // Check if chat is already closed
             if (chat.getStatus() == Chat.ChatStatus.CLOSED) {
-                System.out.println("DEBUG - leaveChat service - Chat already closed: " + chat.getId());
+                logger.warn("Attempt to leave already closed chat - ChatID: {}, UserID: {}", chatId, currentUser.getId());
                 throw new BadRequestException("Chat is already closed");
             }
 
             // If chat has only 2 participants and current user is one of them
             if (chat.getParticipants().size() <= 2) {
-                System.out.println("DEBUG - leaveChat service - Chat has 2 or fewer participants, closing chat: " + chat.getId());
+                logger.info("Closing chat with <= 2 participants - ChatID: {}, Participants: {}", 
+                        chat.getId(), chat.getParticipants().size());
                 
                 // Remove current user from participants
                 chatRepository.removeParticipant(chatId, currentUser.getId());
@@ -348,28 +351,27 @@ public class ChatServiceImpl implements ChatService {
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
                         "Chat closed: " + chat.getTitle(),
-                        getClientIp(),
+                        clientIp,
                         AppConstants.LOG_TYPE_CHAT,
                         currentUser.getId());
                 
-                System.out.println("DEBUG - leaveChat service - Chat status updated to CLOSED: " + chat.getId());
+                logger.info("Chat closed - ChatID: {}, UserID: {}", chat.getId(), currentUser.getId());
             } else {
                 // Chat has more than 2 participants, just remove the current user
-                System.out.println("DEBUG - leaveChat service - Removing current user from chat with " + 
-                        chat.getParticipants().size() + " participants: " + chat.getId());
+                logger.debug("Removing user from multi-participant chat - ChatID: {}, Participants: {}", 
+                        chat.getId(), chat.getParticipants().size());
                 
-                // Remove current user from participants
                 chatRepository.removeParticipant(chatId, currentUser.getId());
                 
                 // Log the user leaving
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
                         "Left chat: " + chat.getTitle(),
-                        getClientIp(),
+                        clientIp,
                         AppConstants.LOG_TYPE_CHAT,
                         currentUser.getId());
                 
-                System.out.println("DEBUG - leaveChat service - User removed from chat: " + chat.getId());
+                logger.info("User left chat - ChatID: {}, UserID: {}", chat.getId(), currentUser.getId());
             }
 
             // Get updated chat with refreshed participants
@@ -379,36 +381,38 @@ public class ChatServiceImpl implements ChatService {
                     .setParameter("id", chatId)
                     .getSingleResult();
             
-            System.out.println("DEBUG - leaveChat service - Updated chat: " + updatedChat.getId() +
-                    ", Status: " + updatedChat.getStatus() +
-                    ", Participants: " + updatedChat.getParticipants().size());
+            logger.debug("Returning updated chat - ChatID: {}, Status: {}, Participants: {}", 
+                    updatedChat.getId(), updatedChat.getStatus(), updatedChat.getParticipants().size());
 
             return updatedChat;
-        } catch (Exception e) {
-            System.out.println("DEBUG - leaveChat service - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (BadRequestException ex) {
+            // Already logged, just rethrow
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("Error leaving chat - ChatID: {}, IP: {}, Error: {}", chatId, clientIp, ex.getMessage(), ex);
+            securityLogger.error("Chat leave failed - ChatID: {}, IP: {}, Error: {}", chatId, clientIp, ex.getMessage());
+            throw ex;
         }
     }
 
     private User getCurrentUser() {
-        System.out.println("DEBUG - getCurrentUser - Getting current user");
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
                 String email = authentication.getName();
-                System.out.println("DEBUG - getCurrentUser - Authentication name: " + email);
                 User user = userRepository.findByEmail(email)
-                        .orElseThrow(() -> new UnauthorizedException("User not found"));
-                System.out.println("DEBUG - getCurrentUser - Found user: " + user.getId() + ", " + user.getEmail());
+                        .orElseThrow(() -> {
+                            securityLogger.warn("Authenticated user not found in database - Email: {}", maskEmail(email));
+                            return new UnauthorizedException("User not found");
+                        });
+                logger.trace("Retrieved current user - UserID: {}", user.getId());
                 return user;
             }
-            System.out.println("DEBUG - getCurrentUser - Not authenticated");
+            securityLogger.warn("Unauthenticated access attempt");
             throw new UnauthorizedException("Not authenticated");
-        } catch (Exception e) {
-            System.out.println("DEBUG - getCurrentUser - Exception: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+        } catch (Exception ex) {
+            logger.error("Error getting current user", ex);
+            throw ex;
         }
     }
 
@@ -426,12 +430,35 @@ public class ChatServiceImpl implements ChatService {
             if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
                 ipAddress = request.getRemoteAddr();
             }
-            System.out.println("DEBUG - getClientIp - Client IP: " + ipAddress);
+            logger.trace("Retrieved client IP: {}", ipAddress);
             return ipAddress;
         } catch (Exception e) {
-            System.out.println("DEBUG - getClientIp - Exception: " + e.getMessage());
-            e.printStackTrace();
+            logger.warn("Error retrieving client IP", e);
             return "unknown";
         }
+    }
+
+    /**
+     * Masks an email address for privacy in logs
+     * Converts user@example.com to u***@e***.com
+     */
+    private String maskEmail(String email) {
+        if (email == null || email.isEmpty() || !email.contains("@")) {
+            return email;
+        }
+        
+        String[] parts = email.split("@");
+        String username = parts[0];
+        String domain = parts[1];
+        
+        String maskedUsername = username.length() > 0 ? username.substring(0, 1) + "***" : "***";
+        
+        String[] domainParts = domain.split("\\.");
+        String domainName = domainParts[0];
+        String tld = domainParts.length > 1 ? domainParts[domainParts.length - 1] : "";
+        
+        String maskedDomain = domainName.length() > 0 ? domainName.substring(0, 1) + "***" : "***";
+        
+        return maskedUsername + "@" + maskedDomain + (tld.isEmpty() ? "" : "." + tld);
     }
 }
