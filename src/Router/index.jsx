@@ -32,7 +32,7 @@ const RouteLogger = ({ children }) => {
     const logNavigation = async () => {
       try {
         await logService.logSecurityEvent(
-          isAuthenticated() ? user?.id : 'anonymous',
+          isAuthenticated() ? user?.id : null,
           'PAGE_VIEW',
           `Navigated to: ${location.pathname}`,
           'NAVIGATION',

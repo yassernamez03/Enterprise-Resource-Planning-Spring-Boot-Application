@@ -21,7 +21,7 @@ const ProtectedRoute = () => {
       } else {
         // Log unauthorized access attempt
         logService.logSecurityEvent(
-          'anonymous',
+          null,
           'UNAUTHORIZED_ACCESS_ATTEMPT',
           `Attempted to access protected route: ${location.pathname}`,
           'SECURITY',
