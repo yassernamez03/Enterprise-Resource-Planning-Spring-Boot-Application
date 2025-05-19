@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "events")
-public class Event {
+@Table(name = "task_events")
+public class TaskEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,26 +28,28 @@ public class Event {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private TaskEventStatus status = TaskEventStatus.PENDING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskEventType type;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date endTime;
-
-    @Column(name = "is_all_day")
-    private boolean allDay = false;
+    private Date dueDate;
 
     private String location;
 
-    private String recurrencePattern;
-    
-    private String color;
-    
-    // If true, visible to all users; if false, only to assigned users
+    @Column(name = "is_global")
     private boolean isGlobal = false;
-    
+
+    @Temporal(TemporalType.DATE)
+    private Date completedDate;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -59,14 +61,22 @@ public class Event {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false)
-    private User createdBy;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     
     @ManyToMany
     @JoinTable(
-        name = "event_users",
-        joinColumns = @JoinColumn(name = "event_id"),
+        name = "task_event_users",
+        joinColumns = @JoinColumn(name = "task_event_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> assignedUsers = new HashSet<>();
+
+    public enum TaskEventStatus {
+        PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+    }
+
+    public enum TaskEventType {
+        TASK, EVENT
+    }
 }

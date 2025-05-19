@@ -85,6 +85,13 @@ public class UserController {
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto passwordChangeDto) {
+
+        if (!isPasswordValid(passwordChangeDto.getNewPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    Map.of("message",
+                            "Password must have at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"));
+        }
+
         boolean changed = userService.changePassword(
                 passwordChangeDto.getCurrentPassword(),
                 passwordChangeDto.getNewPassword());
@@ -129,6 +136,11 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("message", "New password cannot be empty"));
         }
 
+        if (!isPasswordValid(newPassword)) {
+            return ResponseEntity.badRequest().body(Map.of("message",
+                    "Password must have at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character"));
+        }
+        
         boolean success = userService.adminResetPassword(id, newPassword);
         if (success) {
             return ResponseEntity.ok().body(Map.of("message", "Password reset successfully"));
@@ -221,5 +233,30 @@ public class UserController {
 
         // Not a valid image type
         return false;
+    }
+
+    // Add this method to validate password strength
+    private boolean isPasswordValid(String password) {
+        // At least 8 characters
+        if (password.length() < 8)
+            return false;
+
+        // Check for at least one digit
+        if (!password.matches(".*\\d.*"))
+            return false;
+
+        // Check for at least one lowercase letter
+        if (!password.matches(".*[a-z].*"))
+            return false;
+
+        // Check for at least one uppercase letter
+        if (!password.matches(".*[A-Z].*"))
+            return false;
+
+        // Check for at least one special character
+        if (!password.matches(".*[^A-Za-z0-9].*"))
+            return false;
+
+        return true;
     }
 }

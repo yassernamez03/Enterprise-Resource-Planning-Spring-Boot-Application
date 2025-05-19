@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/files/view/**").permitAll()
                 .requestMatchers("/api/files/download/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/api/security/logs").permitAll()
                 .requestMatchers("/ws/**").permitAll()
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
