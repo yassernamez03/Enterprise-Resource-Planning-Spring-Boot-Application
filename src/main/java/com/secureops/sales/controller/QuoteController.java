@@ -6,6 +6,7 @@ import com.secureops.sales.dto.response.QuoteResponse;
 import com.secureops.sales.entity.QuoteStatus;
 import com.secureops.sales.service.QuoteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,10 @@ public class QuoteController {
     private final QuoteService quoteService;
 
     @GetMapping
-    public ResponseEntity<List<QuoteResponse>> getAllQuotes() {
-        return ResponseEntity.ok(quoteService.getAllQuotes());
+    public ResponseEntity<Page<QuoteResponse>> getAllQuotes(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(quoteService.getAllQuotes(page,size));
     }
 
     @GetMapping("/{id}")
@@ -47,6 +50,13 @@ public class QuoteController {
         return ResponseEntity.ok(quoteService.updateQuote(id, request));
     }
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<QuoteResponse> updateQuoteStatus(
+            @PathVariable Long id,
+            @RequestParam QuoteStatus status) {
+        return ResponseEntity.ok(quoteService.updateQuoteStatus(id, status));
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteQuote(@PathVariable Long id) {
         quoteService.deleteQuote(id);
@@ -56,11 +66,6 @@ public class QuoteController {
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<QuoteResponse>> getQuotesByClient(@PathVariable Long clientId) {
         return ResponseEntity.ok(quoteService.getQuotesByClient(clientId));
-    }
-
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<QuoteResponse>> getQuotesByEmployee(@PathVariable Long employeeId) {
-        return ResponseEntity.ok(quoteService.getQuotesByEmployee(employeeId));
     }
 
     @GetMapping("/status/{status}")

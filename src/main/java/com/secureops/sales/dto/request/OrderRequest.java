@@ -20,9 +20,6 @@ public class OrderRequest {
     @NotNull(message = "Client ID is required")
     private Long clientId;
 
-    @NotNull(message = "Employee ID is required")
-    private Long employeeId;
-
     private Long quoteId;
 
     @NotEmpty(message = "At least one item is required")

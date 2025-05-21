@@ -100,65 +100,6 @@ public class ReportServiceImpl implements ReportService {
                 .build();
     }
 
-    @Override
-    public EmployeePerformanceReport getEmployeePerformance(Long employeeId, LocalDateTime startDate, LocalDateTime endDate) {
-        // Verify employee exists
-        Employee employee = salesEmployeeRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", employeeId));
-
-        // Get employee quotes
-        List<Quote> quotes = quoteRepository.findByEmployeeIdAndCreatedDateBetween(
-                employeeId, startDate, endDate);
-
-        // Get employee orders
-        List<Order> orders = orderRepository.findByEmployeeIdAndCreatedDateBetween(
-                employeeId, startDate, endDate);
-
-        int totalQuotes = quotes.size();
-        int acceptedQuotes = (int) quotes.stream()
-                .filter(q -> q.getStatus() == QuoteStatus.ACCEPTED || q.getStatus() == QuoteStatus.CONVERTED_TO_ORDER)
-                .count();
-
-        // Calculate conversion rate
-        BigDecimal conversionRate = totalQuotes > 0 ?
-                BigDecimal.valueOf(acceptedQuotes)
-                        .divide(BigDecimal.valueOf(totalQuotes), 2, RoundingMode.HALF_UP)
-                        .multiply(BigDecimal.valueOf(100)) :
-                BigDecimal.ZERO;
-
-        // Calculate total sales
-        BigDecimal totalSales = orders.stream()
-                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
-                .map(Order::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        // Calculate average order value
-        BigDecimal averageOrderValue = !orders.isEmpty() ?
-                totalSales.divide(BigDecimal.valueOf(orders.size()), 2, RoundingMode.HALF_UP) :
-                BigDecimal.ZERO;
-
-        // Generate monthly sales data
-        Map<String, BigDecimal> monthlySales = orders.stream()
-                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
-                .collect(Collectors.groupingBy(
-                        o -> o.getCreatedDate().format(MONTH_FORMATTER),
-                        Collectors.mapping(
-                                Order::getTotalAmount,
-                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
-                        )
-                ));
-
-        return EmployeePerformanceReport.builder()
-                .employeeId(employeeId)
-                .employeeName(employee.getFullName())
-                .totalQuotes(totalQuotes)
-                .acceptedQuotes(acceptedQuotes)
-                .conversionRate(conversionRate)
-                .totalSales(totalSales)
-                .averageOrderValue(averageOrderValue)
-                .monthlySales(monthlySales)
-                .build();
-    }
 
     @Override
     public ClientSpendingReport getClientSpendingReport(Long clientId, LocalDateTime startDate, LocalDateTime endDate) {

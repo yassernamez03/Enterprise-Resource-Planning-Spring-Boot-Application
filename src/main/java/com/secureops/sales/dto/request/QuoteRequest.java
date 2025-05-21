@@ -20,9 +20,6 @@ public class QuoteRequest {
     @NotNull(message = "Client ID is required")
     private Long clientId;
 
-    @NotNull(message = "Employee ID is required")
-    private Long employeeId;
-
     @NotEmpty(message = "At least one item is required")
     @Valid
     private List<QuoteItemRequest> items;

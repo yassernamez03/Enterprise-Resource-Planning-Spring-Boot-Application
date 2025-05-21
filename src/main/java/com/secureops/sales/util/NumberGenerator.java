@@ -46,10 +46,6 @@ public class NumberGenerator {
         return QUOTE_PREFIX + (lastQuoteId + 1);
     }
 
-    /**
-     * Generates a unique order number in the format OR + sequential number
-     * E.g., OR8640
-     */
     public String generateOrderNumber() {
         Long lastOrderId = orderRepository.findTopByOrderByIdDesc()
                 .map(Order::getId)
@@ -58,10 +54,6 @@ public class NumberGenerator {
         return ORDER_PREFIX + (lastOrderId + 1);
     }
 
-    /**
-     * Generates a unique invoice number in the format INV + YYMMDD + sequential number
-     * E.g., INV250225-123
-     */
     public String generateInvoiceNumber() {
         // Current date in format YYMMDD
         String datePrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));

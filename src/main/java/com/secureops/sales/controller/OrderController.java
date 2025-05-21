@@ -3,9 +3,12 @@ package com.secureops.sales.controller;
 import com.secureops.sales.dto.request.OrderRequest;
 import com.secureops.sales.dto.response.InvoiceResponse;
 import com.secureops.sales.dto.response.OrderResponse;
+import com.secureops.sales.dto.response.QuoteResponse;
 import com.secureops.sales.entity.OrderStatus;
+import com.secureops.sales.entity.QuoteStatus;
 import com.secureops.sales.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(orderService.getAllOrders(page, size));
     }
 
     @GetMapping("/{id}")
@@ -58,14 +63,16 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByClient(clientId));
     }
 
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<OrderResponse>> getOrdersByEmployee(@PathVariable Long employeeId) {
-        return ResponseEntity.ok(orderService.getOrdersByEmployee(employeeId));
-    }
-
     @GetMapping("/status/{status}")
     public ResponseEntity<List<OrderResponse>> getOrdersByStatus(@PathVariable OrderStatus status) {
         return ResponseEntity.ok(orderService.getOrdersByStatus(status));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderResponse> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam OrderStatus status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
     @GetMapping("/date-range")

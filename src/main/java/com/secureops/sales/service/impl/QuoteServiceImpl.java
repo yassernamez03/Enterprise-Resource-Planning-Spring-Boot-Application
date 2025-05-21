@@ -18,6 +18,9 @@ import com.secureops.sales.util.DateUtils;
 import com.secureops.sales.util.NumberGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,16 +71,12 @@ public class QuoteServiceImpl implements QuoteService {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
-        // Get employee
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
 
         // Create quote
         Quote quote = new Quote();
         quote.setQuoteNumber(numberGenerator.generateQuoteNumber());
         quote.setCreatedDate(DateUtils.getCurrentDateTime());
         quote.setClient(client);
-        quote.setEmployee(employee);
         quote.setStatus(QuoteStatus.DRAFT);
         quote.setNotes(request.getNotes());
 
@@ -104,49 +103,93 @@ public class QuoteServiceImpl implements QuoteService {
         return convertToResponse(savedQuote);
     }
 
+        @Override
+        @Transactional
+        public QuoteResponse updateQuote(Long id, QuoteRequest request) {
+            Quote quote = quoteRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Quote", "id", id));
+    
+            if (quote.getStatus() == QuoteStatus.CONVERTED_TO_ORDER) {
+                throw new BusinessException("Cannot update quote that has been converted to an order");
+            }
+    
+            Client client = clientRepository.findById(request.getClientId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
+    
+    
+            quote.setClient(client);
+            quote.setNotes(request.getNotes());
+            quote.setLastModifiedDate(DateUtils.getCurrentDateTime());
+    
+            // Update quote items properly
+            List<QuoteItem> items = quote.getItems();
+            items.clear();
+    
+            for (QuoteItemRequest itemRequest : request.getItems()) {
+                Product product = productRepository.findById(itemRequest.getProductId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Product", "id", itemRequest.getProductId()));
+    
+                QuoteItem item = new QuoteItem();
+                item.setQuote(quote);
+                item.setProduct(product);
+                item.setQuantity(itemRequest.getQuantity());
+                item.setUnitPrice(itemRequest.getUnitPrice() != null ? itemRequest.getUnitPrice() : product.getUnitPrice());
+                item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+                item.setDescription(itemRequest.getDescription());
+                items.add(item);
+            }
+    
+            quote.setTotalAmount(calculateTotal(items));
+    
+            Quote updatedQuote = quoteRepository.save(quote);
+            return convertToResponse(updatedQuote);
+        }
+
     @Override
     @Transactional
-    public QuoteResponse updateQuote(Long id, QuoteRequest request) {
+    public QuoteResponse updateQuoteStatus(Long id, QuoteStatus newStatus) {
         Quote quote = quoteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Quote", "id", id));
 
-        if (quote.getStatus() == QuoteStatus.CONVERTED_TO_ORDER) {
-            throw new BusinessException("Cannot update quote that has been converted to an order");
-        }
+        // Validate status transition
+        validateStatusTransition(quote.getStatus(), newStatus);
 
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
-
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
-
-        quote.setClient(client);
-        quote.setEmployee(employee);
-        quote.setNotes(request.getNotes());
+        // Update status and last modified date
+        quote.setStatus(newStatus);
         quote.setLastModifiedDate(DateUtils.getCurrentDateTime());
-
-        // Update quote items properly
-        List<QuoteItem> items = quote.getItems();
-        items.clear();
-
-        for (QuoteItemRequest itemRequest : request.getItems()) {
-            Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "id", itemRequest.getProductId()));
-
-            QuoteItem item = new QuoteItem();
-            item.setQuote(quote);
-            item.setProduct(product);
-            item.setQuantity(itemRequest.getQuantity());
-            item.setUnitPrice(itemRequest.getUnitPrice() != null ? itemRequest.getUnitPrice() : product.getUnitPrice());
-            item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
-            item.setDescription(itemRequest.getDescription());
-            items.add(item);
-        }
-
-        quote.setTotalAmount(calculateTotal(items));
 
         Quote updatedQuote = quoteRepository.save(quote);
         return convertToResponse(updatedQuote);
+    }
+
+    private void validateStatusTransition(QuoteStatus currentStatus, QuoteStatus newStatus) {
+        if (currentStatus == QuoteStatus.CONVERTED_TO_ORDER) {
+            throw new BusinessException("Cannot modify a quote that has been converted to an order");
+        }
+
+        // Define allowed status transitions
+        switch (currentStatus) {
+            case DRAFT:
+                if (!(newStatus == QuoteStatus.SENT || newStatus == QuoteStatus.DRAFT)) {
+                    throw new BusinessException("Invalid status transition from DRAFT to " + newStatus);
+                }
+                break;
+            case SENT:
+                if (!(newStatus == QuoteStatus.ACCEPTED || newStatus == QuoteStatus.REJECTED || newStatus == QuoteStatus.SENT)) {
+                    throw new BusinessException("Invalid status transition from SENT to " + newStatus);
+                }
+                break;
+            case ACCEPTED:
+                if (newStatus != QuoteStatus.ACCEPTED) {
+                    throw new BusinessException("Cannot change status from ACCEPTED");
+                }
+                break;
+            case REJECTED:
+                if (newStatus != QuoteStatus.REJECTED) {
+                    throw new BusinessException("Cannot change status from REJECTED");
+                }
+                break;
+        }
     }
 
     @Override
@@ -173,15 +216,6 @@ public class QuoteServiceImpl implements QuoteService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<QuoteResponse> getQuotesByEmployee(Long employeeId) {
-        employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", employeeId));
-
-        return quoteRepository.findByEmployeeId(employeeId).stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<QuoteResponse> getQuotesByStatus(QuoteStatus status) {
@@ -217,6 +251,13 @@ public class QuoteServiceImpl implements QuoteService {
         return orderService.createOrderFromQuote(quote);
     }
 
+    @Override
+    public Page<QuoteResponse> getAllQuotes(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return quoteRepository.findAll(pageable)
+                .map(this::convertToResponse);
+    }
+
     private BigDecimal calculateTotal(List<QuoteItem> items) {
         return items.stream()
                 .map(QuoteItem::getSubtotal)
@@ -242,8 +283,6 @@ public class QuoteServiceImpl implements QuoteService {
                 .createdDate(quote.getCreatedDate())
                 .clientId(quote.getClient().getId())
                 .clientName(quote.getClient().getName())
-                .employeeId(quote.getEmployee().getId())
-                .employeeName(quote.getEmployee().getFullName())
                 .items(itemResponses)
                 .totalAmount(quote.getTotalAmount())
                 .status(quote.getStatus())

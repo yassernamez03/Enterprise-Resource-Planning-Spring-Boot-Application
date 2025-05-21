@@ -6,6 +6,7 @@ import com.secureops.sales.dto.request.OrderRequest;
 import com.secureops.sales.dto.response.InvoiceResponse;
 import com.secureops.sales.dto.response.OrderItemResponse;
 import com.secureops.sales.dto.response.OrderResponse;
+import com.secureops.sales.dto.response.QuoteResponse;
 import com.secureops.sales.entity.*;
 import com.secureops.sales.exception.BusinessException;
 import com.secureops.sales.exception.ResourceNotFoundException;
@@ -20,6 +21,9 @@ import com.secureops.sales.util.DateUtils;
 import com.secureops.sales.util.NumberGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,10 +76,6 @@ public class OrderServiceImpl implements OrderService {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
-        // Get employee
-        Employee employee = salesEmployeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
-
         // Get quote if provided
         Quote quote = null;
         if (request.getQuoteId() != null) {
@@ -101,7 +101,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderNumber(numberGenerator.generateOrderNumber());
         order.setCreatedDate(DateUtils.getCurrentDateTime());
         order.setClient(client);
-        order.setEmployee(employee);
         order.setQuote(quote);
         order.setStatus(OrderStatus.PENDING);
         order.setNotes(request.getNotes());
@@ -145,7 +144,6 @@ public class OrderServiceImpl implements OrderService {
         // Create order request
         OrderRequest orderRequest = OrderRequest.builder()
                 .clientId(quote.getClient().getId())
-                .employeeId(quote.getEmployee().getId())
                 .quoteId(quote.getId())
                 .items(itemRequests)
                 .notes("Created from quote " + quote.getQuoteNumber())
@@ -169,13 +167,8 @@ public class OrderServiceImpl implements OrderService {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", request.getClientId()));
 
-        // Get employee
-        Employee employee = salesEmployeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", request.getEmployeeId()));
-
         // Update order
         order.setClient(client);
-        order.setEmployee(employee);
         order.setNotes(request.getNotes());
         order.setLastModifiedDate(DateUtils.getCurrentDateTime());
 
@@ -204,6 +197,62 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    public OrderResponse updateOrderStatus(Long id, OrderStatus newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
+
+        // Validate status transition
+        validateOrderStatusTransition(order.getStatus(), newStatus);
+
+        // Update status and last modified date
+        order.setStatus(newStatus);
+        order.setLastModifiedDate(DateUtils.getCurrentDateTime());
+
+        Order updatedOrder = orderRepository.save(order);
+        return convertToResponse(updatedOrder);
+    }
+
+    private void validateOrderStatusTransition(OrderStatus currentStatus, OrderStatus newStatus) {
+        if (currentStatus == OrderStatus.INVOICED || currentStatus == OrderStatus.COMPLETED) {
+            throw new BusinessException("Cannot modify an order that has been completed or invoiced");
+        }
+
+        // Define allowed status transitions
+        switch (currentStatus) {
+            case PENDING:
+                if (!(newStatus == OrderStatus.IN_PROCESS ||
+                        newStatus == OrderStatus.CANCELLED ||
+                        newStatus == OrderStatus.PENDING)) {
+                    throw new BusinessException("Invalid status transition from PENDING to " + newStatus);
+                }
+                break;
+            case IN_PROCESS:
+                if (!(newStatus == OrderStatus.COMPLETED ||
+                        newStatus == OrderStatus.CANCELLED ||
+                        newStatus == OrderStatus.IN_PROCESS)) {
+                    throw new BusinessException("Invalid status transition from IN_PROCESS to " + newStatus);
+                }
+                break;
+            case COMPLETED:
+                if (newStatus != OrderStatus.COMPLETED) {
+                    throw new BusinessException("Cannot change status from COMPLETED");
+                }
+                break;
+            case CANCELLED:
+                if (newStatus != OrderStatus.CANCELLED) {
+                    throw new BusinessException("Cannot change status from CANCELLED");
+                }
+                break;
+            case INVOICED:
+                if (newStatus != OrderStatus.INVOICED) {
+                    throw new BusinessException("Cannot change status from INVOICED");
+                }
+                break;
+        }
+    }
+
+    @Override
+    @Transactional
     public void deleteOrder(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
@@ -226,13 +275,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getOrdersByClient(Long clientId) {
         return orderRepository.findByClientId(clientId).stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<OrderResponse> getOrdersByEmployee(Long employeeId) {
-        return orderRepository.findByEmployeeId(employeeId).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
@@ -288,6 +330,13 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @Override
+    public Page<OrderResponse> getAllOrders(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderRepository.findAll(pageable)
+                .map(this::convertToResponse);
+    }
+
     private OrderResponse convertToResponse(Order order) {
         OrderResponse response = new OrderResponse();
         response.setId(order.getId());
@@ -295,8 +344,6 @@ public class OrderServiceImpl implements OrderService {
         response.setCreatedDate(order.getCreatedDate());
         response.setClientId(order.getClient().getId());
         response.setClientName(order.getClient().getName());
-        response.setEmployeeId(order.getEmployee().getId());
-        response.setEmployeeName(order.getEmployee().getFullName());
 
         if (order.getQuote() != null) {
             response.setQuoteId(order.getQuote().getId());
