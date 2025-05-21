@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.context.annotation.Primary;
 
+import com.secureops.entity.User;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -42,6 +44,14 @@ public class Employee {
     private List<HRTask> tasks = new ArrayList<>();
 
     private String role;
+
+
+    // the bullshit i'm adding here
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    // end of the bullshit
+
 
     @CreationTimestamp
     @Column(updatable = false)
