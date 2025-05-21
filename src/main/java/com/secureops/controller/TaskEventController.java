@@ -102,7 +102,7 @@ public class TaskEventController {
         return ResponseEntity.ok(tasks);
     }
 
-    @PatchMapping("/{id}/toggle-completion")
+    @PatchMapping("/tasks/{id}/toggle-completion")
     public ResponseEntity<TaskEventDto> toggleTaskCompletion(@PathVariable Long id) {
         TaskEvent updatedTask = taskEventService.toggleTaskCompletion(id);
         return ResponseEntity.ok(mapToDto(updatedTask));
