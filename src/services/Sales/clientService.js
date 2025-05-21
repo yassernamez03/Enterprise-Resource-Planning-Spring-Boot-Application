@@ -7,8 +7,8 @@ const clientService = {
   getClients: async (pagination, filters) => {
     // Ensure we have all filter parameters
     const params = new URLSearchParams({
-      page: pagination.page, // Spring uses 0-based indexing
-      size: pagination.pageSize,
+      page: pagination.page || 0,
+      size: pagination.pageSize || 10,
       sortBy: filters.sortBy || "name",
       sortOrder: filters.sortOrder || "asc"
     });

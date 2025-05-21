@@ -11,7 +11,7 @@ const productService = {
       ...filters
     });
     
-    try {
+    try { 
       const response = await apiService.get(`${BASE_URL}?${params.toString()}`);
       // Handle different response structures (page object or array)
       let products = [];

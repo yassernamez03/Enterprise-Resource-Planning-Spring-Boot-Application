@@ -76,29 +76,7 @@ const Header = () => {
         {/* Breadcrumbs */}
         <nav className="text-sm">
           <ol className="flex items-center space-x-2">
-            {breadcrumbs.map((item, index) => (
-              <React.Fragment key={item.path}>
-                {index > 0 && (
-                  <li className="text-gray-400">
-                    <span>/</span>
-                  </li>
-                )}
-                <li>
-                  {index === breadcrumbs.length - 1 ? (
-                    <span className="text-gray-800 font-medium">
-                      {item.title}
-                    </span>
-                  ) : (
-                    <a
-                      href={item.path}
-                      className="text-gray-600 hover:text-primary-700 transition-colors"
-                    >
-                      {item.title}
-                    </a>
-                  )}
-                </li>
-              </React.Fragment>
-            ))}
+            
           </ol>
         </nav>
         

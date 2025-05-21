@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { getQuotes, deleteQuote } from "../../../services/Sales/quoteService"
-import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService"
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import quoteService from "../../../services/Sales/quoteService";
+import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService";
 import {
   Search,
   Filter,
@@ -10,122 +10,145 @@ import {
   Edit,
   Trash2,
   Download
-} from "lucide-react"
-import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
+} from "lucide-react";
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 
 const statusLabels = {
-  draft: "Draft",
-  sent: "Sent",
-  accepted: "Accepted",
-  rejected: "Rejected"
-}
+  DRAFT: "Draft",
+  SENT: "Sent",
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+  EXPIRED: "Expired"
+};
 
 const statusColors = {
-  draft: "bg-gray-200 text-gray-800",
-  sent: "bg-blue-100 text-blue-800",
-  accepted: "bg-green-100 text-green-800",
-  rejected: "bg-red-100 text-red-800"
-}
+  DRAFT: "bg-gray-200 text-gray-800",
+  SENT: "bg-blue-100 text-blue-800",
+  ACCEPTED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
+  EXPIRED: "bg-yellow-100 text-yellow-800"
+};
 
 const QuoteList = () => {
-  const [quotes, setQuotes] = useState([])
-  const [filteredQuotes, setFilteredQuotes] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [quotes, setQuotes] = useState([]);
+  const [filteredQuotes, setFilteredQuotes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    page: 0,
+    pageSize: 10,
+    total: 0
+  });
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     quoteId: "",
     quoteNumber: ""
-  })
+  });
 
   useEffect(() => {
-    fetchQuotes()
-  }, [])
+    fetchQuotes();
+  }, [pagination.page, pagination.pageSize]);
 
   useEffect(() => {
-    filterQuotes()
-  }, [quotes, searchTerm, statusFilter])
+    filterQuotes();
+  }, [quotes, searchTerm, statusFilter]);
 
   const fetchQuotes = async () => {
     try {
-      setLoading(true)
-      const data = await getQuotes()
-      setQuotes(data)
-      setFilteredQuotes(data)
+      setLoading(true);
+      const response = await quoteService.getQuotes({
+        page: pagination.page,
+        pageSize: pagination.pageSize
+      });
+      
+      setQuotes(response.data);
+      setPagination({
+        ...pagination,
+        total: response.total
+      });
+      setFilteredQuotes(response.data);
     } catch (err) {
-      setError("Failed to fetch quotes")
-      console.error(err)
+      setError("Failed to fetch quotes");
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const filterQuotes = () => {
-    let filtered = [...quotes]
+    let filtered = [...quotes];
 
     if (searchTerm) {
       filtered = filtered.filter(
         quote =>
           quote.quoteNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
           quote.clientName.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      );
     }
 
     if (statusFilter) {
-      filtered = filtered.filter(quote => quote.status === statusFilter)
+      filtered = filtered.filter(quote => quote.status === statusFilter);
     }
 
-    setFilteredQuotes(filtered)
-  }
+    setFilteredQuotes(filtered);
+  };
 
   const handleSearch = event => {
-    setSearchTerm(event.target.value)
-  }
+    setSearchTerm(event.target.value);
+  };
 
   const handleStatusFilter = status => {
-    setStatusFilter(status === statusFilter ? "" : status)
-  }
+    setStatusFilter(status === statusFilter ? "" : status);
+  };
 
   const handleDeletePrompt = (id, quoteNumber) => {
     setDeleteDialog({
       open: true,
       quoteId: id,
       quoteNumber: quoteNumber
-    })
-  }
+    });
+  };
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteQuote(deleteDialog.quoteId)
-      setQuotes(quotes.filter(quote => quote.id !== deleteDialog.quoteId))
-      setError(null)
+      await quoteService.deleteQuote(deleteDialog.quoteId);
+      setQuotes(quotes.filter(quote => quote.id !== deleteDialog.quoteId));
+      setError(null);
     } catch (err) {
-      setError("Failed to delete quote")
-      console.error(err)
+      setError("Failed to delete quote");
+      console.error(err);
     } finally {
-      setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" })
+      setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" });
     }
-  }
+  };
 
   const handleDeleteCancel = () => {
-    setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" })
-  }
+    setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" });
+  };
 
   const handleDownloadPdf = async (id, quoteNumber) => {
     try {
-      const pdfBlob = await generateQuotePdf(id)
-      downloadPdf(pdfBlob, `Quote-${quoteNumber}.pdf`)
+      const pdfBlob = await generateQuotePdf(id);
+      downloadPdf(pdfBlob, `Quote-${quoteNumber}.pdf`);
     } catch (err) {
-      setError("Failed to generate PDF")
-      console.error(err)
+      setError("Failed to generate PDF");
+      console.error(err);
     }
-  }
+  };
+
+  // Handle pagination
+  const handlePageChange = (newPage) => {
+    setPagination({
+      ...pagination,
+      page: newPage
+    });
+  };
 
   if (loading)
-    return <div className="flex justify-center p-8">Loading quotes...</div>
-  if (error) return <div className="text-red-500 p-4">{error}</div>
+    return <div className="flex justify-center p-8">Loading quotes...</div>;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
@@ -222,18 +245,18 @@ const QuoteList = () => {
                     {new Date(quote.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(quote.validUntil).toLocaleDateString()}
+                    {quote.validUntil ? new Date(quote.validUntil).toLocaleDateString() : "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap font-medium">
-                    ${quote.total.toFixed(2)}
+                    ${quote.total ? quote.total.toFixed(2) : "0.00"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        statusColors[quote.status]
+                        statusColors[quote.status] || "bg-gray-200 text-gray-800"
                       }`}
                     >
-                      {statusLabels[quote.status]}
+                      {statusLabels[quote.status] || quote.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -279,6 +302,66 @@ const QuoteList = () => {
         </div>
       )}
 
+      {/* Pagination controls */}
+      {pagination.total > pagination.pageSize && (
+        <div className="flex justify-center mt-6">
+          <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+            <button
+              onClick={() => handlePageChange(Math.max(0, pagination.page - 1))}
+              disabled={pagination.page === 0}
+              className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
+                pagination.page === 0
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-500 hover:bg-gray-50"
+              }`}
+            >
+              Previous
+            </button>
+            
+            {/* Page numbers */}
+            {Array.from(
+              { length: Math.ceil(pagination.total / pagination.pageSize) },
+              (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i)}
+                  className={`relative inline-flex items-center px-4 py-2 border ${
+                    pagination.page === i
+                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
+                      : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                  } text-sm font-medium`}
+                >
+                  {i + 1}
+                </button>
+              )
+            )}
+            
+            <button
+              onClick={() =>
+                handlePageChange(
+                  Math.min(
+                    Math.ceil(pagination.total / pagination.pageSize) - 1,
+                    pagination.page + 1
+                  )
+                )
+              }
+              disabled={
+                pagination.page >=
+                Math.ceil(pagination.total / pagination.pageSize) - 1
+              }
+              className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
+                pagination.page >=
+                Math.ceil(pagination.total / pagination.pageSize) - 1
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-500 hover:bg-gray-50"
+              }`}
+            >
+              Next
+            </button>
+          </nav>
+        </div>
+      )}
+
       <ConfirmDialog
         isOpen={deleteDialog.open}
         title="Delete Quote"
@@ -290,7 +373,7 @@ const QuoteList = () => {
         type="danger"
       />
     </div>
-  )
-}
+  );
+};
 
-export default QuoteList
+export default QuoteList;
