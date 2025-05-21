@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
 import { MONTHS } from '../../utils/dateUtils';
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { 
@@ -69,6 +70,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo and title */}
           <div className="flex items-center">
+            <Link to="/" className="flex items-center">
+                <button className="p-2 rounded-lg hover:bg-gray-100 mr-2">
+                <ArrowLeft className="h-5 w-5 text-gray-600" />
+                </button>
+            </Link>
             <button onClick={() => setDate(new Date())} className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
               <Calendar className="h-6 w-6 mr-2" />
               <span className="text-xl font-semibold">Calendar App</span>
