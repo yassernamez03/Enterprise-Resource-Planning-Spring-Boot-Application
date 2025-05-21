@@ -22,6 +22,7 @@ public interface TaskEventService {
     List<TaskEvent> getAllVisibleTasksByDateRange(Long userId, Date start, Date end);
     TaskEvent getTaskById(Long id);
     TaskEvent toggleTaskCompletion(Long id);
+    List<TaskEvent> getTasksForUser(Long userId);
     
     // Event specific methods
     List<TaskEvent> getAllEvents();
@@ -31,7 +32,9 @@ public interface TaskEventService {
     List<TaskEvent> getAllVisibleEvents(Long userId);
     List<TaskEvent> getAllVisibleEventsByDateRange(Long userId, Date start, Date end);
     TaskEvent getEventById(Long id);
-
+    List<TaskEvent> getEventsForUser(Long userId);
+    
+    
     TaskEvent getTaskEventById(Long id);
 
 }

@@ -53,14 +53,16 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to create task/event", currentUserId);
-                securityLogger.warn("Unauthorized task/event creation attempt by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized task/event creation attempt by userId: {} from IP: {}", currentUserId,
+                        clientIp);
                 throw new UnauthorizedException("Only administrators can create task events");
             }
 
             User currentUser = userRepository.findById(currentUserId)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", currentUserId);
-                        securityLogger.warn("Task/event creation attempt by non-existent userId: {} from IP: {}", currentUserId, clientIp);
+                        securityLogger.warn("Task/event creation attempt by non-existent userId: {} from IP: {}",
+                                currentUserId, clientIp);
                         return new UnauthorizedException("User not found");
                     });
 
@@ -110,7 +112,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             }
 
             TaskEvent savedTaskEvent = taskEventRepository.save(taskEvent);
-            logger.info("Task/event created successfully: {} (ID: {}) by userId: {}", 
+            logger.info("Task/event created successfully: {} (ID: {}) by userId: {}",
                     taskEvent.getTitle(), savedTaskEvent.getId(), currentUserId);
 
             logService.createLog(
@@ -126,7 +128,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error creating task/event by userId: {}", currentUserId, ex);
-            securityLogger.error("Error creating task/event - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error creating task/event - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -142,7 +144,7 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to update task/event ID: {}", currentUserId, id);
-                securityLogger.warn("Unauthorized task/event update attempt by userId: {} for ID: {} from IP: {}", 
+                securityLogger.warn("Unauthorized task/event update attempt by userId: {} for ID: {} from IP: {}",
                         currentUserId, id, clientIp);
                 throw new UnauthorizedException("Only administrators can update task events");
             }
@@ -150,7 +152,8 @@ public class TaskEventServiceImpl implements TaskEventService {
             TaskEvent taskEvent = taskEventRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("Task/event not found: {}", id);
-                        securityLogger.warn("Attempt to update non-existent task/event ID: {} by userId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to update non-existent task/event ID: {} by userId: {} from IP: {}",
                                 id, currentUserId, clientIp);
                         return new ResourceNotFoundException("TaskEvent", "id", id);
                     });
@@ -195,7 +198,8 @@ public class TaskEventServiceImpl implements TaskEventService {
                                     }))
                             .collect(Collectors.toSet());
                     taskEvent.setAssignedUsers(assignedUsers);
-                    logger.debug("Updated assigned users (count: {}) for task/event: {}", assignedUsers.size(), taskEventDto.getTitle());
+                    logger.debug("Updated assigned users (count: {}) for task/event: {}", assignedUsers.size(),
+                            taskEventDto.getTitle());
                 }
             } else {
                 taskEvent.getAssignedUsers().clear();
@@ -203,7 +207,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             }
 
             TaskEvent updatedTaskEvent = taskEventRepository.save(taskEvent);
-            logger.info("Task/event updated successfully: {} (ID: {}) by userId: {}", 
+            logger.info("Task/event updated successfully: {} (ID: {}) by userId: {}",
                     taskEvent.getTitle(), id, currentUserId);
 
             logService.createLog(
@@ -219,7 +223,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error updating task/event ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error updating task/event - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error updating task/event - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -235,7 +239,7 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to delete task/event ID: {}", currentUserId, id);
-                securityLogger.warn("Unauthorized task/event deletion attempt by userId: {} for ID: {} from IP: {}", 
+                securityLogger.warn("Unauthorized task/event deletion attempt by userId: {} for ID: {} from IP: {}",
                         currentUserId, id, clientIp);
                 throw new UnauthorizedException("Only administrators can delete task events");
             }
@@ -243,13 +247,14 @@ public class TaskEventServiceImpl implements TaskEventService {
             TaskEvent taskEvent = taskEventRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("Task/event not found: {}", id);
-                        securityLogger.warn("Attempt to delete non-existent task/event ID: {} by userId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to delete non-existent task/event ID: {} by userId: {} from IP: {}",
                                 id, currentUserId, clientIp);
                         return new ResourceNotFoundException("TaskEvent", "id", id);
                     });
 
             taskEventRepository.delete(taskEvent);
-            logger.info("Task/event deleted successfully: {} (ID: {}) by userId: {}", 
+            logger.info("Task/event deleted successfully: {} (ID: {}) by userId: {}",
                     taskEvent.getTitle(), id, currentUserId);
 
             logService.createLog(
@@ -263,7 +268,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error deleting task/event ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error deleting task/event - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error deleting task/event - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -278,7 +283,8 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to view all tasks", currentUserId);
-                securityLogger.warn("Unauthorized attempt to view all tasks by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized attempt to view all tasks by userId: {} from IP: {}", currentUserId,
+                        clientIp);
                 throw new UnauthorizedException("Admin privileges required to view all tasks");
             }
 
@@ -290,7 +296,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving all tasks for userId: {}", currentUserId, ex);
-            securityLogger.error("Error retrieving all tasks - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving all tasks - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -305,11 +311,13 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to view tasks by date range", currentUserId);
-                securityLogger.warn("Unauthorized attempt to view tasks by date range by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized attempt to view tasks by date range by userId: {} from IP: {}",
+                        currentUserId, clientIp);
                 throw new UnauthorizedException("Admin privileges required to view all tasks");
             }
 
-            List<TaskEvent> tasks = taskEventRepository.findByTypeAndDueDateBetween(TaskEvent.TaskEventType.TASK, start, end);
+            List<TaskEvent> tasks = taskEventRepository.findByTypeAndDueDateBetween(TaskEvent.TaskEventType.TASK, start,
+                    end);
             logger.info("Retrieved {} tasks by date range for userId: {}", tasks.size(), currentUserId);
             return tasks;
 
@@ -317,7 +325,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving tasks by date range for userId: {}", currentUserId, ex);
-            securityLogger.error("Error retrieving tasks by date range - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving tasks by date range - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -333,7 +341,8 @@ public class TaskEventServiceImpl implements TaskEventService {
             userRepository.findById(userId)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", userId);
-                        securityLogger.warn("Attempt to retrieve tasks for non-existent userId: {} by currentUserId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to retrieve tasks for non-existent userId: {} by currentUserId: {} from IP: {}",
                                 userId, currentUserId, clientIp);
                         return new ResourceNotFoundException("User", "id", userId);
                     });
@@ -341,20 +350,22 @@ public class TaskEventServiceImpl implements TaskEventService {
             boolean isAdmin = checkIfAdmin();
             if (!currentUserId.equals(userId) && !isAdmin) {
                 logger.warn("User {} attempted to view tasks of user {}", currentUserId, userId);
-                securityLogger.warn("Unauthorized attempt to view tasks by userId: {} for userId: {} from IP: {}", 
+                securityLogger.warn("Unauthorized attempt to view tasks by userId: {} for userId: {} from IP: {}",
                         currentUserId, userId, clientIp);
                 throw new UnauthorizedException("You don't have permission to view these tasks");
             }
 
             List<TaskEvent> tasks = taskEventRepository.findAssignedTasksByUserId(userId);
-            logger.info("Retrieved {} assigned tasks for userId: {} by currentUserId: {}", tasks.size(), userId, currentUserId);
+            logger.info("Retrieved {} assigned tasks for userId: {} by currentUserId: {}", tasks.size(), userId,
+                    currentUserId);
             return tasks;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
-            logger.error("Unexpected error retrieving assigned tasks for userId: {} by currentUserId: {}", userId, currentUserId, ex);
-            securityLogger.error("Error retrieving assigned tasks - userId: {}, currentUserId: {}, IP: {}, Error: {}", 
+            logger.error("Unexpected error retrieving assigned tasks for userId: {} by currentUserId: {}", userId,
+                    currentUserId, ex);
+            securityLogger.error("Error retrieving assigned tasks - userId: {}, currentUserId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -364,14 +375,15 @@ public class TaskEventServiceImpl implements TaskEventService {
     public List<TaskEvent> getUserAssignedTasksByDateRange(Long userId, Date start, Date end) {
         String clientIp = getClientIp();
         Long currentUserId = getCurrentUserId();
-        logger.debug("Retrieving assigned tasks by date range for userId: {} by currentUserId: {}, start: {}, end: {}", 
+        logger.debug("Retrieving assigned tasks by date range for userId: {} by currentUserId: {}, start: {}, end: {}",
                 userId, currentUserId, start, end);
 
         try {
             userRepository.findById(userId)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", userId);
-                        securityLogger.warn("Attempt to retrieve tasks by date range for non-existent userId: {} by currentUserId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to retrieve tasks by date range for non-existent userId: {} by currentUserId: {} from IP: {}",
                                 userId, currentUserId, clientIp);
                         return new ResourceNotFoundException("User", "id", userId);
                     });
@@ -379,22 +391,24 @@ public class TaskEventServiceImpl implements TaskEventService {
             boolean isAdmin = checkIfAdmin();
             if (!currentUserId.equals(userId) && !isAdmin) {
                 logger.warn("User {} attempted to view tasks by date range of user {}", currentUserId, userId);
-                securityLogger.warn("Unauthorized attempt to view tasks by date range by userId: {} for userId: {} from IP: {}", 
+                securityLogger.warn(
+                        "Unauthorized attempt to view tasks by date range by userId: {} for userId: {} from IP: {}",
                         currentUserId, userId, clientIp);
                 throw new UnauthorizedException("You don't have permission to view these tasks");
             }
 
             List<TaskEvent> tasks = taskEventRepository.findAssignedTasksByUserIdAndDateRange(userId, start, end);
-            logger.info("Retrieved {} assigned tasks by date range for userId: {} by currentUserId: {}", 
+            logger.info("Retrieved {} assigned tasks by date range for userId: {} by currentUserId: {}",
                     tasks.size(), userId, currentUserId);
             return tasks;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
-            logger.error("Unexpected error retrieving assigned tasks by date range for userId: {} by currentUserId: {}", 
+            logger.error("Unexpected error retrieving assigned tasks by date range for userId: {} by currentUserId: {}",
                     userId, currentUserId, ex);
-            securityLogger.error("Error retrieving assigned tasks by date range - userId: {}, currentUserId: {}, IP: {}, Error: {}", 
+            securityLogger.error(
+                    "Error retrieving assigned tasks by date range - userId: {}, currentUserId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -412,7 +426,7 @@ public class TaskEventServiceImpl implements TaskEventService {
 
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving visible tasks for userId: {}", userId, ex);
-            securityLogger.error("Error retrieving visible tasks - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving visible tasks - userId: {}, IP: {}, Error: {}",
                     userId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -430,7 +444,7 @@ public class TaskEventServiceImpl implements TaskEventService {
 
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving visible tasks by date range for userId: {}", userId, ex);
-            securityLogger.error("Error retrieving visible tasks by date range - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving visible tasks by date range - userId: {}, IP: {}, Error: {}",
                     userId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -446,7 +460,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             TaskEvent taskEvent = taskEventRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("Task not found: {}", id);
-                        securityLogger.warn("Attempt to retrieve non-existent task ID: {} by userId: {} from IP: {}", 
+                        securityLogger.warn("Attempt to retrieve non-existent task ID: {} by userId: {} from IP: {}",
                                 id, currentUserId, clientIp);
                         return new ResourceNotFoundException("TaskEvent", "id", id);
                     });
@@ -457,14 +471,15 @@ public class TaskEventServiceImpl implements TaskEventService {
             }
 
             checkAccessPermissions(taskEvent);
-            logger.info("Task retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id, currentUserId);
+            logger.info("Task retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id,
+                    currentUserId);
             return taskEvent;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving task ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error retrieving task - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving task - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -486,7 +501,8 @@ public class TaskEventServiceImpl implements TaskEventService {
 
             if (!isAssigned && !isAdmin) {
                 logger.warn("User {} not assigned or admin for task ID: {}", currentUserId, id);
-                securityLogger.warn("Unauthorized attempt to toggle task completion by userId: {} for task ID: {} from IP: {}", 
+                securityLogger.warn(
+                        "Unauthorized attempt to toggle task completion by userId: {} for task ID: {} from IP: {}",
                         currentUserId, id, clientIp);
                 throw new UnauthorizedException("You don't have permission to update this task");
             }
@@ -502,7 +518,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             }
 
             TaskEvent updatedTask = taskEventRepository.save(taskEvent);
-            logger.info("Task completion toggled successfully: {} (ID: {}) by userId: {}", 
+            logger.info("Task completion toggled successfully: {} (ID: {}) by userId: {}",
                     taskEvent.getTitle(), id, currentUserId);
 
             logService.createLog(
@@ -518,8 +534,40 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error toggling task completion for ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error toggling task completion - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error toggling task completion - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<TaskEvent> getTasksForUser(Long userId) {
+        String clientIp = getClientIp();
+        Long currentUserId = getCurrentUserId();
+        logger.debug("Retrieving all tasks for user ID: {} by admin userId: {}", userId, currentUserId);
+
+        try {
+            if (!checkIfAdmin()) {
+                logger.warn("Non-admin user {} attempted to view tasks for user {}", currentUserId, userId);
+                securityLogger.warn("Unauthorized attempt to view tasks by userId: {} for user: {} from IP: {}",
+                        currentUserId, userId, clientIp);
+                throw new UnauthorizedException("Admin privileges required");
+            }
+
+            userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+            List<TaskEvent> tasks = taskEventRepository.findByAssignedUserIdAndType(userId,
+                    TaskEvent.TaskEventType.TASK);
+            logger.info("Admin userId: {} retrieved {} tasks for user ID: {}", currentUserId, tasks.size(), userId);
+            return tasks;
+
+        } catch (ResourceNotFoundException | UnauthorizedException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("Error retrieving tasks for user ID: {} by admin userId: {}", userId, currentUserId, ex);
+            securityLogger.error("Error retrieving tasks - targetUserId: {}, adminUserId: {}, IP: {}, Error: {}",
+                    userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
     }
@@ -533,7 +581,8 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to view all events", currentUserId);
-                securityLogger.warn("Unauthorized attempt to view all events by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized attempt to view all events by userId: {} from IP: {}", currentUserId,
+                        clientIp);
                 throw new UnauthorizedException("Admin privileges required to view all events");
             }
 
@@ -545,7 +594,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving all events for userId: {}", currentUserId, ex);
-            securityLogger.error("Error retrieving all events - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving all events - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -560,11 +609,13 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to view events by date range", currentUserId);
-                securityLogger.warn("Unauthorized attempt to view events by date range by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized attempt to view events by date range by userId: {} from IP: {}",
+                        currentUserId, clientIp);
                 throw new UnauthorizedException("Admin privileges required to view all events");
             }
 
-            List<TaskEvent> events = taskEventRepository.findByTypeAndStartTimeBetween(TaskEvent.TaskEventType.EVENT, start, end);
+            List<TaskEvent> events = taskEventRepository.findByTypeAndStartTimeBetween(TaskEvent.TaskEventType.EVENT,
+                    start, end);
             logger.info("Retrieved {} events by date range for userId: {}", events.size(), currentUserId);
             return events;
 
@@ -572,7 +623,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving events by date range for userId: {}", currentUserId, ex);
-            securityLogger.error("Error retrieving events by date range - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving events by date range - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -588,7 +639,8 @@ public class TaskEventServiceImpl implements TaskEventService {
             userRepository.findById(userId)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", userId);
-                        securityLogger.warn("Attempt to retrieve events for non-existent userId: {} by currentUserId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to retrieve events for non-existent userId: {} by currentUserId: {} from IP: {}",
                                 userId, currentUserId, clientIp);
                         return new ResourceNotFoundException("User", "id", userId);
                     });
@@ -596,20 +648,22 @@ public class TaskEventServiceImpl implements TaskEventService {
             boolean isAdmin = checkIfAdmin();
             if (!currentUserId.equals(userId) && !isAdmin) {
                 logger.warn("User {} attempted to view events of user {}", currentUserId, userId);
-                securityLogger.warn("Unauthorized attempt to view events by userId: {} for userId: {} from IP: {}", 
+                securityLogger.warn("Unauthorized attempt to view events by userId: {} for userId: {} from IP: {}",
                         currentUserId, userId, clientIp);
                 throw new UnauthorizedException("You don't have permission to view these events");
             }
 
             List<TaskEvent> events = taskEventRepository.findAssignedEventsByUserId(userId);
-            logger.info("Retrieved {} assigned events for userId: {} by currentUserId: {}", events.size(), userId, currentUserId);
+            logger.info("Retrieved {} assigned events for userId: {} by currentUserId: {}", events.size(), userId,
+                    currentUserId);
             return events;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
-            logger.error("Unexpected error retrieving assigned events for userId: {} by currentUserId: {}", userId, currentUserId, ex);
-            securityLogger.error("Error retrieving assigned events - userId: {}, currentUserId: {}, IP: {}, Error: {}", 
+            logger.error("Unexpected error retrieving assigned events for userId: {} by currentUserId: {}", userId,
+                    currentUserId, ex);
+            securityLogger.error("Error retrieving assigned events - userId: {}, currentUserId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -619,14 +673,15 @@ public class TaskEventServiceImpl implements TaskEventService {
     public List<TaskEvent> getUserAssignedEventsByDateRange(Long userId, Date start, Date end) {
         String clientIp = getClientIp();
         Long currentUserId = getCurrentUserId();
-        logger.debug("Retrieving assigned events by date range for userId: {} by currentUserId: {}, start: {}, end: {}", 
+        logger.debug("Retrieving assigned events by date range for userId: {} by currentUserId: {}, start: {}, end: {}",
                 userId, currentUserId, start, end);
 
         try {
             userRepository.findById(userId)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", userId);
-                        securityLogger.warn("Attempt to retrieve events by date range for non-existent userId: {} by currentUserId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to retrieve events by date range for non-existent userId: {} by currentUserId: {} from IP: {}",
                                 userId, currentUserId, clientIp);
                         return new ResourceNotFoundException("User", "id", userId);
                     });
@@ -634,22 +689,25 @@ public class TaskEventServiceImpl implements TaskEventService {
             boolean isAdmin = checkIfAdmin();
             if (!currentUserId.equals(userId) && !isAdmin) {
                 logger.warn("User {} attempted to view events by date range of user {}", currentUserId, userId);
-                securityLogger.warn("Unauthorized attempt to view events by date range by userId: {} for userId: {} from IP: {}", 
+                securityLogger.warn(
+                        "Unauthorized attempt to view events by date range by userId: {} for userId: {} from IP: {}",
                         currentUserId, userId, clientIp);
                 throw new UnauthorizedException("You don't have permission to view these events");
             }
 
             List<TaskEvent> events = taskEventRepository.findAssignedEventsByUserIdAndDateRange(userId, start, end);
-            logger.info("Retrieved {} assigned events by date range for userId: {} by currentUserId: {}", 
+            logger.info("Retrieved {} assigned events by date range for userId: {} by currentUserId: {}",
                     events.size(), userId, currentUserId);
             return events;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
-            logger.error("Unexpected error retrieving assigned events by date range for userId: {} by currentUserId: {}", 
+            logger.error(
+                    "Unexpected error retrieving assigned events by date range for userId: {} by currentUserId: {}",
                     userId, currentUserId, ex);
-            securityLogger.error("Error retrieving assigned events by date range - userId: {}, currentUserId: {}, IP: {}, Error: {}", 
+            securityLogger.error(
+                    "Error retrieving assigned events by date range - userId: {}, currentUserId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -667,7 +725,7 @@ public class TaskEventServiceImpl implements TaskEventService {
 
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving visible events for userId: {}", userId, ex);
-            securityLogger.error("Error retrieving visible events - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving visible events - userId: {}, IP: {}, Error: {}",
                     userId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -685,7 +743,7 @@ public class TaskEventServiceImpl implements TaskEventService {
 
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving visible events by date range for userId: {}", userId, ex);
-            securityLogger.error("Error retrieving visible events by date range - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving visible events by date range - userId: {}, IP: {}, Error: {}",
                     userId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -701,7 +759,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             TaskEvent taskEvent = taskEventRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("Event not found: {}", id);
-                        securityLogger.warn("Attempt to retrieve non-existent event ID: {} by userId: {} from IP: {}", 
+                        securityLogger.warn("Attempt to retrieve non-existent event ID: {} by userId: {} from IP: {}",
                                 id, currentUserId, clientIp);
                         return new ResourceNotFoundException("TaskEvent", "id", id);
                     });
@@ -712,15 +770,48 @@ public class TaskEventServiceImpl implements TaskEventService {
             }
 
             checkAccessPermissions(taskEvent);
-            logger.info("Event retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id, currentUserId);
+            logger.info("Event retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id,
+                    currentUserId);
             return taskEvent;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving event ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error retrieving event - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving event - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<TaskEvent> getEventsForUser(Long userId) {
+        String clientIp = getClientIp();
+        Long currentUserId = getCurrentUserId();
+        logger.debug("Retrieving all events for user ID: {} by admin userId: {}", userId, currentUserId);
+
+        try {
+            if (!checkIfAdmin()) {
+                logger.warn("Non-admin user {} attempted to view events for user {}", currentUserId, userId);
+                securityLogger.warn("Unauthorized attempt to view events by userId: {} for user: {} from IP: {}",
+                        currentUserId, userId, clientIp);
+                throw new UnauthorizedException("Admin privileges required");
+            }
+
+            userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+            List<TaskEvent> events = taskEventRepository.findByAssignedUserIdAndType(userId,
+                    TaskEvent.TaskEventType.EVENT);
+            logger.info("Admin userId: {} retrieved {} events for user ID: {}", currentUserId, events.size(), userId);
+            return events;
+
+        } catch (ResourceNotFoundException | UnauthorizedException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            logger.error("Error retrieving events for user ID: {} by admin userId: {}", userId, currentUserId, ex);
+            securityLogger.error("Error retrieving events - targetUserId: {}, adminUserId: {}, IP: {}, Error: {}",
+                    userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
     }
@@ -735,20 +826,22 @@ public class TaskEventServiceImpl implements TaskEventService {
             TaskEvent taskEvent = taskEventRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("Task/event not found: {}", id);
-                        securityLogger.warn("Attempt to retrieve non-existent task/event ID: {} by userId: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Attempt to retrieve non-existent task/event ID: {} by userId: {} from IP: {}",
                                 id, currentUserId, clientIp);
                         return new ResourceNotFoundException("TaskEvent", "id", id);
                     });
 
             checkAccessPermissions(taskEvent);
-            logger.info("Task/event retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id, currentUserId);
+            logger.info("Task/event retrieved successfully: {} (ID: {}) by userId: {}", taskEvent.getTitle(), id,
+                    currentUserId);
             return taskEvent;
 
         } catch (ResourceNotFoundException | UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving task/event ID: {} by userId: {}", id, currentUserId, ex);
-            securityLogger.error("Error retrieving task/event - ID: {}, userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving task/event - ID: {}, userId: {}, IP: {}, Error: {}",
                     id, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -763,7 +856,8 @@ public class TaskEventServiceImpl implements TaskEventService {
         try {
             if (!checkIfAdmin()) {
                 logger.warn("Non-admin user {} attempted to view all task/events", currentUserId);
-                securityLogger.warn("Unauthorized attempt to view all task/events by userId: {} from IP: {}", currentUserId, clientIp);
+                securityLogger.warn("Unauthorized attempt to view all task/events by userId: {} from IP: {}",
+                        currentUserId, clientIp);
                 throw new UnauthorizedException("Admin privileges required to view all task events");
             }
 
@@ -775,7 +869,7 @@ public class TaskEventServiceImpl implements TaskEventService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving all task/events for userId: {}", currentUserId, ex);
-            securityLogger.error("Error retrieving all task/events - userId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error retrieving all task/events - userId: {}, IP: {}, Error: {}",
                     currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -783,7 +877,8 @@ public class TaskEventServiceImpl implements TaskEventService {
 
     private void checkAccessPermissions(TaskEvent taskEvent) {
         Long currentUserId = getCurrentUserId();
-        logger.debug("Checking access permissions for task/event ID: {} by userId: {}", taskEvent.getId(), currentUserId);
+        logger.debug("Checking access permissions for task/event ID: {} by userId: {}", taskEvent.getId(),
+                currentUserId);
 
         try {
             boolean isAdmin = checkIfAdmin();
@@ -794,7 +889,7 @@ public class TaskEventServiceImpl implements TaskEventService {
 
             if (!hasAccess) {
                 logger.warn("User {} has no access to task/event ID: {}", currentUserId, taskEvent.getId());
-                securityLogger.warn("Unauthorized access attempt to task/event ID: {} by userId: {} from IP: {}", 
+                securityLogger.warn("Unauthorized access attempt to task/event ID: {} by userId: {} from IP: {}",
                         taskEvent.getId(), currentUserId, getClientIp());
                 throw new UnauthorizedException("You don't have permission to view this item");
             }
@@ -803,8 +898,9 @@ public class TaskEventServiceImpl implements TaskEventService {
         } catch (UnauthorizedException ex) {
             throw ex; // Already logged
         } catch (Exception ex) {
-            logger.error("Unexpected error checking access for task/event ID: {} by userId: {}", taskEvent.getId(), currentUserId, ex);
-            securityLogger.error("Error checking access - task/event ID: {}, userId: {}, IP: {}, Error: {}", 
+            logger.error("Unexpected error checking access for task/event ID: {} by userId: {}", taskEvent.getId(),
+                    currentUserId, ex);
+            securityLogger.error("Error checking access - task/event ID: {}, userId: {}, IP: {}, Error: {}",
                     taskEvent.getId(), currentUserId, getClientIp(), ex.getMessage());
             throw ex;
         }
@@ -820,7 +916,8 @@ public class TaskEventServiceImpl implements TaskEventService {
                         .map(User::getId)
                         .orElseThrow(() -> {
                             logger.warn("Authenticated user not found: {}", maskEmail(email));
-                            securityLogger.warn("Authenticated user not found: {} from IP: {}", maskEmail(email), getClientIp());
+                            securityLogger.warn("Authenticated user not found: {} from IP: {}", maskEmail(email),
+                                    getClientIp());
                             return new UnauthorizedException("User not found");
                         });
                 logger.debug("Current user ID retrieved: {}", userId);
@@ -899,8 +996,6 @@ public class TaskEventServiceImpl implements TaskEventService {
     }
 }
 
-
-
 // package com.secureops.service;
 
 // import com.secureops.dto.TaskEventDto;
@@ -919,192 +1014,203 @@ public class TaskEventServiceImpl implements TaskEventService {
 // @Service
 // public class TaskEventServiceImpl implements TaskEventService {
 
-//     private final TaskEventRepository taskEventRepository;
-//     private final UserRepository userRepository;
-//     private final LogService logService;
-//     private final Long HARDCODED_USER_ID = 14L;
+// private final TaskEventRepository taskEventRepository;
+// private final UserRepository userRepository;
+// private final LogService logService;
+// private final Long HARDCODED_USER_ID = 14L;
 
-//     public TaskEventServiceImpl(TaskEventRepository taskEventRepository,
-//             UserRepository userRepository,
-//             LogService logService) {
-//         this.taskEventRepository = taskEventRepository;
-//         this.userRepository = userRepository;
-//         this.logService = logService;
-//     }
+// public TaskEventServiceImpl(TaskEventRepository taskEventRepository,
+// UserRepository userRepository,
+// LogService logService) {
+// this.taskEventRepository = taskEventRepository;
+// this.userRepository = userRepository;
+// this.logService = logService;
+// }
 
-//     @Override
-//     @Transactional
-//     public TaskEvent createTaskEvent(TaskEventDto taskEventDto) {
-//         User currentUser = userRepository.findById(HARDCODED_USER_ID).get();
+// @Override
+// @Transactional
+// public TaskEvent createTaskEvent(TaskEventDto taskEventDto) {
+// User currentUser = userRepository.findById(HARDCODED_USER_ID).get();
 
-//         TaskEvent taskEvent = new TaskEvent();
-//         taskEvent.setTitle(taskEventDto.getTitle());
-//         taskEvent.setDescription(taskEventDto.getDescription());
-//         taskEvent.setStatus(taskEventDto.getStatus());
-//         taskEvent.setType(taskEventDto.getType());
-//         taskEvent.setStartTime(taskEventDto.getStartTime());
-//         taskEvent.setDueDate(taskEventDto.getDueDate());
-//         taskEvent.setLocation(taskEventDto.getLocation());
-//         taskEvent.setGlobal(taskEventDto.isGlobal());
-//         taskEvent.setUser(currentUser);
+// TaskEvent taskEvent = new TaskEvent();
+// taskEvent.setTitle(taskEventDto.getTitle());
+// taskEvent.setDescription(taskEventDto.getDescription());
+// taskEvent.setStatus(taskEventDto.getStatus());
+// taskEvent.setType(taskEventDto.getType());
+// taskEvent.setStartTime(taskEventDto.getStartTime());
+// taskEvent.setDueDate(taskEventDto.getDueDate());
+// taskEvent.setLocation(taskEventDto.getLocation());
+// taskEvent.setGlobal(taskEventDto.isGlobal());
+// taskEvent.setUser(currentUser);
 
-//         if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
-//                 taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
-//             taskEvent.setCompletedDate(new Date());
-//         }
+// if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
+// taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+// taskEvent.setCompletedDate(new Date());
+// }
 
-//         if (!taskEvent.isGlobal() && taskEventDto.getAssignedUserIds() != null
-//                 && !taskEventDto.getAssignedUserIds().isEmpty()) {
-//             Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
-//                     .map(userId -> userRepository.findById(userId).get())
-//                     .collect(Collectors.toSet());
-//             taskEvent.setAssignedUsers(assignedUsers);
-//         }
+// if (!taskEvent.isGlobal() && taskEventDto.getAssignedUserIds() != null
+// && !taskEventDto.getAssignedUserIds().isEmpty()) {
+// Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
+// .map(userId -> userRepository.findById(userId).get())
+// .collect(Collectors.toSet());
+// taskEvent.setAssignedUsers(assignedUsers);
+// }
 
-//         return taskEventRepository.save(taskEvent);
-//     }
+// return taskEventRepository.save(taskEvent);
+// }
 
-//     @Override
-//     @Transactional
-//     public TaskEvent updateTaskEvent(Long id, TaskEventDto taskEventDto) {
-//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
+// @Override
+// @Transactional
+// public TaskEvent updateTaskEvent(Long id, TaskEventDto taskEventDto) {
+// TaskEvent taskEvent = taskEventRepository.findById(id).get();
 
-//         taskEvent.setTitle(taskEventDto.getTitle());
-//         taskEvent.setDescription(taskEventDto.getDescription());
-//         taskEvent.setStatus(taskEventDto.getStatus());
-//         taskEvent.setStartTime(taskEventDto.getStartTime());
-//         taskEvent.setDueDate(taskEventDto.getDueDate());
-//         taskEvent.setLocation(taskEventDto.getLocation());
-//         taskEvent.setGlobal(taskEventDto.isGlobal());
+// taskEvent.setTitle(taskEventDto.getTitle());
+// taskEvent.setDescription(taskEventDto.getDescription());
+// taskEvent.setStatus(taskEventDto.getStatus());
+// taskEvent.setStartTime(taskEventDto.getStartTime());
+// taskEvent.setDueDate(taskEventDto.getDueDate());
+// taskEvent.setLocation(taskEventDto.getLocation());
+// taskEvent.setGlobal(taskEventDto.isGlobal());
 
-//         if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
-//                 taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
-//             taskEvent.setCompletedDate(new Date());
-//         }
+// if (taskEventDto.getType() == TaskEvent.TaskEventType.TASK &&
+// taskEventDto.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+// taskEvent.setCompletedDate(new Date());
+// }
 
-//         if (!taskEvent.isGlobal()) {
-//             taskEvent.getAssignedUsers().clear();
-//             if (taskEventDto.getAssignedUserIds() != null && !taskEventDto.getAssignedUserIds().isEmpty()) {
-//                 Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
-//                         .map(userId -> userRepository.findById(userId).get())
-//                         .collect(Collectors.toSet());
-//                 taskEvent.setAssignedUsers(assignedUsers);
-//             }
-//         } else {
-//             taskEvent.getAssignedUsers().clear();
-//         }
+// if (!taskEvent.isGlobal()) {
+// taskEvent.getAssignedUsers().clear();
+// if (taskEventDto.getAssignedUserIds() != null &&
+// !taskEventDto.getAssignedUserIds().isEmpty()) {
+// Set<User> assignedUsers = taskEventDto.getAssignedUserIds().stream()
+// .map(userId -> userRepository.findById(userId).get())
+// .collect(Collectors.toSet());
+// taskEvent.setAssignedUsers(assignedUsers);
+// }
+// } else {
+// taskEvent.getAssignedUsers().clear();
+// }
 
-//         return taskEventRepository.save(taskEvent);
-//     }
+// return taskEventRepository.save(taskEvent);
+// }
 
-//     @Override
-//     @Transactional
-//     public void deleteTaskEvent(Long id) {
-//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
-//         taskEventRepository.delete(taskEvent);
-//     }
+// @Override
+// @Transactional
+// public void deleteTaskEvent(Long id) {
+// TaskEvent taskEvent = taskEventRepository.findById(id).get();
+// taskEventRepository.delete(taskEvent);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllTasks() {
-//         return taskEventRepository.findByType(TaskEvent.TaskEventType.TASK);
-//     }
+// @Override
+// public List<TaskEvent> getAllTasks() {
+// return taskEventRepository.findByType(TaskEvent.TaskEventType.TASK);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllTasksByDateRange(Date start, Date end) {
-//         return taskEventRepository.findByTypeAndDueDateBetween(TaskEvent.TaskEventType.TASK, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getAllTasksByDateRange(Date start, Date end) {
+// return
+// taskEventRepository.findByTypeAndDueDateBetween(TaskEvent.TaskEventType.TASK,
+// start, end);
+// }
 
-//     @Override
-//     public List<TaskEvent> getUserAssignedTasks(Long userId) {
-//         return taskEventRepository.findAssignedTasksByUserId(userId);
-//     }
+// @Override
+// public List<TaskEvent> getUserAssignedTasks(Long userId) {
+// return taskEventRepository.findAssignedTasksByUserId(userId);
+// }
 
-//     @Override
-//     public List<TaskEvent> getUserAssignedTasksByDateRange(Long userId, Date start, Date end) {
-//         return taskEventRepository.findAssignedTasksByUserIdAndDateRange(userId, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getUserAssignedTasksByDateRange(Long userId, Date
+// start, Date end) {
+// return taskEventRepository.findAssignedTasksByUserIdAndDateRange(userId,
+// start, end);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllVisibleTasks(Long userId) {
-//         return taskEventRepository.findAllVisibleTasks(userId);
-//     }
+// @Override
+// public List<TaskEvent> getAllVisibleTasks(Long userId) {
+// return taskEventRepository.findAllVisibleTasks(userId);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllVisibleTasksByDateRange(Long userId, Date start, Date end) {
-//         return taskEventRepository.findAllVisibleTasksBetween(userId, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getAllVisibleTasksByDateRange(Long userId, Date start,
+// Date end) {
+// return taskEventRepository.findAllVisibleTasksBetween(userId, start, end);
+// }
 
-//     @Override
-//     public TaskEvent getTaskById(Long id) {
-//         return taskEventRepository.findById(id).get();
-//     }
+// @Override
+// public TaskEvent getTaskById(Long id) {
+// return taskEventRepository.findById(id).get();
+// }
 
-//     @Override
-//     @Transactional
-//     public TaskEvent toggleTaskCompletion(Long id) {
-//         TaskEvent taskEvent = taskEventRepository.findById(id).get();
+// @Override
+// @Transactional
+// public TaskEvent toggleTaskCompletion(Long id) {
+// TaskEvent taskEvent = taskEventRepository.findById(id).get();
 
-//         if (taskEvent.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
-//             taskEvent.setStatus(TaskEvent.TaskEventStatus.PENDING);
-//             taskEvent.setCompletedDate(null);
-//         } else {
-//             taskEvent.setStatus(TaskEvent.TaskEventStatus.COMPLETED);
-//             taskEvent.setCompletedDate(new Date());
-//         }
+// if (taskEvent.getStatus() == TaskEvent.TaskEventStatus.COMPLETED) {
+// taskEvent.setStatus(TaskEvent.TaskEventStatus.PENDING);
+// taskEvent.setCompletedDate(null);
+// } else {
+// taskEvent.setStatus(TaskEvent.TaskEventStatus.COMPLETED);
+// taskEvent.setCompletedDate(new Date());
+// }
 
-//         return taskEventRepository.save(taskEvent);
-//     }
+// return taskEventRepository.save(taskEvent);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllEvents() {
-//         return taskEventRepository.findByType(TaskEvent.TaskEventType.EVENT);
-//     }
+// @Override
+// public List<TaskEvent> getAllEvents() {
+// return taskEventRepository.findByType(TaskEvent.TaskEventType.EVENT);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllEventsByDateRange(Date start, Date end) {
-//         return taskEventRepository.findByTypeAndStartTimeBetween(TaskEvent.TaskEventType.EVENT, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getAllEventsByDateRange(Date start, Date end) {
+// return
+// taskEventRepository.findByTypeAndStartTimeBetween(TaskEvent.TaskEventType.EVENT,
+// start, end);
+// }
 
-//     @Override
-//     public List<TaskEvent> getUserAssignedEvents(Long userId) {
-//         return taskEventRepository.findAssignedEventsByUserId(userId);
-//     }
+// @Override
+// public List<TaskEvent> getUserAssignedEvents(Long userId) {
+// return taskEventRepository.findAssignedEventsByUserId(userId);
+// }
 
-//     @Override
-//     public List<TaskEvent> getUserAssignedEventsByDateRange(Long userId, Date start, Date end) {
-//         return taskEventRepository.findAssignedEventsByUserIdAndDateRange(userId, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getUserAssignedEventsByDateRange(Long userId, Date
+// start, Date end) {
+// return taskEventRepository.findAssignedEventsByUserIdAndDateRange(userId,
+// start, end);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllVisibleEvents(Long userId) {
-//         return taskEventRepository.findAllVisibleEvents(userId);
-//     }
+// @Override
+// public List<TaskEvent> getAllVisibleEvents(Long userId) {
+// return taskEventRepository.findAllVisibleEvents(userId);
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllVisibleEventsByDateRange(Long userId, Date start, Date end) {
-//         return taskEventRepository.findAllVisibleEventsBetween(userId, start, end);
-//     }
+// @Override
+// public List<TaskEvent> getAllVisibleEventsByDateRange(Long userId, Date
+// start, Date end) {
+// return taskEventRepository.findAllVisibleEventsBetween(userId, start, end);
+// }
 
-//     @Override
-//     public TaskEvent getEventById(Long id) {
-//         return taskEventRepository.findById(id).get();
-//     }
+// @Override
+// public TaskEvent getEventById(Long id) {
+// return taskEventRepository.findById(id).get();
+// }
 
-//     @Override
-//     public TaskEvent getTaskEventById(Long id) {
-//         return taskEventRepository.findById(id).get();
-//     }
+// @Override
+// public TaskEvent getTaskEventById(Long id) {
+// return taskEventRepository.findById(id).get();
+// }
 
-//     @Override
-//     public List<TaskEvent> getAllTaskEvents() {
-//         return taskEventRepository.findAll();
-//     }
+// @Override
+// public List<TaskEvent> getAllTaskEvents() {
+// return taskEventRepository.findAll();
+// }
 
-//     private Long getCurrentUserId() {
-//         return HARDCODED_USER_ID;
-//     }
+// private Long getCurrentUserId() {
+// return HARDCODED_USER_ID;
+// }
 
-//     private boolean checkIfAdmin() {
-//         return true;  // Always returns true, skipping admin checks
-//     }
+// private boolean checkIfAdmin() {
+// return true; // Always returns true, skipping admin checks
+// }
 // }

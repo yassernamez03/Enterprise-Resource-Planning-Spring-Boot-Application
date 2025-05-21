@@ -67,4 +67,12 @@ public class EmployeeController {
         List<EmployeeDTO> employees = employeeService.getEmployeesByRole(role);
         return ResponseEntity.ok(employees);
     }
+
+    // Bullshit method to find employee by userId
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<EmployeeDTO> getEmployeeByUserId(@PathVariable Long userId) {
+        EmployeeDTO employee = employeeService.getEmployeeByUserId(userId);
+        return ResponseEntity.ok(employee);
+    }
+    // End of bullshit
 }

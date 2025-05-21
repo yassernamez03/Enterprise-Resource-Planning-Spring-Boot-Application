@@ -74,7 +74,8 @@ public class TaskEventController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         Long currentUserId = userService.getCurrentUser().getId();
-        List<TaskEventDto> tasks = taskEventService.getAllVisibleTasksByDateRange(currentUserId, startDate, endDate).stream()
+        List<TaskEventDto> tasks = taskEventService.getAllVisibleTasksByDateRange(currentUserId, startDate, endDate)
+                .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(tasks);
@@ -94,7 +95,8 @@ public class TaskEventController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         Long currentUserId = userService.getCurrentUser().getId();
-        List<TaskEventDto> tasks = taskEventService.getUserAssignedTasksByDateRange(currentUserId, startDate, endDate).stream()
+        List<TaskEventDto> tasks = taskEventService.getUserAssignedTasksByDateRange(currentUserId, startDate, endDate)
+                .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(tasks);
@@ -104,6 +106,15 @@ public class TaskEventController {
     public ResponseEntity<TaskEventDto> toggleTaskCompletion(@PathVariable Long id) {
         TaskEvent updatedTask = taskEventService.toggleTaskCompletion(id);
         return ResponseEntity.ok(mapToDto(updatedTask));
+    }
+
+    @GetMapping("/admin/users/{userId}/tasks")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TaskEventDto>> getTasksForUser(@PathVariable Long userId) {
+        List<TaskEventDto> tasks = taskEventService.getTasksForUser(userId).stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(tasks);
     }
 
     // Event specific endpoints
@@ -121,7 +132,8 @@ public class TaskEventController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         Long currentUserId = userService.getCurrentUser().getId();
-        List<TaskEventDto> events = taskEventService.getAllVisibleEventsByDateRange(currentUserId, startDate, endDate).stream()
+        List<TaskEventDto> events = taskEventService.getAllVisibleEventsByDateRange(currentUserId, startDate, endDate)
+                .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(events);
@@ -141,7 +153,17 @@ public class TaskEventController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
         Long currentUserId = userService.getCurrentUser().getId();
-        List<TaskEventDto> events = taskEventService.getUserAssignedEventsByDateRange(currentUserId, startDate, endDate).stream()
+        List<TaskEventDto> events = taskEventService.getUserAssignedEventsByDateRange(currentUserId, startDate, endDate)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/admin/users/{userId}/events")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TaskEventDto>> getEventsForUser(@PathVariable Long userId) {
+        List<TaskEventDto> events = taskEventService.getEventsForUser(userId).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(events);
@@ -200,7 +222,7 @@ public class TaskEventController {
         dto.setLocation(taskEvent.getLocation());
         dto.setGlobal(taskEvent.isGlobal());
         dto.setCompletedDate(taskEvent.getCompletedDate());
-        
+
         // Map assigned users' IDs
         if (taskEvent.getAssignedUsers() != null && !taskEvent.getAssignedUsers().isEmpty()) {
             Set<Long> assignedUserIds = taskEvent.getAssignedUsers().stream()
@@ -208,7 +230,7 @@ public class TaskEventController {
                     .collect(Collectors.toSet());
             dto.setAssignedUserIds(assignedUserIds);
         }
-        
+
         return dto;
     }
 }

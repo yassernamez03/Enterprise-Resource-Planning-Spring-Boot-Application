@@ -27,6 +27,9 @@ public class EmployeeDTO {
     private AddressDTO address;
     private List<HRTaskDTO> tasks = new ArrayList<>();
     private String role;
+    // the bullshit i'm adding here
+    private Long userId;
+    // end of the bullshit
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

@@ -117,4 +117,12 @@ public class EmployeeService {
                 .map(employeeMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    // bullshit method to get employee by id
+    public EmployeeDTO getEmployeeByUserId(Long userId) {
+        Employee employee = employeeRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Employee not found for user id: " + userId));
+        return employeeMapper.toDto(employee);
+    }
+    // end of bullshit
 }

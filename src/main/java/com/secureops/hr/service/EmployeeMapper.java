@@ -1,6 +1,7 @@
 package com.secureops.hr.service;
 
 
+import com.secureops.entity.User;
 import com.secureops.hr.dto.EmployeeDTO;
 import com.secureops.hr.entity.Address;
 import com.secureops.hr.entity.Employee;
@@ -51,6 +52,12 @@ public class EmployeeMapper {
                     .collect(Collectors.toList()));
         }
 
+        // Bullshit
+        if (employee.getUser() != null) {
+            dto.setUserId(employee.getUser().getId());
+        }
+        // End of the bullshit
+
         return dto;
     }
 
@@ -75,6 +82,14 @@ public class EmployeeMapper {
         if (dto.getAddress() != null) {
             employee.setAddress(addressMapper.toEntity(dto.getAddress()));
         }
+
+        // Bullshit
+        if (dto.getUserId() != null) {
+            User user = new User();
+            user.setId(dto.getUserId());
+            employee.setUser(user);
+        }
+        // End of the bullshit
 
         return employee;
     }
@@ -124,6 +139,18 @@ public class EmployeeMapper {
                 addressMapper.updateEntityFromDto(dto.getAddress(), address);
             }
         }
+
+        // Bullshit
+        if (dto.getUserId() != null) {
+            if (employee.getUser() == null) {
+                User user = new User();
+                user.setId(dto.getUserId());
+                employee.setUser(user);
+            } else {
+                employee.getUser().setId(dto.getUserId());
+            }
+        }
+        // End of the bullshit
 
         return employee;
     }
