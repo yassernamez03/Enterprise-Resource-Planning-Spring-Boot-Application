@@ -16,7 +16,8 @@ export default function CreateEmployeeModal({
   const [userSearchTerm, setUserSearchTerm] = useState('');
 
   const filteredAvailableUsers = availableUsers.filter(user => 
-    user.fullName?.toLowerCase().includes(userSearchTerm.toLowerCase())
+    user.fullName?.toLowerCase().includes(userSearchTerm.toLowerCase()) &&
+    user.approvalStatus === "APPROVED"
   );
 
   const [formData, setFormData] = useState({

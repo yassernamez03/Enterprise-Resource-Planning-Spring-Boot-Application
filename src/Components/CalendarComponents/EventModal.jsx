@@ -15,7 +15,7 @@ const [successMessage, setSuccessMessage] = useState('');
 const { deleteEvent, refreshEvents } = useCalendar();
 const { user, logout } = useAuth();
 const isAdmin = user?.role === 'ADMIN';
-const isCompleted = event?.status === 'COMPLETED' || event?.status === 'COMPLETED' || event?.status === 'COMPLETED';
+const isCompleted = event?.status === 'COMPLETED';
 console.log("isCompleted = " + isCompleted);
 
 // Function to determine event color based on type

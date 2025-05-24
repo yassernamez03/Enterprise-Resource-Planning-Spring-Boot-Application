@@ -73,7 +73,7 @@ const MessageList = ({
   useEffect(() => {
     if (!currentChat?.messages) return;
     
-    const currentLength = currentChat.messages.length;
+    const currentLength = currentChat?.messages?.length || 0;
     const prevLength = prevMessagesLengthRef.current;
     
     // Check if messages were added
@@ -82,7 +82,7 @@ const MessageList = ({
       
       // Check if the last message is from current user
       const isLastMessageFromCurrentUser = currentLength > 0 && 
-        currentChat.messages[currentLength - 1]?.sender?.id === currentUserId;
+        currentChat && currentChat.messages && currentChat.messages[currentLength - 1]?.sender?.id === currentUserId;
       
       // Always scroll to bottom when current user sends a message
       if (isLastMessageFromCurrentUser) {
