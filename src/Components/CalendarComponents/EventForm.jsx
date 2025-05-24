@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Check, ChevronDown } from 'lucide-react';
 import calendarService from '../../services/calanderService';
 import { useCalendar } from '../../context/CalendarContext';
+import userService from '../../services/userService';
 
 const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
   // Form state
@@ -33,9 +34,9 @@ const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
   const [status, setStatus] = useState(event?.status || 'PENDING');
   const [global, setglobal] = useState(event?.global || false);
 
-  // Employee selection
-  const [employees, setEmployees] = useState([]);
-  const [assignedEmployees, setAssignedEmployees] = useState(event?.assignedUsers || []);
+  // User selection
+  const [users, setUsers] = useState([]);
+  const [assignedUserIds, setAssignedUserIds] = useState(event?.assignedUsers?.map(user => user.id) || []);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -58,78 +59,78 @@ const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
     }
   }, [type]);
 
-  // Effect to clear assigned employees when global is checked
+  // Effect to clear assigned users when global is checked
   useEffect(() => {
     if (global) {
-      setAssignedEmployees([]);
+      setAssignedUsers([]);
     }
   }, [global]);
 
-  // Fetch employees on component mount
+  // Fetch users on component mount
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await calendarService.getAllEvents();
-        setEmployees(response);
+        const response = await userService.getAllUsers();
+        console.log('Users : ', response);
+        setUsers(response); 
       } catch (err) {
-        console.error('Error fetching employees:', err);
-        setError('Failed to load employees');
+        console.error('Error fetching users:', err);
+        setError('Failed to load users');
       }
     };
     
-    fetchEmployees();
+    fetchUsers();
   }, []);
 
   // Handle form submission
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  const start = new Date(`${startDate}T${startTime}`);
-  const end = new Date(`${endDate}T${endTime}`);
-  
-  if (end <= start) {
-    setError('End time must be after start time');
-    setLoading(false);
-    return;
-  }
-  
-  const eventData = {
-    title,
-    description,
-    type,
-    status: type === 'TASK' ? status : 'PENDING',
-    startTime: start.toISOString(),
-    dueDate: end.toISOString(),
-    location: type === 'EVENT' ? location : '',
-    global,
-    user: { id: currentUser },
-    assignedUsers: global ? [] : assignedEmployees.map(emp => ({ id: emp.id }))
+    const start = new Date(`${startDate}T${startTime}`);
+    const end = new Date(`${endDate}T${endTime}`);
+    
+    if (end <= start) {
+      setError('End time must be after start time');
+      setLoading(false);
+      return;
+    }
+    
+    const eventData = {
+      title,
+      description,
+      type,
+      status: type === 'TASK' ? status : 'PENDING',
+      startTime: start.toISOString(),
+      dueDate: end.toISOString(),
+      location: type === 'EVENT' ? location : '',
+      global,
+      user: { id: currentUser },
+      assignedUserIds: global ? [] : assignedUserIds    };
+
+    try {
+      if (event && event.id) {
+        // Update existing event/task
+        const updatedEvent = await calendarService.updateEvent(event.id, eventData);
+        console.log('Successfully updated:', updatedEvent);
+      } else {
+        // Create new event/task
+        const createdEvent = await calendarService.createEvent(eventData);
+        console.log('Successfully created:', createdEvent);
+      }
+      await refreshEvents();
+      if (typeof onSuccess === 'function') {
+        onSuccess();
+      }
+      onClose();
+    } catch (err) {
+      console.error('Error saving event:', err);
+      setError(err.response?.data?.message || 'Failed to save event');
+    } finally {
+      setLoading(false);
+    }
   };
-
-  try {
-    if (event && event.id) {  // Check both event and event.id exist
-      // Update existing event/task
-      const updatedEvent = await calendarService.updateEvent(event.id, eventData);
-      console.log('Successfully updated:', updatedEvent);
-    } else {
-      // Create new event/task
-      const createdEvent = await calendarService.createEvent(eventData);
-      console.log('Successfully created:', createdEvent);
-    }
-    await refreshEvents();
-    if (typeof onSuccess === 'function') {
-      onSuccess();
-    }
-    onClose();
-  } catch (err) {
-    console.error('Error saving event:', err);
-    setError(err.response?.data?.message || 'Failed to save event');
-  } finally {
-    setLoading(false);
-  }
-};
 
   // Handle event deletion
   const handleDelete = async () => {
@@ -151,18 +152,18 @@ const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
     }
   };
 
-  // Toggle employee assignment
-  const toggleEmployee = (employee) => {
-    if (assignedEmployees.some(emp => emp.id === employee.id)) {
-      setAssignedEmployees(assignedEmployees.filter(emp => emp.id !== employee.id));
-    } else {
-      setAssignedEmployees([...assignedEmployees, employee]);
-    }
-  };
+  // Toggle user assignment
+  const toggleUser = (user) => {
+  if (assignedUserIds.includes(user.id)) {
+    setAssignedUserIds(assignedUserIds.filter(id => id !== user.id));
+  } else {
+    setAssignedUserIds([...assignedUserIds, user.id]);
+  }
+};
 
-  // Filter employees based on search term
-  const filteredEmployees = employees.filter(emp => 
-    emp.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter users based on search term
+  const filteredUsers = users.filter(user => 
+    user.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Generate status options
@@ -345,7 +346,7 @@ const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
             </div>
           </div>
 
-          {/* global field */}
+          {/* Global field */}
           <div className="mb-4">
             <label className="flex items-center space-x-2">
               <input
@@ -359,89 +360,93 @@ const EventForm = ({ event, onClose, onSuccess, currentUser }) => {
             </label>
           </div>
 
-          {/* Assigned Employees Multi-select Dropdown - Only show if not global */}
+          {/* Assigned Users Multi-select Dropdown - Only show if not global */}
           {!global && (
-            <div className="mb-4 relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Assigned Employees
-              </label>
-              
-              {/* Selected employees chips */}
-              <div className="flex flex-wrap gap-2 mb-2">
-                {assignedEmployees.map((emp) => (
-                  <div 
-                    key={emp.id}
-                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm flex items-center"
-                  >
-                    {emp.name}
-                    <button 
-                      type="button"
-                      onClick={() => toggleEmployee(emp)}
-                      className="ml-1 text-blue-600 hover:text-blue-800"
-                      disabled={isFieldDisabled()}
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Dropdown trigger */}
-              <div 
-                className={`border border-gray-300 rounded-md px-3 py-2 flex justify-between items-center ${isFieldDisabled() ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}`}
-                onClick={() => !isFieldDisabled() && setDropdownOpen(!dropdownOpen)}
+  <div className="mb-4 relative">
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      Assigned Users
+    </label>
+    
+    {/* Selected users chips - Updated style */}
+    <div className="flex flex-wrap gap-2 mb-2">
+      {assignedUserIds.map(id => {
+        const user = users.find(u => u.id === id);
+        if (!user) return null;
+        return (
+          <div 
+            key={id}
+            className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center"
+          >
+            {user.fullName}
+            <button 
+              type="button"
+              onClick={() => toggleUser(user)}
+              className="ml-2 text-gray-500 hover:text-gray-700"
+              disabled={isFieldDisabled()}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </div>
+        );
+      })}
+    </div>
+    
+    {/* Dropdown trigger - Updated style */}
+    <div 
+      className={`border border-gray-300 rounded-md px-3 py-2 flex justify-between items-center ${isFieldDisabled() ? 'bg-gray-100 cursor-not-allowed' : 'cursor-pointer'}`}
+      onClick={() => !isFieldDisabled() && setDropdownOpen(!dropdownOpen)}
+    >
+      <span className="text-gray-500">
+        {assignedUserIds.length > 0 
+          ? `${assignedUserIds.length} user${assignedUserIds.length > 1 ? 's' : ''} selected` 
+          : 'Select users'}
+      </span>
+      {!isFieldDisabled() && <ChevronDown className="h-4 w-4 text-gray-500" />}
+    </div>
+    
+    {/* Dropdown menu */}
+    {dropdownOpen && !isFieldDisabled() && (
+      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        {/* Search input - Updated style */}
+        <div className="p-2 border-b">
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+        
+        {/* User list - Updated style */}
+        <ul>
+          {filteredUsers.map((user) => {
+            const isSelected = assignedUserIds.includes(user.id);
+            return (
+              <li 
+                key={user.id}
+                className={`px-4 py-2 cursor-pointer flex items-center justify-between ${
+                  isSelected ? 'bg-blue-50' : 'hover:bg-gray-100'
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleUser(user);
+                }}
               >
-                <span className="text-gray-500">
-                  {assignedEmployees.length > 0 
-                    ? `${assignedEmployees.length} employee${assignedEmployees.length > 1 ? 's' : ''} selected` 
-                    : 'Select employees'}
-                </span>
-                {!isFieldDisabled() && <ChevronDown className="h-4 w-4 text-gray-500" />}
-              </div>
-              
-              {/* Dropdown menu */}
-              {dropdownOpen && !isFieldDisabled() && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                  {/* Search input */}
-                  <div className="p-2">
-                    <input
-                      type="text"
-                      placeholder="Search employees..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  
-                  {/* Employee list */}
-                  <ul>
-                    {filteredEmployees.map((emp) => {
-                      const isSelected = assignedEmployees.some(e => e.id === emp.id);
-                      return (
-                        <li 
-                          key={emp.id}
-                          className={`px-3 py-2 cursor-pointer flex items-center justify-between ${
-                            isSelected ? 'bg-blue-50' : 'hover:bg-gray-100'
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleEmployee(emp);
-                          }}
-                        >
-                          <span>{emp.name}</span>
-                          {isSelected && <Check className="h-4 w-4 text-blue-600" />}
-                        </li>
-                      );
-                    })}
-                    {filteredEmployees.length === 0 && (
-                      <li className="px-3 py-2 text-gray-500 text-center">No employees found</li>
-                    )}
-                  </ul>
-                </div>
-              )}
-            </div>
+                <span>{user.fullName}</span>
+                {isSelected && <Check className="h-4 w-4 text-blue-600" />}
+              </li>
+            );
+          })}
+          {filteredUsers.length === 0 && (
+            <li className="px-4 py-2 text-gray-500 text-center">No users found</li>
           )}
+        </ul>
+      </div>
+    )}
+  </div>
+)}
           
           {/* Action Buttons */}
           <div className="flex justify-between">

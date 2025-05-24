@@ -55,9 +55,7 @@ const Header = () => {
     
     if (view === 'day') {
       return `${month} ${date}, ${year}`;
-    } else if (view === 'week') {
-      return `${month} ${year}`;
-    } else if (view === 'month') {
+    } else if (view === 'week' || view === 'month') {
       return `${month} ${year}`;
     } else {
       return year;

@@ -88,7 +88,7 @@ return (
         </div>
         </div>
     </main>
-    {!isAdmin && (
+    {isAdmin && (
     <CreateEventButton />
     )}
     </div>

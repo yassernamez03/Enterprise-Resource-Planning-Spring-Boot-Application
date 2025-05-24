@@ -162,7 +162,7 @@ return (
         {event.global && (
             <div className="flex items-center text-sm text-blue-600">
             <Globe className="h-4 w-4 mr-1" />
-            <span>Global Event</span>
+            <span>Global {event.type}</span>
             </div>
         )}
 
