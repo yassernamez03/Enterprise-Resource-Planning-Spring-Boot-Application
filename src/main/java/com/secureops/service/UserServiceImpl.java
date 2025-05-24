@@ -71,7 +71,8 @@ public class UserServiceImpl implements UserService {
             User user = new User();
             user.setFullName(registrationDto.getFullName());
             user.setEmail(registrationDto.getEmail());
-            user.setPassword(passwordEncoder.encode("TEMPORARY_PASSWORD_TO_BE_CHANGED"));
+            String rawPassword = PasswordGenerator.generateRandomPassword(12);
+            user.setPassword(passwordEncoder.encode(rawPassword));
             user.setApprovalStatus(User.ApprovalStatus.PENDING);
             user.setActive(false);
             user.setRole(User.UserRole.USER);

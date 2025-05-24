@@ -67,8 +67,8 @@ public class NumberGenerator {
         String datePrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
 
         // Get last invoice created today
-        Long sequentialNumber = invoiceRepository.countByInvoiceNumberContaining("INV" + datePrefix) + 1;
+        Long sequentialNumber = invoiceRepository.countByInvoiceNumberContaining(INVOICE_PREFIX + datePrefix) + 1;
 
-        return "INV" + datePrefix + "-" + sequentialNumber;
+        return INVOICE_PREFIX + datePrefix + "-" + sequentialNumber;
     }
 }
