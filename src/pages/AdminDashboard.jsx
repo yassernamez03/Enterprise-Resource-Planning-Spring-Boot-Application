@@ -413,19 +413,18 @@ const AdminDashboard = () => {
       case "1":
         return "bg-green-100 text-green-800"; // Green for approved
 
-      case "PENDING":
-      case "0":
-        return "bg-gray-100 text-gray-800"; // Gray for pending
-
+        
       case "REJECTED":
       case "-1":
         return "bg-red-100 text-red-800"; // Red for rejected
-
+            
       case "INACTIVE":
       case "SUSPENDED":
       case "2":
         return "bg-yellow-100 text-yellow-800"; // Yellow for other statuses
-
+                  
+      case "PENDING":
+      case "0":
       default:
         return "bg-gray-100 text-gray-800"; // Default to gray
     }
@@ -455,7 +454,7 @@ const AdminDashboard = () => {
 
       default:
         // If it's a number or unknown value, return a more readable form
-        return isNaN(approvalStatus)
+        return Number.isNaN(approvalStatus)
           ? approvalStatus
           : `Status: ${approvalStatus}`;
     }

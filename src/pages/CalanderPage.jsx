@@ -26,10 +26,9 @@ const renderCalendarView = () => {
         return <DayView />;
     case 'week':
         return <WeekView />;
-    case 'month':
-        return <MonthView />;
     case 'year':
         return <YearView />;
+    case 'month':
     default:
         return <MonthView />;
     }

@@ -19,7 +19,7 @@ if (!isOpen) return null;
 const formatDateTimeLocal = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return '';
+    if (Number.isNaN(date.getTime())) return '';
     
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

@@ -23,7 +23,7 @@ const Header = () => {
       let title = part.charAt(0).toUpperCase() + part.slice(1);
       
       // Handle detail pages
-      if (!isNaN(Number(part)) && index > 0) {
+      if (!Number.isNaN(Number(part)) && index > 0) {
         const parentPart = pathParts[index - 1];
         // Remove trailing 's' from plural and capitalize
         title = `${parentPart

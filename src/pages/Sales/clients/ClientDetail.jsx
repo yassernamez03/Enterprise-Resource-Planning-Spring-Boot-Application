@@ -11,7 +11,7 @@ const safeFormatDate = (dateString, formatStr) => {
   if (!dateString) return "N/A";
   try {
     const date = new Date(dateString);
-    return isNaN(date.getTime()) ? "Invalid date" : format(date, formatStr);
+    return Number.isNaN(date.getTime()) ? "Invalid date" : format(date, formatStr);
   } catch (e) {
     return "Invalid date";
   }

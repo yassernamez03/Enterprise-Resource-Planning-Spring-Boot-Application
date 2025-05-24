@@ -310,7 +310,7 @@ return (
                             <tr key={employee.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <div className="flex items-center">
-                                {employee.imageUrl ? (
+                                {employee.imageUrl && /^https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/.test(employee.imageUrl) ? (
                                     <img className="h-10 w-10 rounded-full mr-3" src={employee.imageUrl} alt={`${employee.firstName} ${employee.lastName}`} />
                                 ) : (
                                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
@@ -399,9 +399,7 @@ return (
                         
                         {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                         let pageNum;
-                        if (totalPages <= 5) {
-                            pageNum = i + 1;
-                        } else if (currentPage <= 3) {
+                        if (totalPages <= 5 || currentPage <= 3) {
                             pageNum = i + 1;
                         } else if (currentPage >= totalPages - 2) {
                             pageNum = totalPages - 4 + i;
