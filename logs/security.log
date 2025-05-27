@@ -1,4 +1,4 @@
-2025-05-24 15:57:42.304 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2025-05-24 15:59:33.927 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: z***@g***.com
-2025-05-24 15:59:34.208 [https-jsse-nio-8443-exec-1] INFO  org.springframework.security.audit - User 'zakariyablagrae@gmail.com' logged in successfully
-2025-05-24 15:59:34.242 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - Successful login - UserID: 4, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
+2025-05-27 18:26:19.219 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-05-27 18:30:48.380 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: z***@g***.com
+2025-05-27 18:30:48.660 [https-jsse-nio-8443-exec-3] INFO  org.springframework.security.audit - User 'zakariyablagrae@gmail.com' logged in successfully
+2025-05-27 18:30:48.693 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Successful login - UserID: 4, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
