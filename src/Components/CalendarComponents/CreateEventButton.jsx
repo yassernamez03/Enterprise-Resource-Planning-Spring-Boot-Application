@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import EventForm from './EventForm';
+import { useAuth } from "../../context/AuthContext"; // Adjust the import path as necessary
 
 const CreateEventButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+    const { user, logout } = useAuth();
+    const currentUser = user || {}; // Fallback to an empty object if user is null
+    // console.log("Current User:", currentUser);
   return (
     <>
       <button
@@ -16,7 +19,7 @@ const CreateEventButton = () => {
       </button>
       
       {isModalOpen && (
-        <EventForm onClose={() => setIsModalOpen(false)} />
+        <EventForm onClose={() => setIsModalOpen(false)} currentUser={currentUser.id}  />
       )}
     </>
   );

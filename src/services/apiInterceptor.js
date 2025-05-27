@@ -95,6 +95,11 @@ export const apiService = {
     method: 'PUT',
     body: JSON.stringify(data),
   }),
+
+  patch: (endpoint, data) => apiRequest(endpoint, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  }),
   
   delete: (endpoint) => apiRequest(endpoint, { method: 'DELETE' }),
   

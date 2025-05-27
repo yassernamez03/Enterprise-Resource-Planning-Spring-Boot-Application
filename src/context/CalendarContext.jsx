@@ -1,140 +1,65 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { hasTimeConflict } from '../utils/dateUtils';
+import calendarService from '../services/calanderService';
+import { useAuth } from './AuthContext';
 
 // Constants for action types
 const SET_DATE = 'SET_DATE';
 const SET_VIEW = 'SET_VIEW';
 const SET_SELECTED_DATE = 'SET_SELECTED_DATE';
+const SET_EVENTS = 'SET_EVENTS';
 const ADD_EVENT = 'ADD_EVENT';
 const UPDATE_EVENT = 'UPDATE_EVENT';
 const DELETE_EVENT = 'DELETE_EVENT';
 const SET_SEARCH_TERM = 'SET_SEARCH_TERM';
 const SET_SHOW_ALL_UPCOMING = 'SET_SHOW_ALL_UPCOMING';
+const SET_LOADING = 'SET_LOADING';
+const SET_ERROR = 'SET_ERROR';
 
 // Initial calendar state
 const initialState = {
   currentDate: new Date(),
   selectedDate: new Date(),
   view: 'month',
-  events: [
-    {
-      id: uuidv4(),
-      title: 'Gym Session',
-      start: new Date(2025, 3, 21, 7, 0),
-      end: new Date(2025, 3, 21, 8, 30),
-      color: '#10b981', // green
-      description: 'Morning workout routine',
-      priority: 'Medium', // New field for priority
-      global: false, // New field for global status
-      assignedUserIds: [] // New field for assigned users (empty initially)
-    },
-    {
-      id: uuidv4(),
-      title: 'Product Meeting',
-      start: new Date(2025, 3, 22, 10, 0),
-      end: new Date(2025, 3, 22, 11, 30),
-      color: '#3b82f6', // blue
-      description: 'Weekly product review',
-      priority: 'High', // New field for priority
-      global: false, // New field for global status
-      assignedUserIds: ['user1', 'user2'] // Example assigned users
-    },
-    {
-      id: uuidv4(),
-      title: 'Coffee with Sarah',
-      start: new Date(2025, 3, 23, 14, 0),
-      end: new Date(2025, 3, 23, 15, 0),
-      color: '#8b5cf6', // purple
-      description: 'Discuss new project ideas',
-      priority: 'Low', // New field for priority
-      global: false, // New field for global status
-      assignedUserIds: ['user3'] // Example assigned user
-    },
-    {
-      id: uuidv4(),
-      title: 'Dentist Appointment',
-      start: new Date(2025, 3, 26, 9, 0),
-      end: new Date(2025, 3, 26, 10, 0),
-      color: '#f59e0b', // amber
-      description: 'Regular checkup',
-      priority: 'Medium', // New field for priority
-      global: false, // New field for global status
-      assignedUserIds: [] // Empty list for assigned users
-    },
-    {
-      id: uuidv4(),
-      title: 'JS Conference',
-      start: new Date(2025, 3, 27, 2, 30),
-      end: new Date(2025, 3, 27, 13, 30),
-      color: '#60a5fa', // light blue
-      description: 'Annual JavaScript conference',
-      priority: 'High', // New field for priority
-      global: true, // Global event set to true
-      assignedUserIds: [] // Empty list for assigned users
-    },
-    // Multi-day event example
-    {
-      id: uuidv4(),
-      title: 'Team Retreat',
-      start: new Date(2025, 4, 5, 9, 0),
-      end: new Date(2025, 4, 7, 17, 0),
-      color: '#ec4899', // pink
-      description: 'Annual team building retreat',
-      priority: 'High', // New field for priority
-      global: false, // New field for global status
-      assignedUserIds: ['user1', 'user4'] // Example assigned users
-    }
-  ]
-  ,
+  events: [],
   searchTerm: '',
-  showAllUpcoming: false
+  showAllUpcoming: false,
+  loading: false,
+  error: null
 };
 
 // Reducer to handle calendar actions
 const calendarReducer = (state, action) => {
   switch (action.type) {
     case SET_DATE:
-      return {
-        ...state,
-        currentDate: action.payload
-      };
+      return { ...state, currentDate: action.payload };
     case SET_VIEW:
+      return { ...state, view: action.payload };
+    case SET_SELECTED_DATE:
+      return { ...state, selectedDate: action.payload };
+    case SET_EVENTS:
       return {
         ...state,
-        view: action.payload
-      };
-    case SET_SELECTED_DATE:
-      return {
-        ...state, 
-        selectedDate: action.payload
+        events: action.payload,
+        loading: false,
+        error: null
       };
     case ADD_EVENT:
-      // Check for time conflicts
       if (hasTimeConflict(state.events, action.payload)) {
         alert('Cannot add event due to a time conflict!');
         return state;
       }
-      return {
-        ...state,
-        events: [...state.events, action.payload]
-      };
+      return { ...state, events: [...state.events, action.payload] };
     case UPDATE_EVENT: {
-      // Filter out the event to update
       const filteredEvents = state.events.filter(event => event.id !== action.payload.id);
-      
-      // Check for time conflicts (excluding the event being updated)
       if (hasTimeConflict(filteredEvents, action.payload)) {
         alert('Cannot update event due to a time conflict!');
         return state;
       }
-      
       return {
         ...state,
-        events: [
-          ...filteredEvents,
-          action.payload
-        ]
+        events: [...filteredEvents, action.payload]
       };
     }
     case DELETE_EVENT:
@@ -143,15 +68,13 @@ const calendarReducer = (state, action) => {
         events: state.events.filter(event => event.id !== action.payload)
       };
     case SET_SEARCH_TERM:
-      return {
-        ...state,
-        searchTerm: action.payload
-      };
+      return { ...state, searchTerm: action.payload };
     case SET_SHOW_ALL_UPCOMING:
-      return {
-        ...state,
-        showAllUpcoming: action.payload
-      };
+      return { ...state, showAllUpcoming: action.payload };
+    case SET_LOADING:
+      return { ...state, loading: action.payload };
+    case SET_ERROR:
+      return { ...state, error: action.payload, loading: false };
     default:
       return state;
   }
@@ -163,68 +86,115 @@ const CalendarContext = createContext();
 // Calendar provider component
 export const CalendarProvider = ({ children }) => {
   const [state, dispatch] = useReducer(calendarReducer, initialState);
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'ADMIN';
   
-  // Set current date
-  const setDate = (date) => {
-    dispatch({ type: SET_DATE, payload: date });
+  const fetchAllCalendarItems = async () => {
+    try {
+      dispatch({ type: SET_LOADING, payload: true });
+      
+      // Use different endpoints based on admin status
+      const [events, tasks] = await Promise.all([
+        isAdmin ? calendarService.getAllEvents() : calendarService.getAllVisibleEvents(),
+        isAdmin ? calendarService.getAllTasks() : calendarService.getAllVisibleTasks()
+      ]);
+
+      const allItems = [...events, ...tasks].map(item => ({
+        ...item,
+        start: new Date(item.startTime),
+        end: new Date(item.dueDate)
+      }));
+      
+      dispatch({ type: SET_EVENTS, payload: allItems });
+    } catch (error) {
+      console.error('Failed to fetch calendar items:', error);
+      dispatch({ type: SET_ERROR, payload: 'Failed to load calendar items. Please try again.' });
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
   };
+
+  useEffect(() => {
+    fetchAllCalendarItems();
+  }, [isAdmin]);
+
+  const setDate = (date) => dispatch({ type: SET_DATE, payload: date });
+  const setView = (view) => dispatch({ type: SET_VIEW, payload: view });
+  const setSelectedDate = (date) => dispatch({ type: SET_SELECTED_DATE, payload: date });
   
-  // Set view mode (day, week, month, year)
-  const setView = (view) => {
-    dispatch({ type: SET_VIEW, payload: view });
-  };
-  
-  // Set selected date
-  const setSelectedDate = (date) => {
-    dispatch({ type: SET_SELECTED_DATE, payload: date });
-  };
-  
-  // Navigate to day view from a specific date
   const navigateToDay = (date) => {
     setSelectedDate(date);
     setView('day');
   };
   
-  // Navigate to week view from a specific date
   const navigateToWeek = (date) => {
     setSelectedDate(date);
     setView('week');
     setDate(date);
   };
   
-  // Add a new event
-  const addEvent = (event) => {
-    const newEvent = {
-      ...event,
-      id: uuidv4()
-    };
-    dispatch({ type: ADD_EVENT, payload: newEvent });
+  const addEvent = async (event) => {
+    try {
+      dispatch({ type: SET_LOADING, payload: true });
+      const savedEvent = await calendarService.createEvent({
+        ...event,
+        startTime: event.start.toISOString(),
+        dueDate: event.end.toISOString()
+      });
+      
+      dispatch({ type: ADD_EVENT, payload: {
+        ...savedEvent,
+        start: new Date(savedEvent.startTime),
+        end: new Date(savedEvent.dueDate)
+      }});
+      return savedEvent;
+    } catch (error) {
+      console.error('Failed to add event:', error);
+      dispatch({ type: SET_ERROR, payload: 'Failed to create event. Please try again.' });
+      throw error;
+    }
   };
   
-  // Update an existing event
-  const updateEvent = (event) => {
-    dispatch({ type: UPDATE_EVENT, payload: event });
+  const updateEvent = async (event) => {
+    try {
+      dispatch({ type: SET_LOADING, payload: true });
+      const updatedEvent = await calendarService.updateEvent(event.id, {
+        ...event,
+        startTime: event.start.toISOString(),
+        dueDate: event.end.toISOString()
+      });
+      
+      dispatch({ type: UPDATE_EVENT, payload: {
+        ...updatedEvent,
+        start: new Date(updatedEvent.startTime),
+        end: new Date(updatedEvent.dueDate)
+      }});
+      return updatedEvent;
+    } catch (error) {
+      console.error('Failed to update event:', error);
+      dispatch({ type: SET_ERROR, payload: 'Failed to update event. Please try again.' });
+      throw error;
+    }
   };
   
-  // Delete an event
-  const deleteEvent = (eventId) => {
-    dispatch({ type: DELETE_EVENT, payload: eventId });
+  const deleteEvent = async (eventId) => {
+    try {
+      dispatch({ type: SET_LOADING, payload: true });
+      await calendarService.deleteEvent(eventId);
+      dispatch({ type: DELETE_EVENT, payload: eventId });
+      await fetchAllCalendarItems();
+    } catch (error) {
+      console.error('Failed to delete event:', error);
+      dispatch({ type: SET_ERROR, payload: 'Failed to delete event. Please try again.' });
+      throw error;
+    }
   };
   
-  // Set search term
-  const setSearchTerm = (term) => {
-    dispatch({ type: SET_SEARCH_TERM, payload: term });
-  };
+  const setSearchTerm = (term) => dispatch({ type: SET_SEARCH_TERM, payload: term });
+  const setShowAllUpcoming = (show) => dispatch({ type: SET_SHOW_ALL_UPCOMING, payload: show });
   
-  // Set show all upcoming events flag
-  const setShowAllUpcoming = (show) => {
-    dispatch({ type: SET_SHOW_ALL_UPCOMING, payload: show });
-  };
-  
-  // Get filtered events based on search term
   const getFilteredEvents = () => {
     if (!state.searchTerm) return state.events;
-    
     return state.events.filter(event => 
       event.title.toLowerCase().includes(state.searchTerm.toLowerCase())
     );
@@ -244,7 +214,8 @@ export const CalendarProvider = ({ children }) => {
         deleteEvent,
         setSearchTerm,
         getFilteredEvents,
-        setShowAllUpcoming
+        setShowAllUpcoming,
+        refreshEvents: fetchAllCalendarItems
       }}
     >
       {children}
@@ -252,7 +223,6 @@ export const CalendarProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the calendar context
 export const useCalendar = () => {
   const context = useContext(CalendarContext);
   if (!context) {

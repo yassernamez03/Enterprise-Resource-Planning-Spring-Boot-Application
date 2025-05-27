@@ -1,59 +1,91 @@
-import AxiosClient from './AxiosClient';
+import { apiService } from './apiInterceptor';
 
-const EMPLOYEE_API_BASE_URL = '/api/employees'; // Adjust the base URL according to your API
-
-const employeeServices = {
-getAllEmployees: async () => {
+const TASKS_ENDPOINT = '/task-events';
+const employeeService = {
+  /**
+   * Get all employees
+   * @returns {Promise<Array>} Promise resolving to an array of employee objects
+   */
+  getAllEmployees: async () => {
     try {
-    const response = await AxiosClient.get(EMPLOYEE_API_BASE_URL);
-    // Ensure we always return an array
-    return Array.isArray(response.data) ? response.data : [];
+      return await apiService.get('/hr/employees');
     } catch (error) {
-    console.error('Error fetching employees:', error);
-    // Return empty array instead of throwing to prevent crashes
-    return [];
+      console.error('Error fetching employees:', error);
+      throw error;
     }
-},
+  },
 
-getEmployeeById: async (id) => {
+  /**
+   * Get employee by ID
+   * @param {string|number} id - Employee ID
+   * @returns {Promise<Object>} Promise resolving to employee object
+   */
+  getEmployeeById: async (id) => {
     try {
-    const response = await AxiosClient.get(`${EMPLOYEE_API_BASE_URL}/${id}`);
-    return response.data;
+      return await apiService.get(`/hr/employees/${id}`);
     } catch (error) {
-    console.error(`Error fetching employee with ID ${id}:`, error);
-    throw error;
+      console.error(`Error fetching employee with id ${id}:`, error);
+      throw error;
     }
-},
+  },
 
-createEmployee: async (employee) => {
-    try {
-    const response = await AxiosClient.post(EMPLOYEE_API_BASE_URL, employee);
-    return response.data;
-    } catch (error) {
+  /**
+   * Get all employees
+   * @returns {Promise<Array>} Promise resolving to an array of employee objects
+   */
+  getEmployeeTasks: async (userId) => {
+      try {
+          return await apiService.get(`${TASKS_ENDPOINT}/admin/users/${userId}/tasks`);
+      } catch (error) {
+          console.error(`Error fetching tasks for employee ${userId}:`, error);
+          throw error;
+      }
+  },
+  /**
+   * Create a new employee
+   * @param {Object} employeeData - Employee data to create
+   * @returns {Promise<Object>} Promise resolving to the created employee
+   */
+  createEmployee: async (employeeData) => {
+  try {
+    console.log('Sending employee data:', employeeData);
+    return await apiService.post('/hr/employees/create', employeeData);
+  } catch (error) {
     console.error('Error creating employee:', error);
     throw error;
-    }
+  }
 },
 
-updateEmployee: async (id, employee) => {
+  /**
+   * Update an existing employee
+   * @param {string|number} id - Employee ID to update
+   * @param {Object} employeeData - Updated employee data
+   * @returns {Promise<Object>} Promise resolving to the updated employee
+   */
+  
+  updateEmployee: async (id, employeeData) => {
     try {
-    const response = await AxiosClient.put(`${EMPLOYEE_API_BASE_URL}/${id}`, employee);
-    return response.data;
+      console.log('Sending employee data:', employeeData);
+      return await apiService.put(`/hr/employees/update/${id}`, employeeData);
     } catch (error) {
-    console.error(`Error updating employee with ID ${id}:`, error);
-    throw error;
+      console.error(`Error updating employee with id ${id}:`, error);
+      throw error;
     }
-},
+  },
 
-deleteEmployee: async (id) => {
+  /**
+   * Delete an employee
+   * @param {string|number} id - Employee ID to delete
+   * @returns {Promise<Object>} Promise resolving to the response data
+   */
+  deleteEmployee: async (id) => {
     try {
-    const response = await AxiosClient.delete(`${EMPLOYEE_API_BASE_URL}/${id}`);
-    return response.data;
+      return await apiService.delete(`/hr/employees/delete/${id}`);
     } catch (error) {
-    console.error(`Error deleting employee with ID ${id}:`, error);
-    throw error;
+      console.error(`Error deleting employee with id ${id}:`, error);
+      throw error;
     }
-}
+  }
 };
 
-export default employeeServices;
+export default employeeService;

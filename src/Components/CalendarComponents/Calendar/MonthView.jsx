@@ -18,6 +18,19 @@ const MonthView = () => {
     currentDate.getMonth()
   );
   
+  // Function to determine event color based on type
+  const getEventColor = (event) => {
+  const type = (event?.type || '').toString().toLowerCase();
+  switch (type) {
+    case 'event':
+      return '#10b981'; // Green
+    case 'task':
+      return '#3b82f6'; // Blue
+    default:
+      return '#9ca3af'; // Gray if undefined or unknown
+  }
+};
+  
   const handleDayClick = (date) => {
     navigateToWeek(date);
   };
@@ -40,7 +53,7 @@ const MonthView = () => {
               setSelectedEvent(event);
             }}
             className="text-xs truncate mb-1 p-1 rounded cursor-pointer"
-            style={{ backgroundColor: event.color, color: '#fff' }}
+            style={{ backgroundColor: getEventColor(event), color: '#fff' }}
           >
             {event.title}
           </div>

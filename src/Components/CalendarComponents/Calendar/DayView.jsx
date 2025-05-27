@@ -15,6 +15,19 @@ const DayView = () => {
   const timeSlots = getTimeSlots();
   const dayEvents = getEventsForDay(events, selectedDate);
   
+  // Function to determine event color based on type
+  const getEventColor = (event) => {
+  const type = (event?.type || '').toString().toLowerCase();
+  switch (type) {
+    case 'event':
+      return '#10b981'; // Green
+    case 'task':
+      return '#3b82f6'; // Blue
+    default:
+      return '#9ca3af'; // Gray if undefined or unknown
+  }
+};
+  
   const renderTimeSlot = (slot) => {
     const slotDate = new Date(selectedDate);
     slotDate.setHours(slot.hour, slot.minute, 0, 0);
@@ -47,6 +60,9 @@ const DayView = () => {
             const durationHours = endHour - startHour;
             const heightPercent = durationHours * 100;
             
+            // Use the new getEventColor function
+            const eventColor = getEventColor(event);
+            
             return (
               <div
                 key={event.id}
@@ -58,7 +74,7 @@ const DayView = () => {
                 style={{
                   top: `${(startHour - Math.floor(startHour)) * 100}%`,
                   height: `${heightPercent}%`,
-                  backgroundColor: event.color,
+                  backgroundColor: eventColor,
                   color: '#fff',
                   zIndex: 10
                 }}
