@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
-import { getInvoices, deleteInvoice } from "../../../services/Sales/invoiceService"
+import { Link, useNavigate } from "react-router-dom"
+import { getInvoices, deleteInvoice, getInvoicesByStatus, searchInvoices } from "../../../services/Sales/invoiceService"
 import { generateInvoicePdf, downloadPdf } from "../../../services/Sales/pdfService"
 import {
   Search,
@@ -12,21 +12,33 @@ import {
 } from "lucide-react"
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 
+// Map backend status enum values (uppercase) to frontend display values
 const statusLabels = {
   pending: "Pending",
   partial: "Partially Paid",
   paid: "Paid",
-  overdue: "Overdue"
+  overdue: "Overdue",
+  // Backend enum values
+  PENDING: "Pending",
+  PAID: "Paid",
+  OVERDUE: "Overdue",
+  PARTIAL: "Partially Paid"
 }
 
 const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",
   partial: "bg-blue-100 text-blue-800",
   paid: "bg-green-100 text-green-800",
-  overdue: "bg-red-100 text-red-800"
+  overdue: "bg-red-100 text-red-800",
+  // Backend enum values
+  PENDING: "bg-yellow-100 text-yellow-800",
+  PARTIAL: "bg-blue-100 text-blue-800",
+  PAID: "bg-green-100 text-green-800",
+  OVERDUE: "bg-red-100 text-red-800"
 }
 
 const InvoiceList = () => {
+  const navigate = useNavigate()
   const [invoices, setInvoices] = useState([])
   const [filteredInvoices, setFilteredInvoices] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -38,19 +50,20 @@ const InvoiceList = () => {
     invoiceId: "",
     invoiceNumber: ""
   })
-
   useEffect(() => {
     fetchInvoices()
   }, [])
 
   useEffect(() => {
     filterInvoices()
-  }, [invoices, searchTerm, statusFilter])
+  }, [invoices, searchTerm]) // removed statusFilter since we handle it separately
 
   const fetchInvoices = async () => {
     try {
       setLoading(true)
-      const data = await getInvoices()
+      const response = await getInvoices()
+      // Check if response has the data property (paginated response)
+      const data = response.data || response
       setInvoices(data)
       setFilteredInvoices(data)
     } catch (err) {
@@ -60,34 +73,91 @@ const InvoiceList = () => {
       setLoading(false)
     }
   }
-
   const filterInvoices = () => {
     let filtered = [...invoices]
 
     if (searchTerm) {
       filtered = filtered.filter(
         invoice =>
-          invoice.invoiceNumber
+          (invoice.invoiceNumber || '')
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          invoice.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          invoice.orderNumber.toLowerCase().includes(searchTerm.toLowerCase())
+          (invoice.clientName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (invoice.orderNumber || '').toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
     if (statusFilter) {
-      filtered = filtered.filter(invoice => invoice.status === statusFilter)
+      filtered = filtered.filter(invoice => {
+        // Handle both lowercase frontend status and uppercase backend enum status
+        const invoiceStatus = (invoice.status || '').toLowerCase();
+        const filterStatus = statusFilter.toLowerCase();
+        return invoiceStatus === filterStatus;
+      })
+    }    setFilteredInvoices(filtered);
+  };
+  
+  const handleSearch = async (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+    
+    try {
+      if (term.length > 2) {
+        // Use the backend search API for more than 2 characters
+        setLoading(true);
+        const results = await searchInvoices(term);
+        const data = Array.isArray(results) ? results : [];
+        setFilteredInvoices(data);
+      } else if (term === "") {
+        // Reset to all invoices if search is cleared
+        setFilteredInvoices(invoices);
+      } else {
+        // For 1-2 characters, just use client-side filtering
+        filterInvoices();
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+      // Fall back to client-side filtering on error
+      filterInvoices();
+    } finally {
+      setLoading(false);
     }
-
-    setFilteredInvoices(filtered)
   }
-
-  const handleSearch = event => {
-    setSearchTerm(event.target.value)
-  }
-
-  const handleStatusFilter = status => {
-    setStatusFilter(status === statusFilter ? "" : status)
+  
+  const handleStatusFilter = async (status) => {
+    // Toggle filter off if clicking the same status
+    if (status === statusFilter) {
+      setStatusFilter("")
+      fetchInvoices() // Reset to all invoices
+      return
+    }
+    
+    setStatusFilter(status)
+    
+    try {
+      setLoading(true)
+      let data
+      
+      // If status is selected, use the API endpoint for filtering by status
+      if (status) {
+        // For backend API, we need to use uppercase status
+        const backendStatus = status.toUpperCase()
+        const response = await getInvoicesByStatus(backendStatus)
+        data = Array.isArray(response) ? response : (response.data || [])
+      } else {
+        // If no status filter, get all invoices
+        const response = await getInvoices()
+        data = response.data || response
+      }
+      
+      setInvoices(data)
+      setFilteredInvoices(data)
+    } catch (err) {
+      setError("Failed to filter invoices")
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleDeletePrompt = (id, invoiceNumber) => {
@@ -161,7 +231,10 @@ const InvoiceList = () => {
           <span className="text-gray-700 mr-2 flex items-center">
             <Filter size={18} className="mr-1" /> Filter:
           </span>
-          {Object.entries(statusLabels).map(([status, label]) => (
+          {/* Only show lowercase status values to avoid duplicates */}
+          {Object.entries(statusLabels)
+            .filter(([status]) => !status.includes('_') && status === status.toLowerCase())
+            .map(([status, label]) => (
             <button
               key={status}
               onClick={() => handleStatusFilter(status)}
@@ -230,33 +303,45 @@ const InvoiceList = () => {
                     >
                       {invoice.orderNumber}
                     </Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap">
                     {invoice.clientName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(invoice.createdAt).toLocaleDateString()}
+                    {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(invoice.dueDate).toLocaleDateString()}
+                    {invoice.dueDate ? (
+                      <>
+                        {new Date(invoice.dueDate).toLocaleDateString()}
+                        {new Date(invoice.dueDate) < new Date() && invoice.status.toLowerCase() !== "paid" && (
+                          <span className="ml-2 text-xs text-red-600 font-semibold">OVERDUE</span>
+                        )}
+                      </>
+                    ) : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium">
-                      ${invoice.total.toFixed(2)}
+                  <td className="px-6 py-4 whitespace-nowrap">                    <div className="font-medium">
+                      ${parseFloat(invoice.total || 0).toFixed(2)}
                     </div>
-                    {invoice.status === "partial" && (
+                    {(invoice.status.toLowerCase() === "partial" || invoice.status.toLowerCase() === "paid" || invoice.paymentDate) && (
                       <div className="text-xs text-gray-500">
-                        Paid: ${invoice.amountPaid.toFixed(2)}
+                        {invoice.status.toLowerCase() === "paid" ? 'Paid on:' : 'Partial payment:'} 
+                        {invoice.paymentDate ? 
+                          ` ${new Date(invoice.paymentDate).toLocaleDateString()}` : 
+                          ` $${parseFloat(invoice.amountPaid || 0).toFixed(2)}`
+                        }
+                        {invoice.paymentMethod && (
+                          <span className="ml-1">via {invoice.paymentMethod.replace('_', ' ')}</span>
+                        )}
                       </div>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        statusColors[invoice.status]
+                        statusColors[invoice.status] || "bg-gray-100 text-gray-800"
                       }`}
                     >
-                      {statusLabels[invoice.status]}
+                      {statusLabels[invoice.status] || invoice.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -267,15 +352,14 @@ const InvoiceList = () => {
                         title="View"
                       >
                         <FileText size={18} />
-                      </Link>
-                      {invoice.status !== "paid" && (
-                        <Link
-                          to={`/sales/invoices/${invoice.id}/payment`}
+                      </Link>                      {(invoice.status !== "paid" && invoice.status !== "PAID") && (
+                        <button
+                          onClick={() => navigate(`/sales/invoices/${invoice.id}`)}
                           className="text-green-600 hover:text-green-900"
                           title="Record Payment"
                         >
                           <DollarSign size={18} />
-                        </Link>
+                        </button>
                       )}
                       <button
                         onClick={() =>

@@ -1,47 +1,48 @@
-import React, { useState, useEffect } from "react"
-import { useParams, useNavigate, Link } from "react-router-dom"
-import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
-
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import {
   getOrder,
   updateOrder,
-  generateInvoice
-} from "../../../services/Sales/orderService"
-import { generateOrderPdf, downloadPdf } from "../../../services/Sales/pdfService"
+  createInvoiceFromOrder
+} from "../../../services/Sales/orderService";
+import { generateOrderPdf, downloadPdf } from "../../../services/Sales/pdfService";
 import {
   ArrowLeft,
   ClipboardEdit,
   FileCheck,
   Download,
   FileInput as FileInvoice,
-  Ban
-} from "lucide-react"
+  Ban,
+  AlertTriangle
+} from "lucide-react";
 
 const statusLabels = {
-  pending: "Pending",
-  "in-process": "In Process",
-  completed: "Completed",
-  cancelled: "Cancelled"
-}
+  PENDING: "Pending",
+  IN_PROCESS: "In Process",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  INVOICED: "Invoiced"
+};
 
 const statusColors = {
-  pending: { bg: "bg-yellow-100", text: "text-yellow-800" },
-  "in-process": { bg: "bg-blue-100", text: "text-blue-800" },
-  completed: { bg: "bg-green-100", text: "text-green-800" },
-  cancelled: { bg: "bg-red-100", text: "text-red-800" }
-}
+  PENDING: { bg: "bg-yellow-100", text: "text-yellow-800" },
+  IN_PROCESS: { bg: "bg-blue-100", text: "text-blue-800" },
+  COMPLETED: { bg: "bg-green-100", text: "text-green-800" },
+  CANCELLED: { bg: "bg-red-100", text: "text-red-800" },
+  INVOICED: { bg: "bg-purple-100", text: "text-purple-800" }
+};
 
 const OrderDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [order, setOrder] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [statusLoading, setStatusLoading] = useState(null)
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [statusLoading, setStatusLoading] = useState(null);
   
-  // Dialog states
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogConfig, setDialogConfig] = useState({
     title: "",
     message: "",
@@ -49,85 +50,118 @@ const OrderDetail = () => {
     cancelText: "Cancel",
     type: "info",
     onConfirm: () => {}
-  })
+  });
 
   useEffect(() => {
     if (id) {
-      fetchOrder(id)
+      fetchOrder(id);
     }
-  }, [id])
+  }, [id]);
 
-  const fetchOrder = async orderId => {
+  const fetchOrder = async (orderId) => {
     try {
-      setLoading(true)
-      const data = await getOrder(orderId)
-      setOrder(data)
+      setLoading(true);
+      const data = await getOrder(orderId);
+      setOrder(data);
     } catch (err) {
-      setError("Failed to fetch order details")
-      console.error(err)
+      setError("Failed to fetch order details: " + (err.message || "Unknown error"));
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleStatusChange = async status => {
-    if (!order || !id) return
+  const calculateOrderValues = (order) => {
+    if (!order) {
+      return {
+        subtotal: 0,
+        discount: 0,
+        tax: 0,
+        discountAmount: 0,
+        taxAmount: 0,
+        totalAmount: 0,
+        subtotalAfterDiscount: 0
+      };
+    }
+
+    const subtotal = order.subtotal || 
+      (order.items || []).reduce((sum, item) => sum + ((item.subtotal || 0) || ((item.unitPrice || 0) * (item.quantity || 0))), 0);
+    const discount = order.discount || 0;
+    const tax = order.tax || 0;
+
+    const discountAmount = (subtotal * discount) / 100;
+    const subtotalAfterDiscount = subtotal - discountAmount;
+    const taxAmount = (subtotalAfterDiscount * tax) / 100;
+    const totalAmount = order.totalAmount || (subtotalAfterDiscount + taxAmount);
+
+    return {
+      subtotal,
+      discount,
+      tax,
+      discountAmount,
+      taxAmount,
+      totalAmount,
+      subtotalAfterDiscount
+    };
+  };
+
+  const handleStatusChange = async (status) => {
+    if (!order || !id) return;
 
     try {
-      setStatusLoading(status)
-      await updateOrder(id, { status })
-      setOrder({ ...order, status })
+      setStatusLoading(status);
+      const updatedOrder = await updateOrder(id, { status });
+      setOrder(updatedOrder);
     } catch (err) {
-      setError("Failed to update order status")
-      console.error(err)
+      setError("Failed to update order status: " + (err.message || "Unknown error"));
+      console.error(err);
     } finally {
-      setStatusLoading(null)
-      setDialogOpen(false)
+      setStatusLoading(null);
+      setDialogOpen(false);
     }
-  }
+  };
 
   const handleGenerateInvoice = async () => {
-    if (!order || !id) return
+    if (!order || !id) return;
 
     try {
-      setLoading(true)
-      const result = await generateInvoice(id)
-      navigate(`/sales/invoices/${result.invoiceId}`)
+      setLoading(true);
+      const result = await createInvoiceFromOrder(id);
+      navigate(`/sales/invoices/${result.invoiceId}`);
     } catch (err) {
-      setError("Failed to generate invoice")
-      console.error(err)
+      setError("Failed to generate invoice: " + (err.message || "Unknown error"));
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleDownloadPdf = async () => {
-    if (!order || !id) return
+    if (!order || !id) return;
 
     try {
-      const pdfBlob = await generateOrderPdf(id)
-      downloadPdf(pdfBlob, `Order-${order.orderNumber}.pdf`)
+      const pdfBlob = await generateOrderPdf(id);
+      downloadPdf(pdfBlob, `Order-${order.orderNumber || 'order'}.pdf`);
     } catch (err) {
-      setError("Failed to generate PDF")
-      console.error(err)
+      setError("Failed to generate PDF: " + (err.message || "Unknown error"));
+      console.error(err);
     }
-  }
+  };
 
-  // Dialog opener functions for different actions
   const openStatusChangeDialog = (newStatus) => {
     let title, message, type;
     
-    if (newStatus === "cancelled") {
+    if (newStatus === "CANCELLED") {
       title = "Cancel Order";
-      message = `Are you sure you want to cancel order #${order.orderNumber}? This action cannot be undone.`;
+      message = `Are you sure you want to cancel order #${order?.orderNumber || ''}? This action cannot be undone.`;
       type = "danger";
-    } else if (newStatus === "in-process") {
+    } else if (newStatus === "IN_PROCESS") {
       title = "Change Status to In Process";
-      message = `Are you sure you want to change the status of order #${order.orderNumber} to In Process?`;
+      message = `Are you sure you want to change the status of order #${order?.orderNumber || ''} to In Process?`;
       type = "warning";
-    } else if (newStatus === "completed") {
+    } else if (newStatus === "COMPLETED") {
       title = "Complete Order";
-      message = `Are you sure you want to mark order #${order.orderNumber} as Completed? This will allow invoice generation.`;
+      message = `Are you sure you want to mark order #${order?.orderNumber || ''} as Completed? This will allow invoice generation.`;
       type = "info";
     }
     
@@ -146,7 +180,7 @@ const OrderDetail = () => {
   const openInvoiceDialog = () => {
     setDialogConfig({
       title: "Generate Invoice",
-      message: `Are you sure you want to generate an invoice for order #${order.orderNumber}?`,
+      message: `Are you sure you want to generate an invoice for order #${order?.orderNumber || ''}?`,
       confirmText: "Generate Invoice",
       cancelText: "Cancel",
       type: "info",
@@ -156,30 +190,53 @@ const OrderDetail = () => {
     setDialogOpen(true);
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center p-8">Loading order details...</div>
-    )
-  if (error) return <div className="text-red-500 p-4">{error}</div>
-  if (!order) return <div className="text-red-500 p-4">Order not found</div>
+  if (loading) return (
+    <div className="flex justify-center p-8">Loading order details...</div>
+  );
 
-  const isEditable =
-    order.status !== "completed" && order.status !== "cancelled"
-  const canGenerateInvoice = order.status === "completed"
+  if (error) return (
+    <div className="p-4 mb-4 bg-red-50 border-l-4 border-red-500">
+      <div className="flex items-center">
+        <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+        <p className="text-red-700">{error}</p>
+      </div>
+      <button
+        onClick={() => setError(null)}
+        className="mt-2 text-red-700 hover:text-red-900 underline text-sm"
+      >
+        Dismiss
+      </button>
+    </div>
+  );
+
+  if (!order) return <div className="text-red-500 p-4">Order not found</div>;
+
+  const normalizedStatus = order.status?.toUpperCase() || "PENDING";
+  const isEditable = !["COMPLETED", "CANCELLED", "INVOICED"].includes(normalizedStatus);
+  const canGenerateInvoice = normalizedStatus === "COMPLETED";
+  
   const nextStatus = () => {
-    switch (order.status) {
-      case "pending":
-        return "in-process"
-      case "in-process":
-        return "completed"
+    switch (normalizedStatus) {
+      case "PENDING":
+        return "IN_PROCESS";
+      case "IN_PROCESS":
+        return "COMPLETED";
       default:
-        return order.status
+        return normalizedStatus;
     }
-  }
+  };
+
+  const {
+    subtotal,
+    discount,
+    tax,
+    discountAmount,
+    taxAmount,
+    totalAmount
+  } = calculateOrderValues(order);
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
-      {/* Confirmation Dialog */}
       <ConfirmDialog 
         isOpen={dialogOpen} 
         onCancel={() => setDialogOpen(false)}
@@ -201,23 +258,26 @@ const OrderDetail = () => {
               <ArrowLeft size={18} />
             </Link>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Order #{order.orderNumber}
+              Order #{order.orderNumber || 'N/A'}
             </h1>
             <span
               className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${
-                statusColors[order.status].bg
-              } ${statusColors[order.status].text}`}
+                statusColors[normalizedStatus]?.bg || "bg-gray-200"
+              } ${statusColors[normalizedStatus]?.text || "text-gray-800"}`}
             >
-              {statusLabels[order.status]}
+              {statusLabels[normalizedStatus] || normalizedStatus}
             </span>
           </div>
           <p className="text-gray-600">
-            Created on {new Date(order.createdAt).toLocaleDateString()}
+            Created on {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'Unknown date'}
             {order.completedAt &&
-              ` | Completed on ${new Date(
-                order.completedAt
-              ).toLocaleDateString()}`}
+              ` | Completed on ${new Date(order.completedAt).toLocaleDateString()}`}
           </p>
+          {order.quoteNumber && (
+            <p className="text-gray-600">
+              Converted from quote #{order.quoteNumber}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
@@ -231,22 +291,20 @@ const OrderDetail = () => {
             </Link>
           )}
 
-          {isEditable &&
-            order.status !== "in-process" &&
-            order.status !== "completed" && (
-              <button
-                onClick={() => openStatusChangeDialog(nextStatus())}
-                className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center"
-                disabled={!!statusLoading}
-              >
-                <FileCheck size={18} className="mr-1" />
-                {statusLoading === nextStatus()
-                  ? "Updating..."
-                  : `Mark as ${statusLabels[nextStatus()]}`}
-              </button>
-            )}
+          {isEditable && normalizedStatus === "PENDING" && (
+            <button
+              onClick={() => openStatusChangeDialog(nextStatus())}
+              className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center"
+              disabled={!!statusLoading}
+            >
+              <FileCheck size={18} className="mr-1" />
+              {statusLoading === nextStatus()
+                ? "Updating..."
+                : `Mark as ${statusLabels[nextStatus()]}`}
+            </button>
+          )}
 
-          {isEditable && order.status === "in-process" && (
+          {isEditable && normalizedStatus === "IN_PROCESS" && (
             <button
               onClick={() => openStatusChangeDialog(nextStatus())}
               className="btn bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md flex items-center"
@@ -261,12 +319,12 @@ const OrderDetail = () => {
 
           {isEditable && (
             <button
-              onClick={() => openStatusChangeDialog("cancelled")}
+              onClick={() => openStatusChangeDialog("CANCELLED")}
               className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md flex items-center"
               disabled={!!statusLoading}
             >
               <Ban size={18} className="mr-1" />
-              {statusLoading === "cancelled" ? "Cancelling..." : "Cancel Order"}
+              {statusLoading === "CANCELLED" ? "Cancelling..." : "Cancel Order"}
             </button>
           )}
 
@@ -296,7 +354,7 @@ const OrderDetail = () => {
           <h3 className="text-sm font-medium text-gray-500 uppercase mb-2">
             Client
           </h3>
-          <p className="font-medium text-gray-800">{order.clientName}</p>
+          <p className="font-medium text-gray-800">{order.clientName || 'No client specified'}</p>
         </div>
 
         <div className="bg-gray-50 p-4 rounded-md">
@@ -304,7 +362,7 @@ const OrderDetail = () => {
             Total Amount
           </h3>
           <p className="font-medium text-gray-800 text-2xl">
-            ${order.total.toFixed(2)}
+            ${totalAmount.toFixed(2)}
           </p>
         </div>
 
@@ -315,24 +373,15 @@ const OrderDetail = () => {
           <div className="space-y-1">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal:</span>
-              <span>${order.subtotal.toFixed(2)}</span>
+              <span>${subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Discount:</span>
-              <span>
-                ${((order.subtotal * order.discount) / 100).toFixed(2)}
-              </span>
+              <span>-${discountAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tax:</span>
-              <span>
-                $
-                {(
-                  ((order.subtotal - (order.subtotal * order.discount) / 100) *
-                    order.tax) /
-                  100
-                ).toFixed(2)}
-              </span>
+              <span>${taxAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -365,30 +414,39 @@ const OrderDetail = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {order.items.map(item => (
-                <tr key={item.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">
-                      {item.productName}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.quantity}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    ${item.unitPrice.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.discount}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.tax}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
-                    ${item.total.toFixed(2)}
-                  </td>
-                </tr>
-              ))}
+              {(order.items || []).map(item => {
+                const itemSubtotal = item.subtotal || (item.unitPrice || 0) * (item.quantity || 0);
+                const itemDiscount = item.discount || 0;
+                const itemTax = item.tax || 0;
+                const itemDiscountAmount = (itemSubtotal * itemDiscount) / 100;
+                const itemTaxAmount = ((itemSubtotal - itemDiscountAmount) * itemTax) / 100;
+                const itemTotal = itemSubtotal - itemDiscountAmount + itemTaxAmount;
+
+                return (
+                  <tr key={item.id || Math.random().toString(36).substr(2, 9)}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium text-gray-900">
+                        {item.productName || 'No product name'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      {item.quantity || 0}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      ${(item.unitPrice || 0).toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      {itemDiscount}%
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                      {itemTax}%
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
+                      ${itemTotal.toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot className="bg-gray-50">
               <tr>
@@ -396,29 +454,23 @@ const OrderDetail = () => {
                   Subtotal
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  ${order.subtotal.toFixed(2)}
+                  ${subtotal.toFixed(2)}
                 </td>
               </tr>
               <tr>
                 <td colSpan={5} className="px-6 py-3 text-right font-medium">
-                  Discount ({order.discount}%)
+                  Discount ({discount}%)
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  -${((order.subtotal * order.discount) / 100).toFixed(2)}
+                  -${discountAmount.toFixed(2)}
                 </td>
               </tr>
               <tr>
                 <td colSpan={5} className="px-6 py-3 text-right font-medium">
-                  Tax ({order.tax}%)
+                  Tax ({tax}%)
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  $
-                  {(
-                    ((order.subtotal -
-                      (order.subtotal * order.discount) / 100) *
-                      order.tax) /
-                    100
-                  ).toFixed(2)}
+                  ${taxAmount.toFixed(2)}
                 </td>
               </tr>
               <tr>
@@ -429,7 +481,7 @@ const OrderDetail = () => {
                   Total
                 </td>
                 <td className="px-6 py-3 text-right text-lg font-semibold">
-                  ${order.total.toFixed(2)}
+                  ${totalAmount.toFixed(2)}
                 </td>
               </tr>
             </tfoot>
@@ -446,7 +498,7 @@ const OrderDetail = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default OrderDetail
+export default OrderDetail;

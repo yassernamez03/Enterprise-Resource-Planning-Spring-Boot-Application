@@ -1,67 +1,16 @@
-import React, { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import { useForm, Controller, useFieldArray } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { createQuote, getQuote, updateQuote } from "../../../services/Sales/quoteService"
-import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react"
-
-// Mock API calls for clients and products - replace with actual API calls
-const getClients = async () => {
-  return new Promise(resolve => {
-    resolve([
-      {
-        id: "1",
-        name: "Acme Corp",
-        email: "contact@acme.com",
-        phone: "123-456-7890",
-        address: "123 Main St",
-        status: "active",
-        createdAt: "2023-01-01"
-      },
-      {
-        id: "2",
-        name: "Wayne Industries",
-        email: "info@wayne.com",
-        phone: "987-654-3210",
-        address: "456 Bat Ave",
-        status: "active",
-        createdAt: "2023-02-15"
-      }
-    ])
-  })
-}
-
-const getProducts = async () => {
-  return new Promise(resolve => {
-    resolve([
-      {
-        id: "1",
-        name: "Product A",
-        description: "Description for Product A",
-        sku: "SKU001",
-        price: 29.99,
-        cost: 15.0,
-        quantity: 100,
-        category: "Category 1",
-        status: "active",
-        createdAt: "2023-01-01"
-      },
-      {
-        id: "2",
-        name: "Product B",
-        description: "Description for Product B",
-        sku: "SKU002",
-        price: 49.99,
-        cost: 25.0,
-        quantity: 50,
-        category: "Category 2",
-        status: "active",
-        createdAt: "2023-02-01"
-      }
-    ])
-  })
-}
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import {
+  createQuote,
+  getQuote,
+  updateQuote,
+} from "../../../services/Sales/quoteService";
+import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react";
+import { clientService } from "../../../services/Sales/clientService";
+import { productService } from "../../../services/Sales/productService";
 
 const schema = yup
   .object({
@@ -80,42 +29,41 @@ const schema = yup
             .number()
             .required("Unit price is required")
             .min(0, "Unit price must be positive"),
-          discount: yup.number().min(0, "Discount must be positive"),
-          tax: yup.number().min(0, "Tax must be positive")
+          description: yup.string(),
         })
       )
       .min(1, "At least one item is required"),
     notes: yup.string(),
-    terms: yup.string()
+    terms: yup.string(),
   })
-  .required()
+  .required();
 
-const calculateItemTotal = item => {
-  const quantity = item.quantity || 0
-  const unitPrice = item.unitPrice || 0
-  const discount = item.discount || 0
-  const tax = item.tax || 0
-
-  const subtotal = quantity * unitPrice
-  const discountAmount = subtotal * (discount / 100)
-  const taxAmount = (subtotal - discountAmount) * (tax / 100)
-
-  return subtotal - discountAmount + taxAmount
-}
+const calculateItemTotal = (item) => {
+  const quantity = item.quantity || 0;
+  const unitPrice = item.unitPrice || 0;
+  return quantity * unitPrice;
+};
 
 const QuoteForm = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const isEditMode = Boolean(id)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(id);
 
-  const [clients, setClients] = useState([])
-  const [products, setProducts] = useState([])
-  const [subtotal, setSubtotal] = useState(0)
-  const [discount, setDiscount] = useState(0)
-  const [tax, setTax] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [clients, setClients] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Calculate default validUntil date (30 days from now)
+  const getDefaultValidUntilDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toISOString().split("T")[0];
+  };
 
   const {
     control,
@@ -123,126 +71,171 @@ const QuoteForm = () => {
     watch,
     setValue,
     reset,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       clientId: "",
-      validUntil: new Date(new Date().setDate(new Date().getDate() + 30))
-        .toISOString()
-        .split("T")[0],
-      items: [
-        { productId: "", quantity: 1, unitPrice: 0, discount: 0, tax: 0 }
-      ],
+      validUntil: getDefaultValidUntilDate(),
+      items: [{ productId: "", quantity: 1, unitPrice: 0, description: "" }],
       notes: "",
-      terms: "Standard terms and conditions apply."
-    }
-  })
+      terms: "Standard terms and conditions apply.",
+    },
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "items"
-  })
+    name: "items",
+  });
 
-  const watchItems = watch("items")
+  const watchItems = watch("items");
 
   useEffect(() => {
-    Promise.all([getClients(), getProducts()])
-      .then(([clientsData, productsData]) => {
-        setClients(clientsData)
-        setProducts(productsData)
-      })
-      .catch(err => {
-        setError("Failed to load data")
-        console.error(err)
-      })
+    // Load client and product data from APIs
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [clientsResponse, productsResponse] = await Promise.all([
+          clientService.getClients({ page: 0, pageSize: 100 }, {}),
+          productService.getProducts({ page: 0, pageSize: 100 }, {}),
+        ]);
+
+        // Handle clients data - Fix by checking all possible response structures
+        let clientsData = [];
+        if (clientsResponse?.data?.content) {
+          // Spring pagination format
+          clientsData = clientsResponse.data.content;
+        } else if (clientsResponse?.content) {
+          // Alternative Spring pagination format
+          clientsData = clientsResponse.content;
+        } else if (
+          clientsResponse?.data &&
+          Array.isArray(clientsResponse.data)
+        ) {
+          // Direct data array
+          clientsData = clientsResponse.data;
+        } else if (Array.isArray(clientsResponse)) {
+          // Direct array response
+          clientsData = clientsResponse;
+        }
+
+        // Handle products data
+        let productsData = [];
+        if (productsResponse?.data?.content) {
+          productsData = productsResponse.data.content;
+        } else if (productsResponse?.content) {
+          productsData = productsResponse.content;
+        } else if (
+          productsResponse?.data &&
+          Array.isArray(productsResponse.data)
+        ) {
+          productsData = productsResponse.data;
+        } else if (Array.isArray(productsResponse)) {
+          productsData = productsResponse;
+        }
+
+        setClients(clientsData);
+        setProducts(productsData);
+
+        console.log("Clients data:", clientsData);
+        console.log("Products data:", productsData);
+      } catch (err) {
+        setError("Failed to load data");
+        console.error("Error loading data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
 
     if (isEditMode && id) {
-      setLoading(true)
+      setLoading(true);
       getQuote(id)
-        .then(quoteData => {
+        .then((quoteData) => {
+          // Handle date formatting safely
+          const validUntil = quoteData.validUntil
+            ? new Date(quoteData.validUntil).toISOString().split("T")[0]
+            : getDefaultValidUntilDate();
+
           reset({
             clientId: quoteData.clientId,
-            validUntil: new Date(quoteData.validUntil)
-              .toISOString()
-              .split("T")[0],
-            items: quoteData.items.map(item => ({
+            validUntil,
+            items: quoteData.items.map((item) => ({
               productId: item.productId,
               quantity: item.quantity,
               unitPrice: item.unitPrice,
-              discount: item.discount,
-              tax: item.tax
+              description: item.description || "",
             })),
             notes: quoteData.notes,
-            terms: quoteData.terms
-          })
-          setDiscount(quoteData.discount)
-          setTax(quoteData.tax)
+            terms: quoteData.terms,
+          });
+          setDiscount(quoteData.discount || 0);
+          setTax(quoteData.tax || 0);
         })
-        .catch(err => {
-          setError("Failed to load quote")
-          console.error(err)
+        .catch((err) => {
+          setError("Failed to load quote");
+          console.error(err);
         })
         .finally(() => {
-          setLoading(false)
-        })
+          setLoading(false);
+        });
     }
-  }, [id, isEditMode, reset])
+  }, [id, isEditMode, reset]);
 
   useEffect(() => {
     // Calculate totals when items change
-    let newSubtotal = 0
+    let newSubtotal = 0;
 
-    watchItems?.forEach(item => {
-      newSubtotal += calculateItemTotal(item)
-    })
+    watchItems?.forEach((item) => {
+      newSubtotal += calculateItemTotal(item);
+    });
 
-    setSubtotal(newSubtotal)
+    setSubtotal(newSubtotal);
 
-    const discountAmount = newSubtotal * (discount / 100)
-    const taxAmount = (newSubtotal - discountAmount) * (tax / 100)
-    setTotal(newSubtotal - discountAmount + taxAmount)
-  }, [watchItems, discount, tax])
+    const discountAmount = newSubtotal * (discount / 100);
+    const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
+    setTotal(newSubtotal - discountAmount + taxAmount);
+  }, [watchItems, discount, tax]);
 
   const handleProductSelect = (index, productId) => {
-    const product = products.find(p => p.id === productId)
+    const product = products.find((p) => p.id.toString() === productId);
     if (product) {
-      setValue(`items.${index}.unitPrice`, product.price)
+      setValue(`items.${index}.unitPrice`, product.price);
     }
-  }
+  };
 
   const addItem = () => {
-    append({ productId: "", quantity: 1, unitPrice: 0, discount: 0, tax: 0 })
-  }
+    append({ productId: "", quantity: 1, unitPrice: 0, description: "" });
+  };
 
-  const removeItem = index => {
+  const removeItem = (index) => {
     if (fields.length > 1) {
-      remove(index)
+      remove(index);
     }
-  }
+  };
 
-  const onSubmit = async (data, status = "draft") => {
+  const onSubmit = async (data, status = "DRAFT") => {
     try {
-      setLoading(true)
+      setLoading(true);
 
-      const client = clients.find(c => c.id === data.clientId)
+      const client = clients.find((c) => c.id.toString() === data.clientId);
 
       const quoteData = {
         clientId: data.clientId,
         clientName: client?.name || "",
-        items: data.items.map(item => {
-          const product = products.find(p => p.id === item.productId)
+        employeeId: localStorage.getItem("employeeId") || "1",
+        items: data.items.map((item) => {
+          const product = products.find(
+            (p) => p.id.toString() === item.productId
+          );
           return {
-            ...item,
-
-            // Temporary ID for new items
-            id: Math.random()
-              .toString(36)
-              .substring(2, 9),
-
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            description: item.description || "",
             productName: product?.name || "",
-            total: calculateItemTotal(item)
-          }
+          };
         }),
         subtotal,
         discount,
@@ -252,33 +245,26 @@ const QuoteForm = () => {
         terms: data.terms || "",
         status,
         validUntil: data.validUntil,
-        quoteNumber: isEditMode
-          ? ""
-          : `Q-${new Date()
-              .getTime()
-              .toString()
-              .substring(0, 10)}`,
-        createdAt: new Date().toISOString()
-      }
+      };
 
       if (isEditMode && id) {
-        await updateQuote(id, quoteData)
+        await updateQuote(id, quoteData);
       } else {
-        await createQuote(quoteData)
+        await createQuote(quoteData);
       }
 
-      navigate("/quotes")
+      navigate("/sales/quotes");
     } catch (err) {
-      setError("Failed to save quote")
-      console.error(err)
+      setError("Failed to save quote");
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (loading && isEditMode)
-    return <div className="flex justify-center p-8">Loading quote data...</div>
-  if (error) return <div className="text-red-500 p-4">{error}</div>
+    return <div className="flex justify-center p-8">Loading quote data...</div>;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
@@ -287,14 +273,14 @@ const QuoteForm = () => {
           {isEditMode ? "Edit Quote" : "Create New Quote"}
         </h1>
         <button
-          onClick={() => navigate("/quotes")}
+          onClick={() => navigate("/sales/quotes")}
           className="text-gray-600 hover:text-gray-800 flex items-center"
         >
           <ArrowLeft size={18} className="mr-1" /> Back to Quotes
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(data => onSubmit(data))}>
+      <form onSubmit={handleSubmit((data) => onSubmit(data))}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="space-y-4">
             <div>
@@ -312,9 +298,9 @@ const QuoteForm = () => {
                     }`}
                   >
                     <option value="">Select a client</option>
-                    {clients.map(client => (
+                    {clients.map((client) => (
                       <option key={client.id} value={client.id}>
-                        {client.name}
+                        {client.name || `Client ${client.id}`}
                       </option>
                     ))}
                   </select>
@@ -370,7 +356,7 @@ const QuoteForm = () => {
                     min="0"
                     max="100"
                     value={discount}
-                    onChange={e => setDiscount(Number(e.target.value))}
+                    onChange={(e) => setDiscount(Number(e.target.value))}
                     className="w-16 p-1 border border-gray-300 rounded-md"
                   />
                 </div>
@@ -387,7 +373,7 @@ const QuoteForm = () => {
                     min="0"
                     max="100"
                     value={tax}
-                    onChange={e => setTax(Number(e.target.value))}
+                    onChange={(e) => setTax(Number(e.target.value))}
                     className="w-16 p-1 border border-gray-300 rounded-md"
                   />
                 </div>
@@ -436,10 +422,7 @@ const QuoteForm = () => {
                     Unit Price
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Discount (%)
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Tax (%)
+                    Description
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     Total
@@ -449,9 +432,9 @@ const QuoteForm = () => {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {fields.map((field, index) => {
-                  const itemErrors = errors.items?.[index]
-                  const item = watchItems?.[index]
-                  const itemTotal = item ? calculateItemTotal(item) : 0
+                  const itemErrors = errors.items?.[index];
+                  const item = watchItems?.[index];
+                  const itemTotal = item ? calculateItemTotal(item) : 0;
 
                   return (
                     <tr key={field.id}>
@@ -462,9 +445,9 @@ const QuoteForm = () => {
                           render={({ field }) => (
                             <select
                               {...field}
-                              onChange={e => {
-                                field.onChange(e)
-                                handleProductSelect(index, e.target.value)
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleProductSelect(index, e.target.value);
                               }}
                               className={`w-full p-2 border rounded-md ${
                                 itemErrors?.productId
@@ -473,7 +456,7 @@ const QuoteForm = () => {
                               }`}
                             >
                               <option value="">Select a product</option>
-                              {products.map(product => (
+                              {products.map((product) => (
                                 <option key={product.id} value={product.id}>
                                   {product.name}
                                 </option>
@@ -497,7 +480,7 @@ const QuoteForm = () => {
                               type="number"
                               min="1"
                               {...field}
-                              onChange={e =>
+                              onChange={(e) =>
                                 field.onChange(Number(e.target.value))
                               }
                               className={`w-full p-2 border rounded-md ${
@@ -525,7 +508,7 @@ const QuoteForm = () => {
                               min="0"
                               step="0.01"
                               {...field}
-                              onChange={e =>
+                              onChange={(e) =>
                                 field.onChange(Number(e.target.value))
                               }
                               className={`w-full p-2 border rounded-md ${
@@ -545,58 +528,17 @@ const QuoteForm = () => {
 
                       <td className="px-4 py-2">
                         <Controller
-                          name={`items.${index}.discount`}
+                          name={`items.${index}.description`}
                           control={control}
                           render={({ field }) => (
                             <input
-                              type="number"
-                              min="0"
-                              max="100"
+                              type="text"
                               {...field}
-                              onChange={e =>
-                                field.onChange(Number(e.target.value))
-                              }
-                              className={`w-full p-2 border rounded-md ${
-                                itemErrors?.discount
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              }`}
+                              className="w-full p-2 border border-gray-300 rounded-md"
+                              placeholder="Item description"
                             />
                           )}
                         />
-                        {itemErrors?.discount && (
-                          <p className="mt-1 text-xs text-red-600">
-                            {itemErrors.discount.message}
-                          </p>
-                        )}
-                      </td>
-
-                      <td className="px-4 py-2">
-                        <Controller
-                          name={`items.${index}.tax`}
-                          control={control}
-                          render={({ field }) => (
-                            <input
-                              type="number"
-                              min="0"
-                              max="100"
-                              {...field}
-                              onChange={e =>
-                                field.onChange(Number(e.target.value))
-                              }
-                              className={`w-full p-2 border rounded-md ${
-                                itemErrors?.tax
-                                  ? "border-red-500"
-                                  : "border-gray-300"
-                              }`}
-                            />
-                          )}
-                        />
-                        {itemErrors?.tax && (
-                          <p className="mt-1 text-xs text-red-600">
-                            {itemErrors.tax.message}
-                          </p>
-                        )}
                       </td>
 
                       <td className="px-4 py-2 font-medium">
@@ -614,7 +556,7 @@ const QuoteForm = () => {
                         </button>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -665,7 +607,7 @@ const QuoteForm = () => {
         <div className="flex justify-end space-x-4">
           <button
             type="button"
-            onClick={() => navigate("/quotes")}
+            onClick={() => navigate("/sales/quotes")}
             className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
             disabled={loading}
           >
@@ -683,7 +625,7 @@ const QuoteForm = () => {
 
           <button
             type="button"
-            onClick={handleSubmit(data => onSubmit(data, "sent"))}
+            onClick={handleSubmit((data) => onSubmit(data, "SENT"))}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center"
             disabled={loading}
           >
@@ -693,7 +635,7 @@ const QuoteForm = () => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default QuoteForm
+export default QuoteForm;

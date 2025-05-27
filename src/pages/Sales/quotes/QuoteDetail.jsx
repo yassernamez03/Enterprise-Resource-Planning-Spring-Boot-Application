@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react"
-import { useParams, useNavigate, Link } from "react-router-dom"
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getQuote,
   updateQuote,
   convertQuoteToOrder
-} from "../../../services/Sales/quoteService"
-import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService"
+} from "../../../services/Sales/quoteService";
+import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService";
 import {
   ArrowLeft,
   ClipboardEdit,
@@ -15,118 +15,111 @@ import {
   Download,
   ShoppingCart,
   AlertTriangle
-} from "lucide-react"
-import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
+} from "lucide-react";
+import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 
 const statusLabels = {
-  draft: "Draft",
-  sent: "Sent",
-  accepted: "Accepted",
-  rejected: "Rejected"
-}
+  DRAFT: "Draft",
+  SENT: "Sent",
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+  CONVERTED_TO_ORDER: "Converted to Order"
+};
 
 const statusColors = {
-  draft: { bg: "bg-gray-200", text: "text-gray-800" },
-  sent: { bg: "bg-blue-100", text: "text-blue-800" },
-  accepted: { bg: "bg-green-100", text: "text-green-800" },
-  rejected: { bg: "bg-red-100", text: "text-red-800" }
-}
+  DRAFT: { bg: "bg-gray-200", text: "text-gray-800" },
+  SENT: { bg: "bg-blue-100", text: "text-blue-800" },
+  ACCEPTED: { bg: "bg-green-100", text: "text-green-800" },
+  REJECTED: { bg: "bg-red-100", text: "text-red-800" },
+  CONVERTED_TO_ORDER: { bg: "bg-purple-100", text: "text-purple-800" }
+};
 
 const QuoteDetail = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [quote, setQuote] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [statusLoading, setStatusLoading] = useState(null)
-  const [isConverting, setIsConverting] = useState(false)
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [quote, setQuote] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [statusLoading, setStatusLoading] = useState(null);
+  const [isConverting, setIsConverting] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     if (id) {
-      fetchQuote(id)
+      fetchQuote(id);
     }
-  }, [id])
+  }, [id]);
 
-  const fetchQuote = async quoteId => {
+  const fetchQuote = async (quoteId) => {
     try {
-      setLoading(true)
-      const data = await getQuote(quoteId)
-      setQuote(data)
+      setLoading(true);
+      const data = await getQuote(quoteId);
+      setQuote(data);
     } catch (err) {
       setError(
         `Failed to fetch quote details: ${err.message || "Unknown error"}`
-      )
-      console.error(err)
+      );
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleStatusChange = async status => {
-    if (!quote || !id) return
+  const handleStatusChange = async (status) => {
+    if (!quote || !id) return;
 
     try {
-      setStatusLoading(status)
-      await updateQuote(id, { status })
-      setQuote({ ...quote, status })
-    } catch (err) {
-      setError(
-        `Failed to update quote status: ${err.message || "Unknown error"}`
-      )
-      console.error(err)
+      setStatusLoading(status);
+      const updatedQuote = await updateQuote(id, { status });
+      setQuote(updatedQuote);
+    } catch (error) {
+      console.error("Status update error:", error);
+      setError(error.response?.data?.message || error.message || "Failed to update status");
     } finally {
-      setStatusLoading(null)
+      setStatusLoading(null);
     }
-  }
+  };
 
   const handleConvertToOrder = async () => {
-    if (!quote || !id) return
+    if (!quote || !id) return;
 
     try {
-      setIsConverting(true)
-      const result = await convertQuoteToOrder(id)
+      setIsConverting(true);
+      const result = await convertQuoteToOrder(id);
 
       if (!result || !result.orderId) {
-        throw new Error("No order ID returned from conversion")
+        throw new Error("No order ID returned from conversion");
       }
 
-      // For testing, let's show a success message before navigation
-      console.log(
-        `Quote converted to order successfully. Order ID: ${result.orderId}`
-      )
-
-      // Navigate to the newly created order
-      // Check if you have an orders route set up
-      navigate(`/sales/orders/${result.orderId}`)
+      navigate(`/sales/orders/${result.orderId}`);
     } catch (err) {
-      console.error("Error converting quote to order:", err)
+      console.error("Error converting quote to order:", err);
       setError(
-        `Failed to convert quote to order: ${err.message || "Unknown error"}`
-      )
-      setShowConfirmation(false)
+        `Failed to convert quote to order: ${err.response?.data?.message || err.message || "Unknown error"}`
+      );
+      setShowConfirmation(false);
     } finally {
-      setIsConverting(false)
+      setIsConverting(false);
     }
-  }
+  };
 
   const handleDownloadPdf = async () => {
-    if (!quote || !id) return
+    if (!quote || !id) return;
 
     try {
-      const pdfBlob = await generateQuotePdf(id)
-      downloadPdf(pdfBlob, `Quote-${quote.quoteNumber}.pdf`)
+      const pdfBlob = await generateQuotePdf(id);
+      downloadPdf(pdfBlob, `Quote-${quote.quoteNumber}.pdf`);
     } catch (err) {
-      setError(`Failed to generate PDF: ${err.message || "Unknown error"}`)
-      console.error(err)
+      setError(`Failed to generate PDF: ${err.message || "Unknown error"}`);
+      console.error(err);
     }
-  }
+  };
 
   if (loading)
     return (
       <div className="flex justify-center p-8">Loading quote details...</div>
-    )
+    );
   if (error)
     return (
       <div className="p-4 mb-4 bg-red-50 border-l-4 border-red-500">
@@ -141,15 +134,26 @@ const QuoteDetail = () => {
           Dismiss
         </button>
       </div>
-    )
-  if (!quote) return <div className="text-red-500 p-4">Quote not found</div>
+    );
+  if (!quote) return <div className="text-red-500 p-4">Quote not found</div>;
 
-  const isEditable = quote.status === "draft"
-  const canBeConverted = quote.status === "accepted"
+  // Handle status case sensitivity between backend enum and frontend display
+  const normalizedStatus = quote.status?.toUpperCase() || "DRAFT";
+  const isEditable = normalizedStatus === "DRAFT";
+  const canBeConverted = normalizedStatus === "ACCEPTED";
+  const isConverted = normalizedStatus === "CONVERTED_TO_ORDER";
+
+  // Calculate discount amount
+  const discountAmount = (quote.subtotal * quote.discount) / 100;
+  
+  // Calculate subtotal after discount
+  const subtotalAfterDiscount = quote.subtotal - discountAmount;
+  
+  // Calculate tax amount
+  const taxAmount = (subtotalAfterDiscount * quote.tax) / 100;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
-      {/* Using the ConfirmDialog component instead of custom modal */}
       <ConfirmDialog
         isOpen={showConfirmation}
         onCancel={() => setShowConfirmation(false)}
@@ -165,7 +169,7 @@ const QuoteDetail = () => {
         <div>
           <div className="flex items-center mb-2">
             <Link
-              to="/quotes"
+              to="/sales/quotes"
               className="text-gray-600 hover:text-gray-800 mr-2"
             >
               <ArrowLeft size={18} />
@@ -175,22 +179,24 @@ const QuoteDetail = () => {
             </h1>
             <span
               className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${
-                statusColors[quote.status].bg
-              } ${statusColors[quote.status].text}`}
+                statusColors[normalizedStatus]?.bg || "bg-gray-200"
+              } ${statusColors[normalizedStatus]?.text || "text-gray-800"}`}
             >
-              {statusLabels[quote.status]}
+              {statusLabels[normalizedStatus] || normalizedStatus}
             </span>
           </div>
           <p className="text-gray-600">
-            Created on {new Date(quote.createdAt).toLocaleDateString()} | Valid
-            until {new Date(quote.validUntil).toLocaleDateString()}
+            Created on {new Date(quote.createdAt).toLocaleDateString()} 
+            {quote.validUntil && (
+              <> | Valid until {new Date(quote.validUntil).toLocaleDateString()}</>
+            )}
           </p>
         </div>
 
         <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
           {isEditable && (
             <Link
-              to={`/quotes/${quote.id}/edit`}
+              to={`/sales/quotes/${quote.id}/edit`}
               className="btn bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-md flex items-center"
             >
               <ClipboardEdit size={18} className="mr-1" />
@@ -198,44 +204,44 @@ const QuoteDetail = () => {
             </Link>
           )}
 
-          {quote.status === "draft" && (
+          {normalizedStatus === "DRAFT" && (
             <button
-              onClick={() => handleStatusChange("sent")}
+              onClick={() => handleStatusChange("SENT")}
               className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center"
               disabled={!!statusLoading}
             >
               <Send size={18} className="mr-1" />
-              {statusLoading === "sent" ? "Sending..." : "Mark as Sent"}
+              {statusLoading === "SENT" ? "Sending..." : "Mark as Sent"}
             </button>
           )}
 
-          {quote.status === "sent" && (
+          {normalizedStatus === "SENT" && !isConverted && (
             <>
               <button
-                onClick={() => handleStatusChange("accepted")}
+                onClick={() => handleStatusChange("ACCEPTED")}
                 className="btn bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md flex items-center"
                 disabled={!!statusLoading}
               >
                 <FileCheck size={18} className="mr-1" />
-                {statusLoading === "accepted"
+                {statusLoading === "ACCEPTED"
                   ? "Updating..."
                   : "Mark as Accepted"}
               </button>
 
               <button
-                onClick={() => handleStatusChange("rejected")}
+                onClick={() => handleStatusChange("REJECTED")}
                 className="btn bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md flex items-center"
                 disabled={!!statusLoading}
               >
                 <FileX size={18} className="mr-1" />
-                {statusLoading === "rejected"
+                {statusLoading === "REJECTED"
                   ? "Updating..."
                   : "Mark as Rejected"}
               </button>
             </>
           )}
 
-          {canBeConverted && (
+          {canBeConverted && !isConverted && (
             <button
               onClick={() => setShowConfirmation(true)}
               className="btn bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-md flex items-center"
@@ -249,6 +255,7 @@ const QuoteDetail = () => {
           <button
             onClick={handleDownloadPdf}
             className="btn bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-md flex items-center"
+            disabled={isConverting || statusLoading}
           >
             <Download size={18} className="mr-1" />
             Download PDF
@@ -257,7 +264,7 @@ const QuoteDetail = () => {
       </div>
 
       {/* Rest of your component remains the same */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-gray-50 p-4 rounded-md">
           <h3 className="text-sm font-medium text-gray-500 uppercase mb-2">
             Client
@@ -270,7 +277,7 @@ const QuoteDetail = () => {
             Total Amount
           </h3>
           <p className="font-medium text-gray-800 text-2xl">
-            ${quote.total.toFixed(2)}
+            ${quote.total?.toFixed(2)}
           </p>
         </div>
 
@@ -281,24 +288,15 @@ const QuoteDetail = () => {
           <div className="space-y-1">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal:</span>
-              <span>${quote.subtotal.toFixed(2)}</span>
+              <span>${quote.subtotal?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Discount:</span>
-              <span>
-                ${((quote.subtotal * quote.discount) / 100).toFixed(2)}
-              </span>
+              <span className="text-gray-600">Discount ({quote.discount}%):</span>
+              <span>${discountAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Tax:</span>
-              <span>
-                $
-                {(
-                  ((quote.subtotal - (quote.subtotal * quote.discount) / 100) *
-                    quote.tax) /
-                  100
-                ).toFixed(2)}
-              </span>
+              <span className="text-gray-600">Tax ({quote.tax}%):</span>
+              <span>${taxAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -319,12 +317,6 @@ const QuoteDetail = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Unit Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Discount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tax
-                </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Total
                 </th>
@@ -337,65 +329,56 @@ const QuoteDetail = () => {
                     <div className="font-medium text-gray-900">
                       {item.productName}
                     </div>
+                    {item.description && (
+                      <div className="text-sm text-gray-500">{item.description}</div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                     {item.quantity}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    ${item.unitPrice.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.discount}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.tax}%
+                    ${item.unitPrice?.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
-                    ${item.total.toFixed(2)}
+                    ${item.subtotal?.toFixed(2)}
                   </td>
                 </tr>
               ))}
             </tbody>
             <tfoot className="bg-gray-50">
               <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
+                <td colSpan={3} className="px-6 py-3 text-right font-medium">
                   Subtotal
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  ${quote.subtotal.toFixed(2)}
+                  ${quote.subtotal?.toFixed(2)}
                 </td>
               </tr>
               <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
+                <td colSpan={3} className="px-6 py-3 text-right font-medium">
                   Discount ({quote.discount}%)
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  -${((quote.subtotal * quote.discount) / 100).toFixed(2)}
+                  -${discountAmount.toFixed(2)}
                 </td>
               </tr>
               <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
+                <td colSpan={3} className="px-6 py-3 text-right font-medium">
                   Tax ({quote.tax}%)
                 </td>
                 <td className="px-6 py-3 text-right font-medium">
-                  $
-                  {(
-                    ((quote.subtotal -
-                      (quote.subtotal * quote.discount) / 100) *
-                      quote.tax) /
-                    100
-                  ).toFixed(2)}
+                  ${taxAmount.toFixed(2)}
                 </td>
               </tr>
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={3}
                   className="px-6 py-3 text-right text-lg font-semibold"
                 >
                   Total
                 </td>
                 <td className="px-6 py-3 text-right text-lg font-semibold">
-                  ${quote.total.toFixed(2)}
+                  ${quote.total?.toFixed(2)}
                 </td>
               </tr>
             </tfoot>
@@ -425,7 +408,7 @@ const QuoteDetail = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default QuoteDetail
+export default QuoteDetail;
