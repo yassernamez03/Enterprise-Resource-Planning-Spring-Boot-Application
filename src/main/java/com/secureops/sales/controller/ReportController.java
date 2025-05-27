@@ -26,14 +26,6 @@ public class ReportController {
         return ResponseEntity.ok(reportService.getSalesSummary(startDate, endDate));
     }
 
-    @GetMapping("/employee-performance/{employeeId}")
-    public ResponseEntity<EmployeePerformanceReport> getEmployeePerformance(
-            @PathVariable Long employeeId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-        return ResponseEntity.ok(reportService.getEmployeePerformance(employeeId, startDate, endDate));
-    }
-
     @GetMapping("/client-spending/{clientId}")
     public ResponseEntity<ClientSpendingReport> getClientSpendingReport(
             @PathVariable Long clientId,

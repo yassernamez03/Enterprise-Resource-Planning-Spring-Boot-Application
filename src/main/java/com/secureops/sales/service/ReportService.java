@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 public interface ReportService {
     SalesSummaryReport getSalesSummary(LocalDateTime startDate, LocalDateTime endDate);
-    EmployeePerformanceReport getEmployeePerformance(Long employeeId, LocalDateTime startDate, LocalDateTime endDate);
     ClientSpendingReport getClientSpendingReport(Long clientId, LocalDateTime startDate, LocalDateTime endDate);
     ProductSalesReport getProductSalesReport(LocalDateTime startDate, LocalDateTime endDate);
 }

@@ -18,8 +18,6 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
     List<Quote> findByClientId(Long clientId);
 
-    List<Quote> findByEmployeeId(Long employeeId);
-
     List<Quote> findByStatus(QuoteStatus status);
 
     @Query("SELECT MAX(q.id) FROM Quote q")
@@ -33,14 +31,8 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
     @Query("SELECT COUNT(q) FROM Quote q WHERE q.status = :status AND q.createdDate BETWEEN :startDate AND :endDate")
     Long countByStatusAndDateRange(@Param("status") QuoteStatus status, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-//    ScopedValue<Integer> findMaxSequenceByPrefix(String basePrefix);
-
     @Query("SELECT q FROM Quote q WHERE q.createdDate BETWEEN :startDate AND :endDate")
     List<Quote> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
-
-    @Query("SELECT q FROM Quote q WHERE q.employee.id = :employeeId AND q.createdDate BETWEEN :startDate AND :endDate")
-    List<Quote> findByEmployeeIdAndCreatedDateBetween(
-            Long employeeId, LocalDateTime startDate, LocalDateTime endDate);
 
     Optional<Quote> findTopByOrderByIdDesc();
 }

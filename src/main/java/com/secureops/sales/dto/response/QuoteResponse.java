@@ -20,8 +20,6 @@ public class QuoteResponse {
     private LocalDateTime createdDate;
     private Long clientId;
     private String clientName;
-    private Long employeeId;
-    private String employeeName;
     private List<QuoteItemResponse> items;
     private BigDecimal totalAmount;
     private QuoteStatus status;

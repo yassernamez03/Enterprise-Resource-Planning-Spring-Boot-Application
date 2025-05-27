@@ -20,8 +20,6 @@ public class OrderResponse {
     private LocalDateTime createdDate;
     private Long clientId;
     private String clientName;
-    private Long employeeId;
-    private String employeeName;
     private Long quoteId;
     private String quoteNumber;
     private List<OrderItemResponse> items;

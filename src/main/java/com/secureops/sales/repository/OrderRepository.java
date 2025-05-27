@@ -18,8 +18,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByClientId(Long clientId);
 
-    List<Order> findByEmployeeId(Long employeeId);
-
     List<Order> findByStatus(OrderStatus status);
     
     Optional<Order> findByQuoteId(Long quoteId);
@@ -35,14 +33,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status AND o.createdDate BETWEEN :startDate AND :endDate")
     Long countByStatusAndDateRange(@Param("status") OrderStatus status, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-//    ScopedValue<Integer> findMaxSequenceByPrefix(String basePrefix);
-
     @Query("SELECT o FROM Order o WHERE o.createdDate BETWEEN :startDate AND :endDate")
     List<Order> findByCreatedDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT o FROM Order o WHERE o.employee.id = :employeeId AND o.createdDate BETWEEN :startDate AND :endDate")
-    List<Order> findByEmployeeIdAndCreatedDateBetween(
-            Long employeeId, LocalDateTime startDate, LocalDateTime endDate);
     @Query("SELECT o FROM Order o WHERE o.client.id = :clientId AND o.createdDate BETWEEN :startDate AND :endDate")
     List<Order> findByClientIdAndCreatedDateBetween(
             @Param("clientId") Long clientId,

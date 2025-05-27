@@ -1,6 +1,7 @@
 package com.secureops.sales.controller;
 
 import com.secureops.sales.dto.request.ProductRequest;
+import com.secureops.sales.dto.response.ClientResponse;
 import com.secureops.sales.dto.response.ProductResponse;
 import com.secureops.sales.service.ProductService;
 import lombok.RequiredArgsConstructor;
