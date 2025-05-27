@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
-import { getInvoice } from "../../../services/Sales/invoiceService"
+import { getInvoice, recordPayment } from "../../../services/Sales/invoiceService"
 import { generateInvoicePdf, downloadPdf } from "../../../services/Sales/pdfService"
 import { ArrowLeft, DollarSign, Download, MailOpen } from "lucide-react"
 
+// Map backend status enum values to frontend display values
 const statusLabels = {
   pending: "Pending",
-  partial: "Partially Paid",
+  partial: "Partially Paid", 
   paid: "Paid",
   overdue: "Overdue"
 }
 
+// These are the normalized lowercase status values we use in the frontend
 const statusColors = {
   pending: { bg: "bg-yellow-100", text: "text-yellow-800" },
   partial: { bg: "bg-blue-100", text: "text-blue-800" },
@@ -20,10 +22,12 @@ const statusColors = {
 
 const InvoiceDetail = () => {
   const { id } = useParams()
-
   const [invoice, setInvoice] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [paymentMethod, setPaymentMethod] = useState("CREDIT_CARD")
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -55,17 +59,37 @@ const InvoiceDetail = () => {
       console.error(err)
     }
   }
-
   if (loading)
     return (
       <div className="flex justify-center p-8">Loading invoice details...</div>
     )
   if (error) return <div className="text-red-500 p-4">{error}</div>
   if (!invoice) return <div className="text-red-500 p-4">Invoice not found</div>
-
+  
+  // Determine payment status based on backend status
   const canRecordPayment = invoice.status !== "paid"
   const isPastDue =
     new Date(invoice.dueDate) < new Date() && invoice.status !== "paid"
+
+  const handleRecordPayment = async () => {
+    if (!paymentMethod) return
+    
+    try {
+      setIsSubmitting(true)
+      await recordPayment(invoice.id, paymentMethod)
+      // Refetch invoice to get updated status
+      await fetchInvoice(invoice.id)
+      setIsPaymentModalOpen(false)
+    } catch (err) {
+      setError("Failed to record payment")
+      console.error(err)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+  
+  // Ensure we use the correct status for the frontend display
+  const displayStatus = invoice.status.toLowerCase()
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
@@ -80,34 +104,29 @@ const InvoiceDetail = () => {
             </Link>
             <h1 className="text-2xl font-semibold text-gray-800">
               Invoice #{invoice.invoiceNumber}
-            </h1>
-            <span
+            </h1>            <span
               className={`ml-4 px-3 py-1 rounded-full text-sm font-medium ${
-                statusColors[invoice.status].bg
-              } ${statusColors[invoice.status].text}`}
+                statusColors[displayStatus]?.bg || statusColors.pending.bg
+              } ${statusColors[displayStatus]?.text || statusColors.pending.text}`}
             >
-              {statusLabels[invoice.status]}
+              {statusLabels[displayStatus] || invoice.status}
             </span>
           </div>
-          <p className="text-gray-600">
-            Created on {new Date(invoice.createdAt).toLocaleDateString()} | Due
-            on {new Date(invoice.dueDate).toLocaleDateString()}
+          <p className="text-gray-600">            Created on {new Date(invoice.createdAt).toLocaleDateString()} | Due
+            on {new Date(invoice.dueDate || invoice.paymentDueDate).toLocaleDateString()}
             {isPastDue && <span className="text-red-600 ml-2">OVERDUE</span>}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-          {canRecordPayment && (
-            <Link
-              to={`/sales/invoices/${invoice.id}/payment`}
+        <div className="flex flex-wrap gap-2 mt-4 md:mt-0">          {canRecordPayment && (
+            <button
+              onClick={() => setIsPaymentModalOpen(true)}
               className="btn bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md flex items-center"
             >
               <DollarSign size={18} className="mr-1" />
               Record Payment
-            </Link>
-          )}
-
-          <button
+            </button>
+          )}          <button
             onClick={handleDownloadPdf}
             className="btn bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-md flex items-center"
           >
@@ -119,6 +138,48 @@ const InvoiceDetail = () => {
             <MailOpen size={18} className="mr-1" />
             Email Invoice
           </button>
+          
+          {/* Payment Modal */}
+          {isPaymentModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <h2 className="text-xl font-semibold mb-4">Record Payment</h2>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Payment Method
+                  </label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  >
+                    <option value="CREDIT_CARD">Credit Card</option>
+                    <option value="BANK_TRANSFER">Bank Transfer</option>
+                    <option value="CHECK">Check</option>
+                    <option value="CASH">Cash</option>
+                    <option value="PAYPAL">PayPal</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                <div className="flex justify-end space-x-4">
+                  <button
+                    onClick={() => setIsPaymentModalOpen(false)}
+                    className="btn bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleRecordPayment}
+                    className="btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Processing..." : "Record Payment"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -133,22 +194,21 @@ const InvoiceDetail = () => {
         <div className="bg-gray-50 p-4 rounded-md">
           <h3 className="text-sm font-medium text-gray-500 uppercase mb-2">
             Payment Status
-          </h3>
-          <div className="space-y-1">
+          </h3>              <div className="space-y-1">
             <div className="flex justify-between">
               <span className="text-gray-600">Total:</span>
-              <span className="font-medium">${invoice.total.toFixed(2)}</span>
+              <span className="font-medium">${parseFloat(invoice.total || 0).toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Paid:</span>
               <span className="font-medium">
-                ${invoice.amountPaid.toFixed(2)}
+                ${parseFloat(invoice.amountPaid || 0).toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Due:</span>
               <span className="font-medium text-lg text-red-600">
-                ${invoice.amountDue.toFixed(2)}
+                ${parseFloat(invoice.amountDue || 0).toFixed(2)}
               </span>
             </div>
           </div>
@@ -194,73 +254,39 @@ const InvoiceDetail = () => {
                   Total
                 </th>
               </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {invoice.items.map(item => (
-                <tr key={item.id}>
+            </thead>            <tbody className="bg-white divide-y divide-gray-200">
+              {(invoice.items || []).map((item, index) => (
+                <tr key={item?.id || index}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="font-medium text-gray-900">
-                      {item.productName}
+                      {item?.productName || 'Item'}
                     </div>
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                    {item?.quantity || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.quantity}
+                    ${(item?.unitPrice || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    ${item.unitPrice.toFixed(2)}
+                    {item?.discount || 0}%
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.discount}%
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                    {item.tax}%
+                    {item?.tax || 0}%
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
-                    ${item.total.toFixed(2)}
+                    ${(item?.total || 0).toFixed(2)}
                   </td>
                 </tr>
               ))}
-            </tbody>
-            <tfoot className="bg-gray-50">
-              <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
-                  Subtotal
-                </td>
-                <td className="px-6 py-3 text-right font-medium">
-                  ${invoice.subtotal.toFixed(2)}
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
-                  Discount ({invoice.discount}%)
-                </td>
-                <td className="px-6 py-3 text-right font-medium">
-                  -${((invoice.subtotal * invoice.discount) / 100).toFixed(2)}
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={5} className="px-6 py-3 text-right font-medium">
-                  Tax ({invoice.tax}%)
-                </td>
-                <td className="px-6 py-3 text-right font-medium">
-                  $
-                  {(
-                    ((invoice.subtotal -
-                      (invoice.subtotal * invoice.discount) / 100) *
-                      invoice.tax) /
-                    100
-                  ).toFixed(2)}
-                </td>
-              </tr>
+            </tbody>                <tfoot className="bg-gray-50">
               <tr>
                 <td
                   colSpan={5}
                   className="px-6 py-3 text-right text-lg font-semibold"
                 >
                   Total
-                </td>
-                <td className="px-6 py-3 text-right text-lg font-semibold">
-                  ${invoice.total.toFixed(2)}
+                </td>                <td className="px-6 py-3 text-right text-lg font-semibold">
+                  ${(invoice.total || 0).toFixed(2)}
                 </td>
               </tr>
             </tfoot>
@@ -271,8 +297,7 @@ const InvoiceDetail = () => {
       <div className="mb-8">
         <h2 className="text-lg font-medium text-gray-800 mb-4">
           Payment History
-        </h2>
-        {invoice.payments.length === 0 ? (
+        </h2>        {(!invoice.payments || invoice.payments.length === 0) ? (
           <div className="text-center py-4 text-gray-500 bg-gray-50 rounded-md">
             No payments recorded yet.
           </div>
@@ -294,20 +319,19 @@ const InvoiceDetail = () => {
                     Notes
                   </th>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {invoice.payments.map(payment => (
-                  <tr key={payment.id}>
+              </thead>              <tbody className="bg-white divide-y divide-gray-200">
+                {(invoice.payments || []).map((payment, index) => (
+                  <tr key={payment?.id || index}>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {new Date(payment.date).toLocaleDateString()}
+                      {payment?.date ? new Date(payment.date).toLocaleDateString() : 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-medium">
-                      ${payment.amount.toFixed(2)}
+                      ${(payment?.amount || 0).toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                      {payment.method}
+                      {payment?.method || 'N/A'}
                     </td>
-                    <td className="px-6 py-4 text-gray-600">{payment.notes}</td>
+                    <td className="px-6 py-4 text-gray-600">{payment?.notes || ''}</td>
                   </tr>
                 ))}
               </tbody>
