@@ -15,15 +15,15 @@ import {
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 
 const statusLabels = {
-  PENDING: "Pending",
   IN_PROCESS: "In Process",
+  INVOICED: "Invoiced",
   COMPLETED: "Completed",
   CANCELLED: "Cancelled"
 };
 
 const statusColors = {
-  PENDING: "bg-yellow-100 text-yellow-800",
   IN_PROCESS: "bg-blue-100 text-blue-800",
+  INVOICED: "bg-yellow-100 text-yellow-800",
   COMPLETED: "bg-green-100 text-green-800",
   CANCELLED: "bg-red-100 text-red-800"
 };
@@ -75,7 +75,6 @@ const OrderList = () => {
       setLoading(false);
     }
   };
-
   const filterOrders = () => {
     let filtered = [...orders];
 
@@ -88,7 +87,7 @@ const OrderList = () => {
     }
 
     if (statusFilter) {
-      filtered = filtered.filter(order => order.status === statusFilter);
+      filtered = filtered.filter(order => order.status.toUpperCase() === statusFilter);
     }
 
     setFilteredOrders(filtered);
@@ -246,17 +245,15 @@ const OrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap font-medium">
                     ${order.totalAmount.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </td>                  <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        statusColors[order.status] || "bg-gray-200 text-gray-800"
+                        statusColors[order.status.toUpperCase()] || "bg-gray-200 text-gray-800"
                       }`}
                     >
-                      {statusLabels[order.status] || order.status}
+                      {statusLabels[order.status.toUpperCase()] || order.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -267,8 +264,7 @@ const OrderList = () => {
                         title="View"
                       >
                         <FileText size={18} />
-                      </Link>
-                      {order.status !== "COMPLETED" && (
+                      </Link>                      {order.status.toUpperCase() !== "COMPLETED" && (
                         <Link
                           to={`/sales/orders/${order.id}/edit`}
                           className="text-amber-600 hover:text-amber-900"
@@ -283,8 +279,7 @@ const OrderList = () => {
                         title="Download PDF"
                       >
                         <Download size={18} />
-                      </button>
-                      {order.status === "COMPLETED" && (
+                      </button>                      {order.status.toUpperCase() === "COMPLETED" && (
                         <Link
                           to={`/sales/orders/${order.id}/invoice`}
                           className="text-purple-600 hover:text-purple-900"
@@ -293,7 +288,7 @@ const OrderList = () => {
                           <FileInvoice size={18} />
                         </Link>
                       )}
-                      {order.status !== "COMPLETED" && order.status !== "CANCELLED" && (
+                      {order.status.toUpperCase() !== "COMPLETED" && order.status.toUpperCase() !== "CANCELLED" && (
                         <button
                           onClick={() => handleDeletePrompt(order.id, order.orderNumber)}
                           className="text-red-600 hover:text-red-900"
