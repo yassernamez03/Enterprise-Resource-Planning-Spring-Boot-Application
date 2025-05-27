@@ -492,7 +492,7 @@ const AccountPage = () => {
                     </Link>
                   </div>
                 ) : (
-                  events.slice(0, 3).map((event) => (
+                  events.slice(0, 4).map((event) => (
                     <div
                       key={event.id}
                       className="p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors duration-150"

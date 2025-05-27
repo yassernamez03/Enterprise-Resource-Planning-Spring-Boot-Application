@@ -11,13 +11,14 @@ export default function Home_Page() {
   const { showInfoToast } = useToast();
 
   // App data with route paths added
-  const apps = [
+  const allApps = [
     {
       id: 1,
       name: "Calendar",
       color: "bg-emerald-500",
       icon: "📅",
       path: "/calander_page",
+      adminOnly: false,
     },
     {
       id: 2,
@@ -25,16 +26,21 @@ export default function Home_Page() {
       color: "bg-indigo-500",
       icon: "💬",
       path: "/chat_page",
+      adminOnly: false,
     },
-    { id: 3, name: "Sales", color: "bg-pink-500", icon: "🏷️", path: "/sales" },
+    { id: 3, name: "Sales", color: "bg-pink-500", icon: "🏷️", path: "/sales", adminOnly: true },
     {
       id: 4,
       name: "Human Resources",
       color: "bg-yellow-500",
       icon: "👥",
       path: "/Employee",
+      adminOnly: true,
     },
   ];
+
+  // Filter apps based on user role
+  const apps = allApps.filter((app) => !app.adminOnly || user?.role === "ADMIN");
 
   // Handle clicks outside the menu to close it
   useEffect(() => {
@@ -151,32 +157,7 @@ export default function Home_Page() {
                       </svg>
                       Account details
                     </Link>
-                    <Link
-                      to="/settings"
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center transition-colors duration-150"
-                    >
-                      <svg
-                        className="mr-2 h-5 w-5 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        ></path>
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        ></path>
-                      </svg>
-                      Settings
-                    </Link>
+                    
                     {user?.role === "ADMIN" && (
                       <>
                         <Link
