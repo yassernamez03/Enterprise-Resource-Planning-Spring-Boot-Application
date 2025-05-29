@@ -31,6 +31,8 @@ const AccountPage = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loadingTasks, setLoadingTasks] = useState(false);
+  const [loadingEvents, setLoadingEvents] = useState(false);
 
   const [user, setUser] = useState({
     name: "",
@@ -40,6 +42,51 @@ const AccountPage = () => {
 
   const [tasks, setTasks] = useState([]);
   const [events, setEvents] = useState([]);
+
+  // Transform tasks data from API to expected format
+  const transformTasks = (apiTasks) => {
+    if (!Array.isArray(apiTasks)) return [];
+
+    return apiTasks.map((task) => ({
+      id: task.id,
+      title: task.title || "Untitled Task",
+      description: task.description || "",
+      deadline: task.dueDate
+        ? new Date(task.dueDate).toLocaleDateString()
+        : "No deadline",
+      priority: task.priority || "Medium",
+      status: task.status === "COMPLETED" ? "completed" : "pending",
+      category: task.category || "General",
+      isLoading: false,
+    }));
+  };
+
+  // Transform events data from API to expected format
+  const transformEvents = (apiEvents) => {
+    if (!Array.isArray(apiEvents)) return [];
+
+    const now = new Date();
+
+    return apiEvents
+      .map((event) => ({
+        id: event.id,
+        title: event.title || "Untitled Event",
+        description: event.description || "",
+        date: event.startTime
+          ? new Date(event.startTime).toLocaleDateString()
+          : "",
+        time: event.startTime
+          ? new Date(event.startTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "",
+        type: event.type?.toLowerCase() || "event",
+        startTime: event.startTime ? new Date(event.startTime) : null,
+      }))
+      .filter((event) => event.startTime && event.startTime > now) // Only future events
+      .sort((a, b) => a.startTime - b.startTime); // Sort by date, earliest first
+  };
 
   // Fetch user data - using useCallback to prevent excessive re-renders
   const fetchUserData = useCallback(async () => {
@@ -51,18 +98,10 @@ const AccountPage = () => {
       const profileData = await accountService.getProfile();
 
       setUser({
-        name: profileData.fullName || "",
+        name: profileData.fullName || profileData.name || "",
         email: profileData.email || "",
-        avatar: profileData.avatarUrl || "", // Update this with your actual field name
+        avatar: profileData.avatarUrl || profileData.avatar || "",
       });
-
-      // Get tasks (this would need a backend endpoint)
-      const tasksResponse = await accountService.getTasks();
-      setTasks(tasksResponse.data || []);
-
-      // Get events (this would need a backend endpoint)
-      const eventsResponse = await accountService.getEvents();
-      setEvents(eventsResponse.data || []);
     } catch (err) {
       console.error("Error fetching user data:", err);
       setError("Failed to load user data. Please try again.");
@@ -72,10 +111,44 @@ const AccountPage = () => {
     }
   }, [showErrorToast]);
 
+  // Fetch tasks separately
+  const fetchTasks = useCallback(async () => {
+    setLoadingTasks(true);
+    try {
+      const tasksResponse = await accountService.getTasks();
+      const transformedTasks = transformTasks(tasksResponse);
+      setTasks(transformedTasks);
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+      showErrorToast("Failed to load tasks");
+      setTasks([]);
+    } finally {
+      setLoadingTasks(false);
+    }
+  }, [showErrorToast]);
+
+  // Fetch events separately
+  const fetchEvents = useCallback(async () => {
+    setLoadingEvents(true);
+    try {
+      const eventsResponse = await accountService.getEvents();
+      const transformedEvents = transformEvents(eventsResponse);
+      setEvents(transformedEvents);
+    } catch (err) {
+      console.error("Error fetching events:", err);
+      showErrorToast("Failed to load events");
+      setEvents([]);
+    } finally {
+      setLoadingEvents(false);
+    }
+  }, [showErrorToast]);
+
   // Load user data on component mount
   useEffect(() => {
     fetchUserData();
-  }, [fetchUserData]);
+    fetchTasks();
+    fetchEvents();
+  }, [fetchUserData, fetchTasks, fetchEvents]);
 
   // Handler for account data update from EditAccountDetails
   const handleSaveAccountDetails = (updatedData) => {
@@ -231,11 +304,17 @@ const AccountPage = () => {
             </h1>
           </div>
           <div className="flex items-center">
-            <img
-              src={user.avatar}
-              alt={`${user.name || "User"}'s profile`}
-              className="w-8 h-8 rounded-full object-cover"
-            />
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={`${user.name || "User"}'s profile`}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm">
+                {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+              </div>
+            )}
             <span className="ml-2 text-slate-600">{user.email}</span>
           </div>
         </header>
@@ -244,7 +323,11 @@ const AccountPage = () => {
           <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md">
             <p>{error}</p>
             <button
-              onClick={() => fetchUserData()}
+              onClick={() => {
+                fetchUserData();
+                fetchTasks();
+                fetchEvents();
+              }}
               className="text-red-700 underline mt-2 hover:text-red-900 transition-colors"
             >
               Try again
@@ -264,12 +347,14 @@ const AccountPage = () => {
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
-                  ) : (
+                  ) : user.name ? (
                     user.name.charAt(0).toUpperCase()
+                  ) : (
+                    "U"
                   )}
                 </div>
                 <h2 className="text-xl font-medium text-slate-800">
-                  {user.name}
+                  {user.name || "User"}
                 </h2>
                 <p className="text-slate-500">{user.email}</p>
               </div>
@@ -286,9 +371,9 @@ const AccountPage = () => {
                     className="flex items-center p-2 hover:bg-slate-50 rounded cursor-pointer transition-colors duration-150"
                   >
                     <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">
-                      <Key size={16} />
+                      <Edit2 size={16} />
                     </div>
-                    <span className="ml-3 text-slate-600">Security</span>
+                    <span className="ml-3 text-slate-600">Edit Profile</span>
                   </div>
                   <div
                     onClick={() => setCurrentView("allTasks")}
@@ -337,7 +422,9 @@ const AccountPage = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-500">Name</p>
-                    <p className="text-slate-800">{user.name}</p>
+                    <p className="text-slate-800">
+                      {user.name || "Not provided"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex border-b pb-4">
@@ -386,7 +473,11 @@ const AccountPage = () => {
               </div>
 
               <div className="space-y-3">
-                {events.length === 0 ? (
+                {loadingEvents ? (
+                  <div className="text-center py-4">
+                    <LoadingSpinner size="small" text="Loading events..." />
+                  </div>
+                ) : events.length === 0 ? (
                   <div className="text-center py-8">
                     <Calendar
                       size={40}
@@ -401,7 +492,7 @@ const AccountPage = () => {
                     </Link>
                   </div>
                 ) : (
-                  events.map((event) => (
+                  events.slice(0, 4).map((event) => (
                     <div
                       key={event.id}
                       className="p-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors duration-150"
@@ -456,7 +547,11 @@ const AccountPage = () => {
               </div>
 
               <div className="space-y-3">
-                {tasks.length === 0 ? (
+                {loadingTasks ? (
+                  <div className="text-center py-4">
+                    <LoadingSpinner size="small" text="Loading tasks..." />
+                  </div>
+                ) : tasks.length === 0 ? (
                   <div className="text-center py-8">
                     <CheckSquare
                       size={40}

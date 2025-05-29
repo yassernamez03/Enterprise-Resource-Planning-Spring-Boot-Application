@@ -14,7 +14,7 @@ const StatsCard = ({ title, value, icon, change, className = "" }) => {
 
       <div className="flex items-end">
         <p className="text-2xl font-bold text-gray-800">
-          {typeof value === "number" && !isNaN(value)
+          {typeof value === "number" && !Number.isNaN(value)
             ? value.toLocaleString()
             : value}
         </p>

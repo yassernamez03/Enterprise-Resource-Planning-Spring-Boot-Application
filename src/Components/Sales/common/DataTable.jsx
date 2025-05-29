@@ -208,9 +208,7 @@ function DataTable({
                   (_, idx) => {
                     // Logic to determine which pages to show
                     let pageNum
-                    if (totalPages <= 5) {
-                      pageNum = idx + 1
-                    } else if (currentPage <= 3) {
+                    if (totalPages <= 5 || currentPage <= 3) {
                       pageNum = idx + 1
                     } else if (currentPage >= totalPages - 2) {
                       pageNum = totalPages - 4 + idx

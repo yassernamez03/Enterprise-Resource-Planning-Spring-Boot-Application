@@ -36,6 +36,7 @@ const MonthView = () => {
   };
   
   const renderDayEvents = (date) => {
+    console.log(events);
     const dayEvents = getEventsForDay(events, date);
     
     if (dayEvents.length === 0) return null;
