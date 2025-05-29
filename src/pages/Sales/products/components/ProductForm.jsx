@@ -79,10 +79,11 @@ const ProductForm = ({ initialData, onSubmit, onCancel, loading = false }) => {
         
         // Fallback to mock categories if API fails
         const MOCK_CATEGORIES = [
-          { id: 1, name: "Electronics" },
-          { id: 2, name: "Office Supplies" },
-          { id: 3, name: "Furniture" },
-          { id: 4, name: "Software" }
+          { id: 1, name: "Promotional" },
+          { id: 2, name: "Stationery" },
+          { id: 3, name: "Marketing Materials" },
+          { id: 4, name: "Signage" },
+          { id: 5, name: "Documents" }
         ];
         setCategories(MOCK_CATEGORIES);
       } catch (error) {

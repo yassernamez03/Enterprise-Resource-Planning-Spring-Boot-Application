@@ -87,11 +87,11 @@ const productService = {
     const backendProduct = {
       name: productData.name,
       description: productData.description,
-      unitPrice: productData.price,
+      unitPrice: productData.unitPrice,
       sku: productData.sku,
       stock: productData.inStock,
       minStock: productData.minStock,
-      active: productData.isActive,
+      active: productData.active,
       category: productData.category?.name || productData.category
     };
     
