@@ -17,13 +17,13 @@ const CreateClient = () => {
 
       // In a real app, call the create API
       const newClient = await clientService.createClient(data);
-      navigate(`/clients/create/${newClient.id}`);
+      // navigate(`/clients/create/${newClient.id}`);
 
       // For development, just wait a bit then redirect
       setTimeout(() => {
         showNotification("Client created successfully", "success")
         navigate("/sales/clients")
-      }, 1000)
+      }, 500)
     } catch (error) {
       console.error("Error creating client:", error)
       showNotification("Failed to create client", "error")

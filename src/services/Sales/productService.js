@@ -84,16 +84,19 @@ const productService = {
 
   createProduct: async (productData) => {
     // Transform frontend data to match backend expected properties
+    console.log("Creating product with data 3:", productData);
+    
     const backendProduct = {
       name: productData.name,
       description: productData.description,
-      unitPrice: productData.price,
+      unitPrice: productData.unitPrice,
       sku: productData.sku,
       stock: productData.inStock,
       minStock: productData.minStock,
-      active: productData.isActive,
+      active: productData.active,
       category: productData.category?.name || productData.category
     };
+    console.log("Creating product with data:", backendProduct);
     
     return apiService.post(`${BASE_URL}/create`, backendProduct);
   },
