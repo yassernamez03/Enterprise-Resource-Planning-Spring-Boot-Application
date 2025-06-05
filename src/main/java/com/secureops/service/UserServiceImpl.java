@@ -78,7 +78,8 @@ public class UserServiceImpl implements UserService {
             user.setRole(User.UserRole.USER);
 
             User savedUser = userRepository.save(user);
-            logger.info("User registered successfully: {} (ID: {}) from IP: {}", maskedEmail, savedUser.getId(), clientIp);
+            logger.info("User registered successfully: {} (ID: {}) from IP: {}", maskedEmail, savedUser.getId(),
+                    clientIp);
 
             logService.createLog(
                     AppConstants.LOG_ACTION_REGISTER,
@@ -93,7 +94,27 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error registering user with email: {} from IP: {}", maskedEmail, clientIp, ex);
-            securityLogger.error("Error registering user - email: {}, IP: {}, Error: {}", maskedEmail, clientIp, ex.getMessage());
+            securityLogger.error("Error registering user - email: {}, IP: {}, Error: {}", maskedEmail, clientIp,
+                    ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public List<UserDto> getActiveApprovedUsers() {
+        String clientIp = getClientIp();
+        logger.debug("Retrieving active approved users from IP: {}", clientIp);
+        try {
+            List<UserDto> users = userRepository.findByActiveAndApprovalStatus(true, User.ApprovalStatus.APPROVED)
+                    .stream()
+                    .map(this::mapToDto)
+                    .collect(Collectors.toList());
+            logger.info("Retrieved {} active approved users from IP: {}", users.size(), clientIp);
+            return users;
+        } catch (Exception ex) {
+            logger.error("Unexpected error retrieving active approved users", ex);
+            securityLogger.error("Error retrieving active approved users - IP: {}, Error: {}", clientIp,
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -137,7 +158,7 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error approving user ID: {} by admin ID: {}", userId, currentUserId, ex);
-            securityLogger.error("Error approving user - userId: {}, adminId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error approving user - userId: {}, adminId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -178,7 +199,7 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error rejecting user ID: {} by admin ID: {}", userId, currentUserId, ex);
-            securityLogger.error("Error rejecting user - userId: {}, adminId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error rejecting user - userId: {}, adminId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -193,7 +214,8 @@ public class UserServiceImpl implements UserService {
             return pendingUsers;
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving pending approvals", ex);
-            securityLogger.error("Error retrieving pending approvals - IP: {}, Error: {}", getClientIp(), ex.getMessage());
+            securityLogger.error("Error retrieving pending approvals - IP: {}, Error: {}", getClientIp(),
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -205,7 +227,8 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", id);
-                        securityLogger.warn("Attempt to retrieve non-existent user ID: {} from IP: {}", id, getClientIp());
+                        securityLogger.warn("Attempt to retrieve non-existent user ID: {} from IP: {}", id,
+                                getClientIp());
                         return new ResourceNotFoundException("User", "id", id);
                     });
             logger.debug("User retrieved: {} (ID: {})", maskEmail(user.getEmail()), id);
@@ -214,7 +237,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving user ID: {}", id, ex);
-            securityLogger.error("Error retrieving user - ID: {}, IP: {}, Error: {}", id, getClientIp(), ex.getMessage());
+            securityLogger.error("Error retrieving user - ID: {}, IP: {}, Error: {}", id, getClientIp(),
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -227,7 +251,8 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> {
                         logger.warn("User not found: {}", maskedEmail);
-                        securityLogger.warn("Attempt to retrieve non-existent user email: {} from IP: {}", maskedEmail, getClientIp());
+                        securityLogger.warn("Attempt to retrieve non-existent user email: {} from IP: {}", maskedEmail,
+                                getClientIp());
                         return new ResourceNotFoundException("User", "email", maskedEmail);
                     });
             logger.debug("User retrieved: {}", maskedEmail);
@@ -236,7 +261,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving user email: {}", maskedEmail, ex);
-            securityLogger.error("Error retrieving user - email: {}, IP: {}, Error: {}", maskedEmail, getClientIp(), ex.getMessage());
+            securityLogger.error("Error retrieving user - email: {}, IP: {}, Error: {}", maskedEmail, getClientIp(),
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -253,7 +279,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error retrieving user DTO ID: {}", id, ex);
-            securityLogger.error("Error retrieving user DTO - ID: {}, IP: {}, Error: {}", id, getClientIp(), ex.getMessage());
+            securityLogger.error("Error retrieving user DTO - ID: {}, IP: {}, Error: {}", id, getClientIp(),
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -335,7 +362,8 @@ public class UserServiceImpl implements UserService {
             return null;
         } catch (Exception ex) {
             logger.error("Error retrieving current user ID", ex);
-            securityLogger.error("Error retrieving current user ID - IP: {}, Error: {}", getClientIp(), ex.getMessage());
+            securityLogger.error("Error retrieving current user ID - IP: {}, Error: {}", getClientIp(),
+                    ex.getMessage());
             return null;
         }
     }
@@ -379,20 +407,23 @@ public class UserServiceImpl implements UserService {
             User user = getUserByEmail(email);
 
             if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-                logger.warn("Invalid current password for user: {} (ID: {}) from IP: {}", maskedEmail, userId, clientIp);
-                securityLogger.warn("Failed password change attempt for user: {} (ID: {}) from IP: {}", 
+                logger.warn("Invalid current password for user: {} (ID: {}) from IP: {}", maskedEmail, userId,
+                        clientIp);
+                securityLogger.warn("Failed password change attempt for user: {} (ID: {}) from IP: {}",
                         maskedEmail, userId, clientIp);
                 return false;
             }
 
             if (!isPasswordValid(newPassword)) {
-                logger.warn("Invalid new password format for user: {} (ID: {}) from IP: {}", maskedEmail, userId, clientIp);
+                logger.warn("Invalid new password format for user: {} (ID: {}) from IP: {}", maskedEmail, userId,
+                        clientIp);
                 return false;
             }
 
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
-            logger.info("Password changed successfully for user: {} (ID: {}) from IP: {}", maskedEmail, userId, clientIp);
+            logger.info("Password changed successfully for user: {} (ID: {}) from IP: {}", maskedEmail, userId,
+                    clientIp);
 
             logService.createLog(
                     "CHANGE_PASSWORD",
@@ -407,7 +438,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error changing password for user: {} (ID: {})", maskedEmail, userId, ex);
-            securityLogger.error("Error changing password - userId: {}, IP: {}, Error: {}", userId, clientIp, ex.getMessage());
+            securityLogger.error("Error changing password - userId: {}, IP: {}, Error: {}", userId, clientIp,
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -430,8 +462,10 @@ public class UserServiceImpl implements UserService {
             }
 
             if (!user.isActive() || user.getApprovalStatus() != User.ApprovalStatus.APPROVED) {
-                logger.warn("Password reset attempted for inactive/unapproved user: {} from IP: {}", maskedEmail, clientIp);
-                securityLogger.warn("Password reset attempt for inactive/unapproved user: {} from IP: {}", maskedEmail, clientIp);
+                logger.warn("Password reset attempted for inactive/unapproved user: {} from IP: {}", maskedEmail,
+                        clientIp);
+                securityLogger.warn("Password reset attempt for inactive/unapproved user: {} from IP: {}", maskedEmail,
+                        clientIp);
                 return false;
             }
 
@@ -442,7 +476,7 @@ public class UserServiceImpl implements UserService {
             logger.debug("Generated verification code for user: {} (ID: {})", maskedEmail, user.getId());
 
             emailService.sendPasswordResetVerificationEmail(user.getEmail(), user.getFullName(), verificationCode);
-            logger.info("Password reset code sent successfully for user: {} (ID: {}) from IP: {}", 
+            logger.info("Password reset code sent successfully for user: {} (ID: {}) from IP: {}",
                     maskedEmail, user.getId(), clientIp);
 
             logService.createLog(
@@ -456,7 +490,7 @@ public class UserServiceImpl implements UserService {
 
         } catch (Exception ex) {
             logger.error("Unexpected error sending password reset code for email: {}", maskedEmail, ex);
-            securityLogger.error("Error sending password reset code - email: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error sending password reset code - email: {}, IP: {}, Error: {}",
                     maskedEmail, clientIp, ex.getMessage());
             return false; // Return false for unexpected errors to indicate failure
         }
@@ -467,13 +501,15 @@ public class UserServiceImpl implements UserService {
     public boolean verifyAndResetPassword(String email, String verificationCode) {
         String clientIp = getClientIp();
         String maskedEmail = maskEmail(email);
-        logger.debug("Attempting to verify and reset password for email: {} with code from IP: {}", maskedEmail, clientIp);
+        logger.debug("Attempting to verify and reset password for email: {} with code from IP: {}", maskedEmail,
+                clientIp);
 
         try {
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> {
                         logger.warn("User not found for password reset verification: {}", maskedEmail);
-                        securityLogger.warn("Password reset verification attempt for non-existent email: {} from IP: {}", 
+                        securityLogger.warn(
+                                "Password reset verification attempt for non-existent email: {} from IP: {}",
                                 maskedEmail, clientIp);
                         return new ResourceNotFoundException("User", "email", maskedEmail);
                     });
@@ -481,9 +517,9 @@ public class UserServiceImpl implements UserService {
             if (user.getResetCode() == null ||
                     !user.getResetCode().equals(verificationCode) ||
                     LocalDateTime.now().isAfter(user.getResetCodeExpiry())) {
-                logger.warn("Invalid or expired verification code for user: {} (ID: {}) from IP: {}", 
+                logger.warn("Invalid or expired verification code for user: {} (ID: {}) from IP: {}",
                         maskedEmail, user.getId(), clientIp);
-                securityLogger.warn("Failed password reset verification for user: {} (ID: {}) from IP: {}", 
+                securityLogger.warn("Failed password reset verification for user: {} (ID: {}) from IP: {}",
                         maskedEmail, user.getId(), clientIp);
                 return false;
             }
@@ -497,7 +533,7 @@ public class UserServiceImpl implements UserService {
             logger.debug("Password reset completed for user: {} (ID: {})", maskedEmail, user.getId());
 
             emailService.sendNewPasswordEmail(user.getEmail(), user.getFullName(), rawPassword);
-            logger.info("Password reset completed successfully for user: {} (ID: {}) from IP: {}", 
+            logger.info("Password reset completed successfully for user: {} (ID: {}) from IP: {}",
                     maskedEmail, user.getId(), clientIp);
 
             logService.createLog(
@@ -513,7 +549,7 @@ public class UserServiceImpl implements UserService {
             return false; // Return false for non-existent users
         } catch (Exception ex) {
             logger.error("Unexpected error verifying and resetting password for email: {}", maskedEmail, ex);
-            securityLogger.error("Error verifying and resetting password - email: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error verifying and resetting password - email: {}, IP: {}, Error: {}",
                     maskedEmail, clientIp, ex.getMessage());
             return false;
         }
@@ -530,7 +566,7 @@ public class UserServiceImpl implements UserService {
             return result;
         } catch (Exception ex) {
             logger.error("Unexpected error in legacy password reset for email: {}", maskedEmail, ex);
-            securityLogger.error("Error in legacy password reset - email: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error in legacy password reset - email: {}, IP: {}, Error: {}",
                     maskedEmail, getClientIp(), ex.getMessage());
             return false;
         }
@@ -566,7 +602,8 @@ public class UserServiceImpl implements UserService {
             }
 
             User savedUser = userRepository.save(user);
-            logger.info("Profile updated successfully for user: {} (ID: {}) from IP: {}", maskedEmail, userId, clientIp);
+            logger.info("Profile updated successfully for user: {} (ID: {}) from IP: {}", maskedEmail, userId,
+                    clientIp);
 
             logService.createLog(
                     "PROFILE_UPDATE",
@@ -581,7 +618,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error updating profile for user: {} (ID: {})", maskedEmail, userId, ex);
-            securityLogger.error("Error updating profile - userId: {}, IP: {}, Error: {}", userId, clientIp, ex.getMessage());
+            securityLogger.error("Error updating profile - userId: {}, IP: {}, Error: {}", userId, clientIp,
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -609,7 +647,8 @@ public class UserServiceImpl implements UserService {
                     fileStorageService.deleteFile(user.getAvatarFileName());
                     logger.debug("Deleted old avatar for user: {} (ID: {})", maskedEmail, userId);
                 } catch (Exception e) {
-                    logger.error("Failed to delete old avatar for user: {} (ID: {}): {}", maskedEmail, userId, e.getMessage());
+                    logger.error("Failed to delete old avatar for user: {} (ID: {}): {}", maskedEmail, userId,
+                            e.getMessage());
                 }
             }
 
@@ -633,7 +672,8 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error updating avatar for user: {} (ID: {})", maskedEmail, userId, ex);
-            securityLogger.error("Error updating avatar - userId: {}, IP: {}, Error: {}", userId, clientIp, ex.getMessage());
+            securityLogger.error("Error updating avatar - userId: {}, IP: {}, Error: {}", userId, clientIp,
+                    ex.getMessage());
             throw ex;
         }
     }
@@ -659,14 +699,14 @@ public class UserServiceImpl implements UserService {
     public User changeUserRole(Long userId, User.UserRole newRole) {
         String clientIp = getClientIp();
         Long currentUserId = getCurrentUserId();
-        logger.debug("Attempting to change role for user ID: {} to {} by admin ID: {} from IP: {}", 
+        logger.debug("Attempting to change role for user ID: {} to {} by admin ID: {} from IP: {}",
                 userId, newRole, currentUserId, clientIp);
 
         try {
             if (currentUserId == null || currentUserId.equals(userId)) {
-                logger.warn("Admin attempted to change own role or no admin authenticated: userId: {}, adminId: {}", 
+                logger.warn("Admin attempted to change own role or no admin authenticated: userId: {}, adminId: {}",
                         userId, currentUserId);
-                securityLogger.warn("Invalid role change attempt - userId: {}, adminId: {}, IP: {}", 
+                securityLogger.warn("Invalid role change attempt - userId: {}, adminId: {}, IP: {}",
                         userId, currentUserId, clientIp);
                 throw new BadRequestException("Administrators cannot change their own role");
             }
@@ -676,7 +716,7 @@ public class UserServiceImpl implements UserService {
 
             user.setRole(newRole);
             User savedUser = userRepository.save(user);
-            logger.info("Role changed to {} for user: {} (ID: {}) by admin ID: {} from IP: {}", 
+            logger.info("Role changed to {} for user: {} (ID: {}) by admin ID: {} from IP: {}",
                     newRole, maskedEmail, userId, currentUserId, clientIp);
 
             logService.createLog(
@@ -692,7 +732,7 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error changing role for user ID: {} by admin ID: {}", userId, currentUserId, ex);
-            securityLogger.error("Error changing role - userId: {}, adminId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error changing role - userId: {}, adminId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
@@ -703,7 +743,7 @@ public class UserServiceImpl implements UserService {
     public boolean adminResetPassword(Long userId, String newPassword) {
         String clientIp = getClientIp();
         Long currentUserId = getCurrentUserId();
-        logger.debug("Attempting admin password reset for user ID: {} by admin ID: {} from IP: {}", 
+        logger.debug("Attempting admin password reset for user ID: {} by admin ID: {} from IP: {}",
                 userId, currentUserId, clientIp);
 
         try {
@@ -711,9 +751,10 @@ public class UserServiceImpl implements UserService {
             String maskedEmail = maskEmail(user.getEmail());
 
             if (!user.isActive() || user.getApprovalStatus() != User.ApprovalStatus.APPROVED) {
-                logger.warn("Admin password reset attempted for inactive/unapproved user: {} (ID: {})", 
+                logger.warn("Admin password reset attempted for inactive/unapproved user: {} (ID: {})",
                         maskedEmail, userId);
-                securityLogger.warn("Admin password reset attempt for inactive/unapproved user: {} (ID: {}) from IP: {}", 
+                securityLogger.warn(
+                        "Admin password reset attempt for inactive/unapproved user: {} (ID: {}) from IP: {}",
                         maskedEmail, userId, clientIp);
                 return false;
             }
@@ -728,7 +769,7 @@ public class UserServiceImpl implements UserService {
             logger.debug("Password reset by admin for user: {} (ID: {})", maskedEmail, userId);
 
             emailService.sendPasswordChangedNotificationEmail(user.getEmail(), user.getFullName());
-            logger.info("Admin password reset completed for user: {} (ID: {}) by admin ID: {} from IP: {}", 
+            logger.info("Admin password reset completed for user: {} (ID: {}) by admin ID: {} from IP: {}",
                     maskedEmail, userId, currentUserId, clientIp);
 
             logService.createLog(
@@ -744,7 +785,7 @@ public class UserServiceImpl implements UserService {
             throw ex; // Already logged
         } catch (Exception ex) {
             logger.error("Unexpected error in admin password reset for user ID: {}", userId, ex);
-            securityLogger.error("Error in admin password reset - userId: {}, adminId: {}, IP: {}, Error: {}", 
+            securityLogger.error("Error in admin password reset - userId: {}, adminId: {}, IP: {}, Error: {}",
                     userId, currentUserId, clientIp, ex.getMessage());
             throw ex;
         }
