@@ -214,3 +214,88 @@ export const getYearMonths = (year) => {
   }
   return months;
 };
+
+export const formatMessageDate = (timestamp) => {
+  if (!timestamp) return "";
+
+  const messageDate = new Date(timestamp);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  
+  const messageDateOnly = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+
+  // Today
+  if (messageDateOnly.getTime() === today.getTime()) {
+    return "Today";
+  }
+
+  // Yesterday
+  if (messageDateOnly.getTime() === yesterday.getTime()) {
+    return "Yesterday";
+  }
+
+  // This week
+  const oneWeekAgo = new Date(today);
+  oneWeekAgo.setDate(today.getDate() - 7);
+  if (messageDateOnly > oneWeekAgo) {
+    const options = { weekday: "long" };
+    return messageDate.toLocaleDateString(undefined, options);
+  }
+
+  // This year
+  if (messageDate.getFullYear() === now.getFullYear()) {
+    const options = { month: "long", day: "numeric" };
+    return messageDate.toLocaleDateString(undefined, options);
+  }
+
+  // Previous years
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return messageDate.toLocaleDateString(undefined, options);
+};
+
+export const groupMessagesByDate = (messages) => {
+  if (!messages || messages.length === 0) return [];
+
+  // Sort messages by timestamp first
+  const sortedMessages = [...messages].sort((a, b) => 
+    new Date(a.timestamp) - new Date(b.timestamp)
+  );
+
+  const grouped = [];
+  let currentDate = null;
+
+  sortedMessages.forEach((message) => {
+    const messageDate = new Date(message.timestamp);
+    const messageDateString = messageDate.toDateString();
+
+    // If this is a new date, add a date separator
+    if (currentDate !== messageDateString) {
+      currentDate = messageDateString;
+      grouped.push({
+        type: 'date-separator',
+        date: formatMessageDate(message.timestamp),
+        timestamp: message.timestamp
+      });
+    }
+
+    // Add the message
+    grouped.push({
+      type: 'message',
+      ...message
+    });
+  });
+
+  return grouped;
+};
+
+export const formatMessageTime = (timestamp) => {
+  if (!timestamp) return "";
+  
+  const messageDate = new Date(timestamp);
+  return messageDate.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

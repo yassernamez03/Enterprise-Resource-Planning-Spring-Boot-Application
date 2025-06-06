@@ -1,6 +1,8 @@
 // components/MessageList.js
 import React, { useRef, useEffect, useState } from 'react';
 import MessageItem from './MessageItem';
+import { groupMessagesByDate } from '../../utils/dateUtils';
+import DateSeparator from './DateSeparator';
 
 const MessageList = ({ 
   currentChat, 
@@ -117,6 +119,9 @@ const MessageList = ({
 
   if (!currentChat) return null;
 
+  // Group messages by date and sort them
+  const groupedMessages = groupMessagesByDate(currentChat?.messages || []);
+
   // Function to find the original message for a reply
   const getOriginalMessage = (messageId) => {
     return currentChat.messages.find(msg => msg.id === messageId);
@@ -128,19 +133,42 @@ const MessageList = ({
       ref={chatContainerRef}
     >
       <div className="space-y-4 w-full">
-        {currentChat.messages.map((msg) => (
-          <MessageItem 
-            key={msg.id}
-            message={msg}
-            currentChat={currentChat}
-            isHighlighted={msg.id === highlightedMessageId}
-            darkMode={darkMode}
-            highlightedMessageRef={msg.id === highlightedMessageId ? highlightedMessageRef : null}
-            originalMessage={msg.replyTo ? getOriginalMessage(msg.replyTo) : null}
-            handleReplyToMessage={handleReplyToMessage}
-            currentUserId={currentUserId}
-          />
-        ))}
+        {groupedMessages.map((item, index) => {
+          if (item.type === 'date-separator') {
+            return (
+              <DateSeparator 
+                key={`date-${index}`}
+                date={item.date}
+                darkMode={darkMode}
+              />
+            );
+          }
+
+          // This is a message
+          const message = item;
+          const isOwnMessage = message.sender.id === currentUserId;
+          const isHighlighted = highlightedMessageId === message.id;
+
+          return (
+            <div
+              key={message.id}
+              id={`message-${message.id}`}
+              
+            >
+              {/* Your existing MessageBubble or message rendering component */}
+              <MessageItem 
+                message={message}
+                currentChat={currentChat}
+                isHighlighted={isHighlighted}
+                darkMode={darkMode}
+                highlightedMessageRef={isHighlighted ? highlightedMessageRef : null}
+                originalMessage={message.replyTo ? getOriginalMessage(message.replyTo) : null}
+                handleReplyToMessage={handleReplyToMessage}
+                currentUserId={currentUserId}
+              />
+            </div>
+          );
+        })}
       </div>
       
       {/* Scroll to bottom button - show only when not at bottom */}

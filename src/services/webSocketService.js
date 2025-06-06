@@ -12,10 +12,22 @@ class WebSocketService {
     this.messageCallbacks = new Map();
     this.typingCallbacks = new Map();
     this.readStatusCallbacks = new Map();
+    this.connectionPromise = null; // Add this to track connection promise
   }
 
   // Connect to WebSocket
   connect(onConnectCallback = null) {
+    // If already connected, call callback immediately
+    if (this.connected && onConnectCallback) {
+      onConnectCallback();
+      return Promise.resolve(true);
+    }
+
+    // If connection is in progress, return existing promise
+    if (this.connectionPromise) {
+      return this.connectionPromise;
+    }
+
     // Clear any existing reconnect timeout
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
@@ -25,37 +37,49 @@ class WebSocketService {
     const token = authService.getToken();
     if (!token) {
       console.error('No authentication token available');
-      return false;
+      return Promise.reject(new Error('No authentication token'));
     }
 
-    try {
-      // Create SockJS connection to the WebSocket endpoint
-      const socket = new SockJS('https://localhost:8443/ws');
-      this.stompClient = Stomp.over(socket);
+    // Create connection promise
+    this.connectionPromise = new Promise((resolve, reject) => {
+      try {
+        // Create SockJS connection to the WebSocket endpoint
+        const socket = new SockJS('https://localhost:8443/ws');
+        this.stompClient = Stomp.over(socket);
 
-      // Disable debug logs in production
-      this.stompClient.debug = process.env.NODE_ENV === 'development' 
-        ? console.log 
-        : () => {};
+        // Disable debug logs in production
+        this.stompClient.debug = process.env.NODE_ENV === 'development' 
+          ? console.log 
+          : () => {};
 
-      // Configure connection headers with JWT token
-      const headers = {
-        'Authorization': `Bearer ${token}`
-      };
+        // Configure connection headers with JWT token
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
 
-      // Connect to the WebSocket server
-      this.stompClient.connect(
-        headers,
-        () => this.onConnect(onConnectCallback),
-        this.onError
-      );
+        // Connect to the WebSocket server
+        this.stompClient.connect(
+          headers,
+          () => {
+            this.onConnect(onConnectCallback);
+            this.connectionPromise = null;
+            resolve(true);
+          },
+          (error) => {
+            this.onError(error);
+            this.connectionPromise = null;
+            reject(error);
+          }
+        );
+      } catch (error) {
+        console.error('WebSocket connection error:', error);
+        this.connectionPromise = null;
+        this.scheduleReconnect();
+        reject(error);
+      }
+    });
 
-      return true;
-    } catch (error) {
-      console.error('WebSocket connection error:', error);
-      this.scheduleReconnect();
-      return false;
-    }
+    return this.connectionPromise;
   }
 
   // Handler for successful connection

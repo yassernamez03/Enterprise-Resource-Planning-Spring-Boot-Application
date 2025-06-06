@@ -15,15 +15,16 @@ const CreateProduct = () => {
     try {
       setLoading(true)
 
+      console.log("Creating product with data:", data);
+      
       // In a real app, call the create API
       const newProduct = await productService.createProduct(data);
-      // navigate(`/products/create/${newProduct.id}`);
 
       // For development, just wait a bit then redirect
       setTimeout(() => {
         showNotification("Product created successfully", "success")
         navigate("/sales/products")
-      }, 1000)
+      }, 500)
     } catch (error) {
       console.error("Error creating product:", error)
       showNotification("Failed to create product", "error")

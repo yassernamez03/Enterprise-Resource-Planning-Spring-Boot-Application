@@ -6,7 +6,7 @@ import {
   Image as ImageIcon,
   Video as VideoIcon,
   File as FileIcon,
-  Download
+  Download,
 } from "lucide-react";
 
 const MessageItem = ({
@@ -125,6 +125,26 @@ const MessageItem = ({
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
+  const handleFileDownload = async (e) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(uiMessage.current.fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = uiMessage.current.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback to direct link
+      window.open(uiMessage.current.fileUrl, "_blank");
+    }
+  };
+
   const renderFileMessage = () => {
     if (!uiMessage.current || !uiMessage.current.isAttachment) return null;
 
@@ -213,16 +233,13 @@ const MessageItem = ({
               </p>
             </div>
 
-            <a
-              href={uiMessage.current.fileUrl}
-              download={uiMessage.current.fileName}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={handleFileDownload}
               className={`p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600`}
-              onClick={(e) => e.stopPropagation()}
+              title={`Download ${uiMessage.current.fileName}`}
             >
               <Download size={16} />
-            </a>
+            </button>
           </div>
         </div>
       </div>

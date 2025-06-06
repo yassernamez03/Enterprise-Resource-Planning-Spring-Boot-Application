@@ -9,7 +9,6 @@ import SearchBar from "../Components/Chat/SearchBar";
 import FilterMenu from "../Components/Chat/FilterMenu";
 import { Link } from "react-router-dom";
 import { useChat } from "../context/ChatContext";
-import websocketService from "../services/websocketService";
 import authService from "../services/authService";
 
 const ChatApp = () => {
@@ -27,6 +26,7 @@ const ChatApp = () => {
     unarchiveChat,
     leaveChat,
     createNewChat,
+    isWebSocketConnected, // Add this
   } = useChat();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,18 +60,6 @@ const ChatApp = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Connect to WebSocket when component mounts
-  useEffect(() => {
-    if (!websocketService.isConnected()) {
-      websocketService.connect();
-    }
-
-    return () => {
-      // Disconnect when component unmounts
-      websocketService.disconnect();
-    };
-  }, []);
-
   // Handle search functionality
   useEffect(() => {
     if (searchQuery) {
@@ -82,7 +70,7 @@ const ChatApp = () => {
         const matchedMessages = conv.messages.filter((msg) => {
           if (msg.messageType === "TEXT") {
             return msg.content
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(searchQuery.toLowerCase());
           }
           return false;
@@ -90,7 +78,7 @@ const ChatApp = () => {
 
         if (
           matchedMessages.length > 0 ||
-          conv.title.toLowerCase().includes(searchQuery.toLowerCase())
+          (conv.title && conv.title.toLowerCase().includes(searchQuery.toLowerCase()))
         ) {
           results.push({
             conversation: conv,
@@ -172,11 +160,11 @@ const ChatApp = () => {
     if (searchQuery) {
       filtered = filtered.filter(
         (conv) =>
-          conv.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (conv.title && conv.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
           conv.messages.some((msg) => {
             if (msg.messageType === "TEXT") {
               return msg.content
-                .toLowerCase()
+                ?.toLowerCase()
                 .includes(searchQuery.toLowerCase());
             }
             return false;
@@ -385,10 +373,14 @@ const ChatApp = () => {
   // Get current user ID from auth service
   const currentUserId = authService.getCurrentUser()?.id || -1;
 
-  if (loading) {
+  // Show loading if WebSocket is not connected
+  if (loading || !isWebSocketConnected) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-500 mx-auto mb-4"></div>
+          <p>{loading ? "Loading chats..." : "Connecting to chat service..."}</p>
+        </div>
       </div>
     );
   }

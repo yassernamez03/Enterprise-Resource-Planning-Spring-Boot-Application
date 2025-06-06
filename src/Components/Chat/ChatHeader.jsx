@@ -67,7 +67,7 @@ const ChatHeader = ({
             </p>
           ) : (
             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Online
+              {currentChat.participants.length} participant{currentChat.participants.length !== 1 ? 's' : ''}
             </p>
           )}
         </div>

@@ -34,29 +34,38 @@ export const ChatProvider = ({ children }) => {
   // Use refs to track processed messages and prevent duplicates
   const processedMessages = useRef(new Set());
 
+  // Add connection state tracking
+  const [isWebSocketConnected, setIsWebSocketConnected] = useState(false);
+
   // Load user chats on initial render
   useEffect(() => {
     if (authService.isAuthenticated()) {
       loadUserChats();
 
-      // Connect to WebSocket
+      // Connect to WebSocket with proper callback
       if (!websocketService.isConnected()) {
         websocketService.connect(() => {
           console.log("WebSocket connected successfully");
+          setIsWebSocketConnected(true);
         });
+      } else {
+        setIsWebSocketConnected(true);
       }
 
       // Cleanup function to disconnect WebSocket when component unmounts
       return () => {
         websocketService.disconnect();
         processedMessages.current.clear();
+        setIsWebSocketConnected(false);
       };
     }
   }, []);
 
-  // When active chat changes, subscribe to its WebSocket topics
+  // When active chat changes AND WebSocket is connected, subscribe to its topics
   useEffect(() => {
-    if (activeChat) {
+    if (activeChat && isWebSocketConnected) {
+      console.log("Setting up subscriptions for chat:", activeChat.id);
+
       // Subscribe to messages
       websocketService.subscribeToChatMessages(activeChat.id, handleNewMessage);
 
@@ -72,7 +81,7 @@ export const ChatProvider = ({ children }) => {
         handleTypingStatusUpdate
       );
     }
-  }, [activeChat]);
+  }, [activeChat, isWebSocketConnected]);
 
   // Load user chats from API
   const loadUserChats = async () => {
@@ -87,12 +96,17 @@ export const ChatProvider = ({ children }) => {
             console.log(`Fetching messages for chat ID: ${chat.id}`);
             const messages = await apiService.get(`/messages/chat/${chat.id}`);
 
+            // Sort messages by timestamp to ensure proper order
+            const sortedMessages = messages.sort((a, b) => 
+              new Date(a.timestamp) - new Date(b.timestamp)
+            );
+
             // Add all message IDs to processed set to prevent duplicates
-            messages.forEach((msg) => processedMessages.current.add(msg.id));
+            sortedMessages.forEach((msg) => processedMessages.current.add(msg.id));
 
             // Find the last message for preview
             const lastMessage =
-              messages.length > 0 ? messages[messages.length - 1] : null;
+              sortedMessages.length > 0 ? sortedMessages[sortedMessages.length - 1] : null;
 
             // Get avatar text - first letter of each word in title
             const titleWords = chat.title.split(" ");
@@ -104,7 +118,7 @@ export const ChatProvider = ({ children }) => {
 
             return {
               ...chat,
-              messages: messages,
+              messages: sortedMessages, // Use sorted messages
               avatar: avatarText,
               lastMessage: lastMessage
                 ? lastMessage.messageType === "TEXT"
@@ -114,7 +128,7 @@ export const ChatProvider = ({ children }) => {
               time: lastMessage
                 ? formatMessageTime(lastMessage.timestamp)
                 : "No messages",
-              unread: messages.filter(
+              unread: sortedMessages.filter(
                 (msg) =>
                   !msg.readStatus &&
                   msg.sender.id !== authService.getCurrentUser().id
@@ -192,8 +206,10 @@ export const ChatProvider = ({ children }) => {
     setConversations((prevConversations) => {
       return prevConversations.map((conv) => {
         if (conv.id === message.chatId) {
-          // Add message to this conversation
-          const updatedMessages = [...conv.messages, message];
+          // Add message and sort to maintain order
+          const updatedMessages = [...conv.messages, message].sort((a, b) => 
+            new Date(a.timestamp) - new Date(b.timestamp)
+          );
 
           // Update unread count if message is from someone else
           const unread =
@@ -222,9 +238,14 @@ export const ChatProvider = ({ children }) => {
       setActiveChat((prevChat) => {
         if (!prevChat) return null;
 
+        // Add message and sort to maintain order
+        const updatedMessages = [...prevChat.messages, message].sort((a, b) => 
+          new Date(a.timestamp) - new Date(b.timestamp)
+        );
+
         return {
           ...prevChat,
-          messages: [...prevChat.messages, message],
+          messages: updatedMessages,
         };
       });
 
@@ -535,6 +556,7 @@ export const ChatProvider = ({ children }) => {
     unarchiveChat,
     leaveChat,
     refreshChats: loadUserChats,
+    isWebSocketConnected, // Add this to context
   };
 
   return (

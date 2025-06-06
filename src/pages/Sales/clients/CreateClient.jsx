@@ -23,7 +23,7 @@ const CreateClient = () => {
       setTimeout(() => {
         showNotification("Client created successfully", "success")
         navigate("/sales/clients")
-      }, 1000)
+      }, 500)
     } catch (error) {
       console.error("Error creating client:", error)
       showNotification("Failed to create client", "error")
