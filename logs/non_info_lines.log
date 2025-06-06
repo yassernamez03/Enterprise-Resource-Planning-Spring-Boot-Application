@@ -1,0 +1,40 @@
+2025-06-06 13:20:39.118 [https-jsse-nio-8443-exec-10] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:39.122 [https-jsse-nio-8443-exec-10] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:39.124 [https-jsse-nio-8443-exec-10] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:39.128 [https-jsse-nio-8443-exec-10] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:45.051 [https-jsse-nio-8443-exec-5] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:45.053 [https-jsse-nio-8443-exec-5] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:45.055 [https-jsse-nio-8443-exec-5] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:45.093 [https-jsse-nio-8443-exec-5] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:53.053 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - Failed login attempt - user not found: f***@s***. from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:20:53.054 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - Bad login request - email: f***@s***., IP: 0:0:0:0:0:0:0:1, Reason: Invalid credentials
+2025-06-06 13:20:58.282 [https-jsse-nio-8443-exec-4] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:58.284 [https-jsse-nio-8443-exec-4] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:58.288 [https-jsse-nio-8443-exec-4] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:58.290 [https-jsse-nio-8443-exec-4] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:07.732 [https-jsse-nio-8443-exec-9] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:07.736 [https-jsse-nio-8443-exec-9] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:07.738 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:07.740 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:14.545 [https-jsse-nio-8443-exec-2] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:14.549 [https-jsse-nio-8443-exec-2] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:14.551 [https-jsse-nio-8443-exec-2] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:14.554 [https-jsse-nio-8443-exec-2] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:26.293 [https-jsse-nio-8443-exec-3] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:26.296 [https-jsse-nio-8443-exec-3] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:26.298 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:26.300 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:39.918 [https-jsse-nio-8443-exec-3] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:39.921 [https-jsse-nio-8443-exec-3] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:39.923 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:39.926 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:40:53.842 [https-jsse-nio-8443-exec-6] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 14:40:53.845 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 14:40:53.848 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:40:53.848 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login error - email: xozakariaox@gmail.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:42:18.706 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Failed login attempt - user not found: s***@k***.sac from IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:42:18.706 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Login error - email: sadssd_@kjc.sac, IP: 0:0:0:0:0:0:0:1, Error: Invalid credentials
+2025-06-06 14:46:09.434 [https-jsse-nio-8443-exec-6] WARN  org.springframework.security.audit - Failed login attempt for user 'zakariyablagrae@gmail.com': Bad credentials
+2025-06-06 14:46:09.440 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Authentication failed - UserID: 4, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 14:46:09.443 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login process error - Email: z***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:46:09.443 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login error - email: zakariyablagrae@gmail.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials

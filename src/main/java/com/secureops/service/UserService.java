@@ -47,4 +47,6 @@ public interface UserService {
     User changeUserRole(Long userId, User.UserRole newRole);
 
     boolean adminResetPassword(Long userId, String newPassword);
+
+    List<UserDto> getActiveApprovedUsers();
 }

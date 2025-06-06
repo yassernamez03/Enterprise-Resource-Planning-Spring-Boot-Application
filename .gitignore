@@ -34,3 +34,20 @@ build/
 
 ### VS Code ###
 .vscode/
+security.md
+security.pdf
+logs/application.log
+logs/error.log
+logs/security.log
+logs/archived/application-2025-05-27-0.log
+logs/archived/application-2025-05-29-0.log
+logs/archived/error-2025-05-24-0.log
+logs/archived/error-2025-05-27-0.log
+logs/archived/error-2025-05-29-0.log
+logs/archived/security-2025-05-27-0.log
+logs/archived/security-2025-05-29-0.log
+logs/archived/**
+.gitignore
+logs/application.log
+logs/error.log
+logs/security.log

@@ -23,7 +23,11 @@ public class AppConstants {
     public static final String LOG_TYPE_EVENT = "EVENT";
     public static final String LOG_TYPE_CHAT = "CHAT";
     public static final String LOG_TYPE_FILE = "FILE";
-    
+    public static final String LOG_TYPE_ADMIN = "ADMIN";
+    public static final String LOG_TYPE_SYSTEM = "SYSTEM";
+    public static final String LOG_TYPE_SECURITY = "SECURITY";
+    public static final String LOG_TYPE_ERROR = "ERROR";
+
     // Log actions
     public static final String LOG_ACTION_READ = "READ";
     public static final String LOG_ACTION_CREATE = "CREATE";

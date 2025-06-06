@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2025-06-06 16:31:21.328 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
 2025-06-06 16:32:38.301 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
 2025-06-06 16:32:38.702 [https-jsse-nio-8443-exec-4] INFO  org.springframework.security.audit - User 'admin@secureops.com' logged in successfully
@@ -5,3 +6,831 @@
 2025-06-06 17:04:11.775 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
 2025-06-06 17:04:12.059 [https-jsse-nio-8443-exec-7] INFO  org.springframework.security.audit - User 'admin@secureops.com' logged in successfully
 2025-06-06 17:04:12.075 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - Successful login - UserID: 1, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
+=======
+2025-06-06 12:32:13.405 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:32:39.336 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:33:17.098 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:17.099 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:33:17.152 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: z***@g***.com
+2025-06-06 12:33:17.519 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: z***@g***.com
+2025-06-06 12:33:17.801 [https-jsse-nio-8443-exec-2] INFO  org.springframework.security.audit - User 'zakariyablagrae@gmail.com' logged in successfully
+2025-06-06 12:33:17.837 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Successful login - UserID: 4, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:33:17.863 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Successful login - email: z***@g***.com, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:33:18.077 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.081 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:18.082 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.084 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:18.094 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.098 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:18.143 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.146 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:18.177 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.177 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:18.179 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:18.179 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:20.926 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:20.926 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:20.928 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:20.928 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:20.971 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:20.972 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:20.973 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:20.974 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:23.247 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:23.249 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:33:23.251 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:33:23.252 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:33:23.299 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_DASHBOARD_SCAN - Admin: Zakariyae Belagraa Admin original (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: FULL_SECURITY_SCAN
+2025-06-06 12:33:39.210 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_DASHBOARD_SCAN - Admin: Zakariyae Belagraa Admin original (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: FULL_SECURITY_SCAN
+2025-06-06 12:36:29.097 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:36:29.097 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:36:29.099 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:36:29.099 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:36:29.249 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:36:29.251 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:36:29.254 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:36:29.256 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:41:15.447 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:09.179 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:17.534 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:25.477 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:36.749 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:44.335 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:49:54.450 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:50:03.232 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:50:11.023 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:50:20.125 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:50:27.869 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:51:36.285 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:51:44.263 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 12:56:14.860 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:14.889 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:14.891 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:56:14.905 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:14.905 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:56:15.109 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:15.138 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:15.236 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:15.236 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:15.238 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:56:15.495 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:15.513 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:56:15.515 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.520 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.519 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.527 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:15.528 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:15.528 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:56:15.534 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:56:15.623 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.632 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.703 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.710 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.746 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.748 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:56:15.751 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 12:56:22.908 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:22.917 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:22.917 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:56:22.970 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:23.154 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:23.189 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:23.195 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:56:23.231 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:56:23.305 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.336 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.403 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.406 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.413 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.453 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.454 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:23.457 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:56:23.494 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:56:23.495 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.497 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:56:23.516 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.552 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:56:23.567 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.423 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.424 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:59:30.439 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:59:30.470 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.470 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 12:59:30.531 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:59:30.685 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:59:30.786 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.786 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.838 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:59:30.847 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.847 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:59:30.857 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.879 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.901 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 12:59:30.903 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.905 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:59:30.955 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.959 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 12:59:30.960 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 12:59:30.963 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 12:59:31.092 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 12:59:31.096 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 12:59:31.097 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 12:59:31.121 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 12:59:31.157 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:01:08.433 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:01:21.854 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:01:34.089 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:01:43.312 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:01:46.904 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - User chats request from IP: 127.0.0.1
+2025-06-06 13:01:46.979 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:46.979 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:01:46.982 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:46.983 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:01:47.025 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 127.0.0.1
+2025-06-06 13:01:47.049 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats request from IP: 127.0.0.1
+2025-06-06 13:01:47.166 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.257 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 127.0.0.1
+2025-06-06 13:01:47.256 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.256 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.273 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.277 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.311 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:47.314 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:01:47.362 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:47.366 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:01:47.380 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:47.384 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:01:47.389 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:01:47.398 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:01:47.400 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.442 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.483 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.488 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:01:47.520 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:20:08.890 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:08.893 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:20:08.996 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:08.998 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:20:32.499 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:32.500 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:32.500 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:32.500 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:32.545 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:32.545 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:32.546 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 13:20:32.546 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:32.587 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:32.588 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:38.630 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:38.631 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:38.661 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:38.851 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:39.118 [https-jsse-nio-8443-exec-10] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:39.122 [https-jsse-nio-8443-exec-10] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:39.124 [https-jsse-nio-8443-exec-10] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:39.128 [https-jsse-nio-8443-exec-10] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:39.161 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:39.162 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:42.474 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:42.474 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:44.759 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:44.760 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:44.761 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:44.932 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:45.051 [https-jsse-nio-8443-exec-5] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:45.053 [https-jsse-nio-8443-exec-5] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:45.055 [https-jsse-nio-8443-exec-5] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:45.093 [https-jsse-nio-8443-exec-5] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:45.120 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:45.121 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:48.431 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:48.431 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:52.894 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: f***@s***.
+2025-06-06 13:20:52.894 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:52.895 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:53.051 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: f***@s***.
+2025-06-06 13:20:53.053 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - Failed login attempt - user not found: f***@s***. from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:20:53.054 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - Bad login request - email: f***@s***., IP: 0:0:0:0:0:0:0:1, Reason: Invalid credentials
+2025-06-06 13:20:53.076 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:53.076 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:56.398 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:56.398 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:58.034 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:58.034 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:58.034 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:20:58.161 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:20:58.282 [https-jsse-nio-8443-exec-4] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:20:58.284 [https-jsse-nio-8443-exec-4] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:20:58.288 [https-jsse-nio-8443-exec-4] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:58.290 [https-jsse-nio-8443-exec-4] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:20:58.317 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:20:58.317 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:01.625 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:01.626 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:07.443 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:07.449 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:07.450 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:07.609 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:07.732 [https-jsse-nio-8443-exec-9] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:07.736 [https-jsse-nio-8443-exec-9] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:07.738 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:07.740 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:07.764 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:07.764 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:11.075 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:11.075 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:14.253 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:14.263 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:14.264 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:14.428 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:14.545 [https-jsse-nio-8443-exec-2] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:14.549 [https-jsse-nio-8443-exec-2] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:14.551 [https-jsse-nio-8443-exec-2] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:14.554 [https-jsse-nio-8443-exec-2] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:14.579 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:14.579 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:17.958 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:17.958 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:25.963 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:25.968 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:25.968 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:26.147 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:26.293 [https-jsse-nio-8443-exec-3] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:26.296 [https-jsse-nio-8443-exec-3] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:26.298 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:26.300 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:26.321 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:26.321 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:29.637 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:29.637 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:39.621 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:39.626 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:39.626 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:39.802 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:21:39.918 [https-jsse-nio-8443-exec-3] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 13:21:39.921 [https-jsse-nio-8443-exec-3] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 13:21:39.923 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:39.926 [https-jsse-nio-8443-exec-3] ERROR com.secureops.security - Login error - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 13:21:39.947 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:39.948 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:21:44.130 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:21:44.130 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:31:13.939 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:31:21.564 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:31:21.570 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:21.571 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:31:21.644 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:21.644 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:31:21.688 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:31:21.722 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:31:21.764 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:31:21.993 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:22.002 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:31:22.044 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:22.046 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:31:22.086 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.094 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.252 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.253 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.258 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.328 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:22.331 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:31:22.337 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:31:22.340 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:31:22.389 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.425 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.475 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.492 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:31:22.688 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:42:35.970 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:42:36.017 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.018 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:36.043 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.045 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:36.052 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:42:36.065 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:42:36.164 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:42:36.169 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.171 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:42:36.190 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.196 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:42:36.400 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.505 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.538 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.540 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:42:36.573 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.575 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.577 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.587 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:36.589 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:42:36.657 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.739 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.746 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.793 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:42:36.818 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:42:48.483 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:48.483 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:48.483 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:48.483 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:48.509 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:48.510 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:54.361 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:54.362 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:54.364 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:54.364 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:54.394 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:54.394 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 13:42:54.395 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:54.397 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:42:54.413 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:42:54.414 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:44:02.087 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:44:36.350 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 13:46:19.685 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:19.685 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:46:19.704 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:46:19.903 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 13:46:20.146 [https-jsse-nio-8443-exec-2] INFO  org.springframework.security.audit - User 'xozakariaox@gmail.com' logged in successfully
+2025-06-06 13:46:20.150 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Successful login - UserID: 7, Role: USER, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:20.156 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - Successful login - email: x***@g***.com, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:20.237 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.243 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:20.278 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.281 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:20.283 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.286 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:20.303 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.307 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:20.310 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.312 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:20.316 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:20.319 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:23.527 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:23.527 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:23.528 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:23.529 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:23.565 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:23.566 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:23.568 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:23.568 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:25.294 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.295 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:46:25.298 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:25.322 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.323 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:46:25.390 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats retrieved - UserID: 7, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:25.411 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.420 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.423 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.426 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.441 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.455 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.453 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.455 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.458 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:25.458 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.471 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.477 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.547 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.547 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:46:25.549 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:46:25.550 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:46:25.552 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:25.572 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.575 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 15, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.578 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.588 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 17, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.594 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.597 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 7, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:46:25.648 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 15, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.649 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.655 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 17, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.695 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:46:25.708 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:47:19.222 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:19.222 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:19.224 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 13:47:19.224 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 13:47:25.112 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.113 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:47:25.129 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:47:25.159 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.160 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 13:47:25.197 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:47:25.217 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:47:25.256 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 13:47:25.333 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.341 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:47:25.376 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.377 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:47:25.422 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.445 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.505 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.525 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.527 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.529 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 13:47:25.562 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.568 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 13:47:25.570 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 13:47:25.659 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.677 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.692 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.706 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 13:47:25.729 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 14:02:58.203 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:04:02.208 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.209 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.209 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:04:02.210 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:04:02.235 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:04:02.410 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.416 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 14:04:02.433 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.441 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 14:04:02.457 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:04:02.534 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.539 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 14:04:02.607 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:04:02.610 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 14:04:02.663 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:04:02.738 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:04:03.060 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.307 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.405 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.480 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.635 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.747 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 14:04:03.963 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 14:04:04.258 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 14:04:04.259 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 14:04:04.277 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 14:18:30.671 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:19:00.076 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:19:09.129 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:19:59.873 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:21:16.918 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:27:43.708 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:28:01.990 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:28:12.641 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:28:28.721 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:28:42.940 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:29:01.264 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:29:27.913 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:29:49.518 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:30:12.273 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:30:37.675 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:30:46.760 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:31:20.282 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:32:00.645 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:32:16.200 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:33:29.726 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:33:39.969 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:38:47.563 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:39:16.989 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:39:27.549 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:39:42.457 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:39:59.833 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:40:40.045 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 14:40:43.615 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats request from IP: 127.0.0.1
+2025-06-06 14:40:43.631 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:43.632 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:43.635 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:43.637 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:43.734 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 127.0.0.1
+2025-06-06 14:40:43.850 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:43.853 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 14:40:43.891 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:43.892 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 14:40:43.935 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats request from IP: 127.0.0.1
+2025-06-06 14:40:43.972 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 127.0.0.1
+2025-06-06 14:40:44.009 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.116 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.171 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.223 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.297 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:44.297 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 14:40:44.308 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:44.310 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:44.309 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:44.318 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.315 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:44.388 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:44.390 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 14:40:44.419 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:44.421 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 14:40:44.553 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.663 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.767 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 14:40:44.992 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 14:40:45.073 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 127.0.0.1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 14:40:46.057 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:46.058 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:53.315 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:53.316 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:53.381 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user=xozakariaox@gmail.com ip=0:0:0:0:0:0:0:1
+2025-06-06 14:40:53.573 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 14:40:53.842 [https-jsse-nio-8443-exec-6] WARN  org.springframework.security.audit - Failed login attempt for user 'xozakariaox@gmail.com': Bad credentials
+2025-06-06 14:40:53.845 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Authentication failed - UserID: 7, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 14:40:53.848 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login process error - Email: x***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:40:53.848 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login error - email: xozakariaox@gmail.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:40:53.894 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:53.894 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:40:57.210 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:40:57.210 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:41:02.802 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user=xozakariaox@gmail.com ip=0:0:0:0:0:0:0:1
+2025-06-06 14:41:02.806 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:02.807 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:41:03.025 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: x***@g***.com
+2025-06-06 14:41:03.198 [https-jsse-nio-8443-exec-7] INFO  org.springframework.security.audit - User 'xozakariaox@gmail.com' logged in successfully
+2025-06-06 14:41:03.208 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - Successful login - UserID: 7, Role: USER, IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:41:03.216 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - AUTHENTICATION_SUCCESS user=xozakariaox@gmail.com ip=0:0:0:0:0:0:0:1
+2025-06-06 14:41:03.276 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.277 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 14:41:03.296 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.298 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 14:41:03.329 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.332 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 14:41:03.332 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.337 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 14:41:03.350 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.352 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 14:41:03.353 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:03.354 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 14:41:05.414 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:05.415 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:05.416 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 14:41:05.417 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 14:41:05.464 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:05.464 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:05.466 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 7
+2025-06-06 14:41:05.466 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: xozakariaox@gmail.com (ID: 7), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 7
+2025-06-06 14:41:06.990 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:06.990 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:06.990 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 14:41:06.990 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:41:06.990 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:06.992 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:41:11.129 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:41:11.131 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:42:18.524 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:42:18.525 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:42:18.525 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user=sadssd_@kjc.sac ip=0:0:0:0:0:0:0:1
+2025-06-06 14:42:18.701 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: s***@k***.sac
+2025-06-06 14:42:18.706 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Failed login attempt - user not found: s***@k***.sac from IP: 0:0:0:0:0:0:0:1
+2025-06-06 14:42:18.706 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Login error - email: sadssd_@kjc.sac, IP: 0:0:0:0:0:0:0:1, Error: Invalid credentials
+2025-06-06 14:42:18.743 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:42:18.743 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:42:23.121 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:42:23.122 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:46:09.084 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:46:09.085 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:46:09.113 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user=zakariyablagrae@gmail.com ip=0:0:0:0:0:0:0:1
+2025-06-06 14:46:09.310 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: z***@g***.com
+2025-06-06 14:46:09.434 [https-jsse-nio-8443-exec-6] WARN  org.springframework.security.audit - Failed login attempt for user 'zakariyablagrae@gmail.com': Bad credentials
+2025-06-06 14:46:09.440 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - Authentication failed - UserID: 4, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-06-06 14:46:09.443 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login process error - Email: z***@g***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:46:09.443 [https-jsse-nio-8443-exec-6] ERROR com.secureops.security - Login error - email: zakariyablagrae@gmail.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-06-06 14:46:09.469 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:46:09.470 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 14:46:13.829 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 14:46:13.837 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:10:57.641 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:10:57.641 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:10:57.641 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:10:57.642 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:10:57.698 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:10:57.701 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:11:00.084 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 15:11:00.119 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.119 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:11:00.147 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.148 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:11:00.275 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 15:11:00.295 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.299 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.299 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 15:11:00.305 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 15:11:00.339 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 15:11:00.383 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.385 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 15:11:00.415 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 15:11:00.436 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:11:00.438 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 15:11:00.570 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 15:11:00.702 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 15:11:00.754 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 15:11:00.792 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 15:11:00.870 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 15:11:00.930 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 15:11:01.035 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 15:11:01.104 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 15:11:01.177 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 15:11:01.370 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 15:14:24.293 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 15:14:44.087 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 15:14:52.998 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 15:15:15.861 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 15:18:41.665 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:18:41.666 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:18:41.767 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user='or 1=1 -- ip=0:0:0:0:0:0:0:1
+2025-06-06 15:18:41.769 [https-jsse-nio-8443-exec-9] WARN  com.secureops.security - Login error - email: 'or 1=1 --, IP: 0:0:0:0:0:0:0:1, Error: Invalid input data
+2025-06-06 15:18:41.851 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:18:41.851 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:18:46.111 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:18:46.111 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:21:30.512 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:21:30.513 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:21:30.513 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:21:30.513 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 15:21:30.556 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:21:30.556 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 15:21:30.556 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 15:21:30.559 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 16:23:49.230 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:23:49.230 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:23:49.467 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:23:49.467 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:23:49.976 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:23:49.979 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:23:49.979 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:23:49.982 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:27:55.237 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.238 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 16:27:55.252 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:27:55.264 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.266 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 16:27:55.592 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:27:55.680 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.692 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:27:55.735 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.737 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:27:55.812 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.814 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:27:55.905 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:27:55.908 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:27:56.052 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:27:56.168 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:27:56.314 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 16:27:56.450 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 16:27:56.543 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 16:27:56.895 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.101 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.199 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.285 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.338 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.384 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 16:27:57.474 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.119 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:29:29.135 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.136 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 16:29:29.149 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.149 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 16:29:29.176 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:29:29.192 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:29:29.220 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:29:29.245 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.247 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:29.247 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.248 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:29:29.260 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.270 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.276 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.283 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.301 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.356 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 16, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.359 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 18, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.365 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 20, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.383 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.386 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:29.404 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:29.405 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:29:29.415 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 12, Action: VIEW_MESSAGES
+2025-06-06 16:29:29.420 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, ChatId: 19, Action: VIEW_MESSAGES
+2025-06-06 16:29:41.231 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:41.232 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:41.272 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:41.278 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:29:41.552 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:41.555 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:41.586 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:41.587 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:29:48.209 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:48.210 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:48.235 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:48.237 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:29:48.417 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:48.419 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:29:48.441 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:29:48.442 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:33:08.213 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:33:08.213 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:33:08.215 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:33:08.216 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+2025-06-06 16:33:10.458 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:33:10.459 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 4
+2025-06-06 16:33:10.483 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 16:33:10.485 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: zakariyablagrae@gmail.com (ID: 4), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 4
+>>>>>>> origin/V2
+2025-06-06 19:18:16.420 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:27.049 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: UNAUTHORIZED_ACCESS_ATTEMPT, LogType: SECURITY, TargetUserId: null
+2025-06-06 19:31:27.062 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:31:27.064 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:31:27.066 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:31:27.066 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:31:40.553 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:40.612 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: unknown (ID: null), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:31:40.882 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - AUTHENTICATION_ATTEMPT user=admin@secureops.com ip=0:0:0:0:0:0:0:1
+2025-06-06 19:31:41.657 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-06-06 19:31:42.073 [https-jsse-nio-8443-exec-8] INFO  org.springframework.security.audit - User 'admin@secureops.com' logged in successfully
+2025-06-06 19:31:42.158 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - Successful login - UserID: 1, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
+2025-06-06 19:31:42.208 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - AUTHENTICATION_SUCCESS user=admin@secureops.com ip=0:0:0:0:0:0:0:1
+2025-06-06 19:31:42.673 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.673 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.691 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.694 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.702 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:42.706 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:42.727 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:42.727 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:42.899 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.906 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:42.931 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:42.938 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:45.816 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:45.848 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:45.848 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:45.913 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:45.930 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:46.016 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:46.219 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:46.332 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:46.520 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:46.526 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:46.526 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:46.545 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:48.033 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:48.041 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:48.041 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:48.084 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:31:49.482 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:49.494 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:31:49.495 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:31:49.509 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:19.230 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:19.244 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:19.274 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:19.274 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:37.809 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:37.857 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:37.888 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:37.907 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:43.970 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:43.975 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:43.989 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:43.999 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:49.854 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:49.853 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 19:32:49.857 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:32:49.879 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:49.886 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-06 19:32:50.692 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:50.742 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:50.805 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:50.783 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-06 19:32:50.856 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:51.035 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-06 19:32:51.151 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:51.153 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:51.191 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:51.197 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:51.416 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-06 19:32:51.439 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-06 19:32:51.443 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-06 19:32:51.650 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-06 19:32:51.656 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-06 19:32:52.937 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:52.941 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:52.947 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:52.951 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:54.756 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:54.773 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:32:54.788 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:32:54.797 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:32:59.318 [clientInboundChannel-3] INFO  com.secureops.security - WEBSOCKET_MESSAGE_PROCESSING - User: admin@secureops.com (ID: 1), IP: websocket-session, ChatId: 4, MessageType: TEXT, SessionId: 4ojhag2r
+2025-06-06 19:33:02.717 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:33:02.866 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:33:02.875 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:33:02.935 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:33:03.838 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:33:03.848 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-06 19:33:03.868 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-06 19:33:03.871 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-06 19:33:03.906 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS
+2025-06-06 19:33:03.966 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
+2025-06-06 19:33:04.219 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
+2025-06-06 19:33:04.219 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS

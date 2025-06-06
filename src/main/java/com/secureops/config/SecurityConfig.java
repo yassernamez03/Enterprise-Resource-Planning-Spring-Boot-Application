@@ -40,11 +40,13 @@ public class SecurityConfig {
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/security/logs").permitAll()
                 .requestMatchers("/ws/**").permitAll()
+                
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/users/pending").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/approve").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/reject").hasRole("ADMIN")
+                .requestMatchers("/api/alerts/**").hasRole("ADMIN")
 
                 // All other endpoints require authentication
                 .requestMatchers("/api/users/{id}").authenticated()

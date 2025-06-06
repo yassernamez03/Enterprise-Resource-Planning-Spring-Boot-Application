@@ -23,7 +23,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ChatServiceImpl implements ChatService {
