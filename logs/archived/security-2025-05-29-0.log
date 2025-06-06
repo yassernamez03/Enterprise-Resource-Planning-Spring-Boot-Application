@@ -1,0 +1,19 @@
+2025-05-29 12:17:26.933 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-05-29 12:20:56.296 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-05-29 12:20:56.939 [https-jsse-nio-8443-exec-5] WARN  org.springframework.security.audit - Failed login attempt for user 'admin@secureops.com': Bad credentials
+2025-05-29 12:20:56.951 [https-jsse-nio-8443-exec-5] WARN  com.secureops.security - Authentication failed - UserID: 1, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-05-29 12:20:56.964 [https-jsse-nio-8443-exec-5] ERROR com.secureops.security - Login process error - Email: a***@s***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-05-29 12:21:05.854 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-05-29 12:21:06.230 [https-jsse-nio-8443-exec-11] WARN  org.springframework.security.audit - Failed login attempt for user 'admin@secureops.com': Bad credentials
+2025-05-29 12:21:06.233 [https-jsse-nio-8443-exec-11] WARN  com.secureops.security - Authentication failed - UserID: 1, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-05-29 12:21:06.236 [https-jsse-nio-8443-exec-11] ERROR com.secureops.security - Login process error - Email: a***@s***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-05-29 12:24:29.698 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-05-29 12:24:30.236 [https-jsse-nio-8443-exec-1] WARN  org.springframework.security.audit - Failed login attempt for user 'admin@secureops.com': Bad credentials
+2025-05-29 12:24:30.240 [https-jsse-nio-8443-exec-1] WARN  com.secureops.security - Authentication failed - UserID: 1, IP: 0:0:0:0:0:0:0:1, Reason: Bad credentials
+2025-05-29 12:24:30.244 [https-jsse-nio-8443-exec-1] ERROR com.secureops.security - Login process error - Email: a***@s***.com, IP: 0:0:0:0:0:0:0:1, Error: Bad credentials
+2025-05-29 12:24:51.008 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-05-29 12:24:51.340 [https-jsse-nio-8443-exec-5] INFO  org.springframework.security.audit - User 'admin@secureops.com' logged in successfully
+2025-05-29 12:24:51.449 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - Successful login - UserID: 1, Role: ADMIN, IP: 0:0:0:0:0:0:0:1
+2025-05-29 13:15:17.097 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - Login attempt from IP: 0:0:0:0:0:0:0:1 for account: a***@s***.com
+2025-05-29 13:15:17.851 [https-jsse-nio-8443-exec-11] INFO  org.springframework.security.audit - User 'admin@secureops.com' logged in successfully
+2025-05-29 13:15:17.922 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - Successful login - UserID: 1, Role: ADMIN, IP: 0:0:0:0:0:0:0:1

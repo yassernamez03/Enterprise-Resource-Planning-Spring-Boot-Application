@@ -1,774 +1,467 @@
-2025-05-20 11:58:48.572 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 7024 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
-2025-05-20 11:58:48.576 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-20 11:58:48.576 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-20 11:58:48.697 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-05-20 11:58:48.698 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-05-20 11:58:52.086 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-20 11:58:52.353 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 254 ms. Found 18 JPA repository interfaces.
-2025-05-20 11:58:54.426 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-20 11:58:54.460 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-20 11:58:54.461 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-20 11:58:54.569 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-20 11:58:54.569 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5870 ms
-2025-05-20 11:58:54.964 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-20 11:58:54.968 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-20 11:58:56.037 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-20 11:58:56.120 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-05-20 11:58:56.525 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@1be3971a
-2025-05-20 11:58:56.527 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-05-20 11:58:56.752 [restartedMain] ERROR o.s.o.j.LocalContainerEntityManagerFactoryBean - Failed to initialize JPA EntityManagerFactory: Unable to load class [com.secureops.entity.FileMessage]
-2025-05-20 11:58:56.754 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to load class [com.secureops.entity.FileMessage]
-2025-05-20 11:58:56.757 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2025-05-20 11:58:56.787 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2025-05-20 11:58:56.794 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
-2025-05-20 11:58:56.832 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+2025-06-06 16:31:02.835 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 21.0.6 with PID 16796 (C:\Users\admin\IdeaProjects\demo\target\classes started by admin in C:\Users\admin\IdeaProjects\demo)
+2025-06-06 16:31:02.837 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-06-06 16:31:02.837 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
+2025-06-06 16:31:03.040 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-06 16:31:03.040 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-06 16:31:07.008 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-06 16:31:07.352 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 318 ms. Found 18 JPA repository interfaces.
+2025-06-06 16:31:10.627 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
+2025-06-06 16:31:10.672 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-06 16:31:10.673 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-06-06 16:31:10.785 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-06 16:31:10.785 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 7745 ms
+2025-06-06 16:31:11.288 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-06-06 16:31:11.304 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
+2025-06-06 16:31:12.625 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-06 16:31:12.707 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-06 16:31:13.411 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@10b0cd7
+2025-06-06 16:31:13.411 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-06-06 16:31:20.297 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-06-06 16:31:21.410 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
+2025-06-06 16:31:21.487 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
+2025-06-06 16:31:21.493 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\admin\IdeaProjects\demo\uploads
+2025-06-06 16:31:21.496 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\admin\IdeaProjects\demo\uploads
+2025-06-06 16:31:21.508 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
+2025-06-06 16:31:21.649 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
+2025-06-06 16:31:21.730 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-06-06 16:31:23.099 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
+2025-06-06 16:31:23.667 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
+2025-06-06 16:31:23.667 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
+2025-06-06 16:31:25.473 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
+2025-06-06 16:31:27.685 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-06-06 16:31:28.137 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
+2025-06-06 16:31:28.844 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.AuthController:
+	
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.ChatController:
+	
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.FileController:
+	
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.LogAdminController:
+	
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.LogSecurityController:
+	
+2025-06-06 16:31:29.613 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.MessageController:
+	
+2025-06-06 16:31:29.628 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.TaskEventController:
+	
+2025-06-06 16:31:29.630 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.UserController:
+	
+2025-06-06 16:31:29.639 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.c.WebSocketController:
+	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
+2025-06-06 16:31:29.639 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.h.c.EmployeeController:
+	
+2025-06-06 16:31:29.645 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.h.c.HRTaskController:
+	
+2025-06-06 16:31:29.649 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.ClientController:
+	
+2025-06-06 16:31:29.653 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.InvoiceController:
+	
+2025-06-06 16:31:29.655 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.OrderController:
+	
+2025-06-06 16:31:29.660 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.ProductController:
+	
+2025-06-06 16:31:29.661 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.QuoteController:
+	
+2025-06-06 16:31:29.662 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	c.s.s.c.ReportController:
+	
+2025-06-06 16:31:29.665 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	o.s.b.a.w.s.e.BasicErrorController:
+	
+2025-06-06 16:31:29.671 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	o.s.w.a.OpenApiWebMvcResource:
+	
+2025-06-06 16:31:29.672 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	o.s.w.u.SwaggerWelcomeWebMvc:
+	
+2025-06-06 16:31:29.673 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
+	o.s.w.u.SwaggerConfigResource:
+	
+2025-06-06 16:31:31.291 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-06-06 16:31:31.446 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-06-06 16:31:31.446 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-06-06 16:31:31.446 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2025-06-06 16:31:31.446 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]
+2025-06-06 16:31:31.462 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]
+2025-06-06 16:31:31.462 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]]
+2025-06-06 16:31:31.468 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2025-06-06 16:31:31.469 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-06-06 16:31:31.471 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-06-06 16:31:31.949 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\admin\.keystore] using alias [localhost] with trust store [null]
+2025-06-06 16:31:32.003 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
+2025-06-06 16:31:32.029 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 31.372 seconds (process running for 32.638)
+2025-06-06 16:32:31.394 [MessageBroker-1] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2025-06-06 16:32:37.206 [https-jsse-nio-8443-exec-3] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-06-06 16:32:37.208 [https-jsse-nio-8443-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-06-06 16:32:37.213 [https-jsse-nio-8443-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+2025-06-06 16:32:37.405 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/auth/login, client=0:0:0:0:0:0:0:1]
+2025-06-06 16:32:37.406 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 16:32:37.752 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.RecaptchaService - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:37.752 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.RecaptchaService - Validating CAPTCHA token: 03AFcW****OBtI from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:37.771 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.RecaptchaService - Sending CAPTCHA verification request to Google for token: 03AFcW****OBtI
+2025-06-06 16:32:37.901 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /login","logType":"NAVIGATION"}]
+2025-06-06 16:32:38.301 [https-jsse-nio-8443-exec-4] INFO  c.secureops.service.RecaptchaService - CAPTCHA validation successful for token: 03AFcW****OBtI from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:38.301 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.AuthServiceImpl - Login attempt for user: a***@s***.com
+2025-06-06 16:32:38.388 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.AuthServiceImpl - User found - ID: 1, Role: ADMIN, Active: true, Status: APPROVED
+2025-06-06 16:32:38.793 [https-jsse-nio-8443-exec-4] INFO  c.secureops.service.AuthServiceImpl - User successfully authenticated - UserID: 1
+2025-06-06 16:32:38.847 [https-jsse-nio-8443-exec-4] DEBUG c.secureops.service.AuthServiceImpl - JWT token generated for user: 1
+2025-06-06 16:32:38.877 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/auth/login, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"email":"admin@secureops.com","password":"password123","rememberMe":false,"recaptchaResponse":"03AFcWeA5pyjAqwBjn-sNRyfBXIit4rujzJTupcgLYCmginmco3rslPNF7Ujln9HT8DpPmcKOm11xhM7lmNTiBtah2z9Ji9bAC_5dX8DLodvlwz410GlZYH3zXRN6mDpS8rhsky7HpPyJJwPkp4UWprZ-7kpUeXiNzKpUJUSw5apcpcCccuz31iogm98HrgftbowBpCxC56WcHJlfTDnGbTcmO8u34Ttf2ZsYLqOYcc6uGA3yuaAtWC9bSneA_2XSOCm2U-nWrptoy1QiKtdCjlf2RSXlSmz1A6PetExsWzECkNQleIFOWUH61ZISuQIsKs89hgfYHlU03apghSHNxPktDwfYAmTELU8nF0oATPEOhWq659PNDO7th7IxUhPTc9zP3gYTeUi_KSv1uq7OU_0payoI_dE6-nvpOALJHYob0IeTNmDxMb99HpZk9UBJifybk8FMqmwhirfDqEY11A0B9V4oF3Qd-yNuuiMeXX-0GHMaq3pnD7sVbG-xt4_gTzGXJSr0eoP7ZxsULaeBBLeZB6OLdFN2NFXMS0YQmgb0oZu4AqtsnBIIH461ZxMa88NyOJGL37yOHlM-NFmSDqEO57VUlO2bym8p2wVLBUgtGAtOOCloz0EFIV1N1gGrXb3WNQsQUiAlZTTNzE81qtgAwBoGT4rb7ajaizfD89hhoUSMBq3DFAn64A-zk1QayrZtpcn3AtfEVcBo1VEtrLf0B4vnQEYlQF-UOWdMb2XNVPyRwYEoOyoOrsG-M_C25GEvyk5vxaJdjDaF2C14yL-C2UlGMOjFpCTIc8gnhxiQWZWRpKq6Lq8kgDalNfj0sWPBH4aqkK0taKwj47YsG7sSzNI7NyYSpg8NPWcdfN-89ioCiVZqzgzUNYO95aKyuytj1VXn2jCwtrdiVMuTvXd-80GNsx6dniTzWkmkelG5Xuan77f1wF0axAH0IRiJD410cjz2xHmptfow77Ox0iookHIYVR_zdpaVPjp-LKoJy33nKWeHvSK9Y2Ch8eeyQNvSb3EujQx7XNbHZwzcR_ZRaeVczeSIZP5r1QcqwGeKysyzLzZWEO68bsWY_VgW-drpoJd3xR_Hwmc5HXLNaKGG0l--pisYu3mx4oWoo5jx8wR5ULtRqWH3BdtH3d081T5j_-Qxwjs-mqcF-dHD2JtqzdlwQMXxCp1KQwjmHAY7m0r-FXd8tljOyBMV82FLHEIqxuT5TLd_hm5Hv-1e83V-WpmKXBl_lLIRvgsg-sK1crXAFEXyxGRjwXT-EySefGSCXYfcTEt4YXWcBEv1tsYD3LSd0XHPK7R8Z1hdkEOVp2pXuLqa2Ueud7NlGcDT2wdL_85ERbMtNGhExqeIe5wJGDNIcwYmEzLgBxKWvw2IiClllkZulEAQOJj-6MzLG_S3E2SizFbnE5LJ0esTDJfoArcqEXmV9i8cm0WJ2LeCockffhXg4yP4Bdgf9lhyxHvi90va9AiDDLy8-lw1jdhSczcJ9PtbqzRaVGJlpiShWCR0fURnIGcr5NGDlzDtCrlbOiM7fq8V_4FZhpFLcZw_9hrbUvsU3vyMaKSaGSXXZzVwFh61opki9nreruZLXmbabr3DTFtEMg_1RE-_nl6DmzYuVd_lZSOl0-8BB_tjCeFNItAGlQl2tTouE_p3byrQYjRLtVlnA10DhcXumkECqInv6a8H-W1uRX_ExotBSESOQufWCmWMaMSntinzchohGxGHexRmoW5gzYYpLClZWuH-eiTiUG_UOjM3_5NiX0q3GWjn5Fe9ssNmIrEjvn01SDN6w9bF2mw2VvQId1eJTU1NwF6eJU6_B6nu8dZmtlp-ll6F-JpLvwU3YvvayNV6TNrHpEOen750JzLQzB0abYUtqkWjYFcEEVL088SZnUv0VvJkqIdwABZqZs_Es2tR7quFqbb9UqQMoBiNg78AuKdzeFG_kJue4Ry_Amj7S1hKwMPvHMZSH5s-XQ_3tFMACbfeN3GatJ8PUWrlHPYdYhUAJsa934nDPMspRhU6EYfrd8za9baXo1MtafvrZOhWj4hDgOBtI"}]
+2025-06-06 16:32:39.225 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.297 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.325 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:39.356 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Retrieving current user from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:39.373 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.377 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.381 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Retrieving user by email: a***@s***.com
+2025-06-06 16:32:39.388 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.399 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /login","logType":"NAVIGATION"}]
+2025-06-06 16:32:39.451 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 16:32:39.463 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - User retrieved: a***@s***.com
+2025-06-06 16:32:39.471 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 16:32:39.478 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Mapping user to DTO: a***@s***.com
+2025-06-06 16:32:39.483 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Generating avatar URL for file: default-avatar.png
+2025-06-06 16:32:39.493 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Generated avatar URL: https://localhost:8443/api/files/download/default-avatar.png
+2025-06-06 16:32:39.500 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Avatar URL set for user: a***@s***.com
+2025-06-06 16:32:39.513 [https-jsse-nio-8443-exec-9] DEBUG c.secureops.service.UserServiceImpl - Current user retrieved: a***@s***.com from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:39.515 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 16:32:39.523 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.580 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.587 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:39.630 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 16:32:39.637 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 16:32:39.693 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/files/download/default-avatar.png, client=0:0:0:0:0:0:0:1]
+2025-06-06 16:32:39.721 [https-jsse-nio-8443-exec-2] DEBUG c.s.service.FileStorageServiceImpl - Attempting to load file as resource: default-avatar.png
+2025-06-06 16:32:39.728 [https-jsse-nio-8443-exec-2] INFO  c.s.service.FileStorageServiceImpl - File resource loaded successfully: default-avatar.png
+2025-06-06 16:32:39.730 [https-jsse-nio-8443-exec-2] DEBUG c.s.service.FileStorageServiceImpl - Retrieving storage directory: C:\Users\admin\IdeaProjects\demo\uploads
+2025-06-06 16:32:39.743 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/files/download/default-avatar.png, client=0:0:0:0:0:0:0:1]
+2025-06-06 16:32:41.647 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:41.663 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:41.691 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 16:32:41.731 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 16:32:42.380 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.381 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.393 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:42.407 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Retrieving current user from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:42.413 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Retrieving user by email: a***@s***.com
+2025-06-06 16:32:42.420 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 16:32:42.461 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - User retrieved: a***@s***.com
+2025-06-06 16:32:42.467 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Mapping user to DTO: a***@s***.com
+2025-06-06 16:32:42.480 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Generating avatar URL for file: default-avatar.png
+2025-06-06 16:32:42.496 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Generated avatar URL: https://localhost:8443/api/files/download/default-avatar.png
+2025-06-06 16:32:42.464 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.543 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Avatar URL set for user: a***@s***.com
+2025-06-06 16:32:42.545 [https-jsse-nio-8443-exec-10] DEBUG c.secureops.service.UserServiceImpl - Current user retrieved: a***@s***.com from IP: 0:0:0:0:0:0:0:1
+2025-06-06 16:32:42.559 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.591 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 16:32:42.681 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.682 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:42.753 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 16:32:42.770 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 16:32:43.158 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:43.159 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:43.161 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:43.233 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products","logType":"NAVIGATION"}]
+2025-06-06 16:32:43.253 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products","logType":"SECURITY"}]
+2025-06-06 16:32:43.304 [https-jsse-nio-8443-exec-7] WARN  o.s.d.w.c.SpringDataJacksonConfiguration$PageModule$WarningLoggingModifier - Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
+	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2025-05-20 11:58:56.873 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Unable to load class [com.secureops.entity.FileMessage]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1818)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
-	at com.secureops.SecureOpsApplication.main(SecureOpsApplication.java:16)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-Caused by: org.hibernate.boot.registry.classloading.spi.ClassLoadingException: Unable to load class [com.secureops.entity.FileMessage]
-	at org.hibernate.boot.registry.classloading.internal.ClassLoaderServiceImpl.classForName(ClassLoaderServiceImpl.java:126)
-	at org.hibernate.boot.model.source.internal.annotations.AnnotationMetadataSourceProcessorImpl.<init>(AnnotationMetadataSourceProcessorImpl.java:103)
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess$1.<init>(MetadataBuildingProcess.java:206)
-	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:200)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1442)
-	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1513)
-	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
-	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
-	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1865)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1814)
-	... 18 common frames omitted
-Caused by: java.lang.ClassNotFoundException: Could not load requested class : com.secureops.entity.FileMessage
-	at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:216)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:592)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-	at java.base/java.lang.Class.forName0(Native Method)
-	at java.base/java.lang.Class.forName(Class.java:529)
-	at java.base/java.lang.Class.forName(Class.java:508)
-	at org.hibernate.boot.registry.classloading.internal.ClassLoaderServiceImpl.classForName(ClassLoaderServiceImpl.java:123)
-	... 30 common frames omitted
-Caused by: java.lang.Throwable: null
-	at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:209)
-	... 36 common frames omitted
-	Suppressed: java.lang.ClassNotFoundException: com.secureops.entity.FileMessage
-		at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-		at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at java.base/java.lang.Class.forName0(Native Method)
-		at java.base/java.lang.Class.forName(Class.java:529)
-		at java.base/java.lang.Class.forName(Class.java:508)
-		at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:206)
-		... 36 common frames omitted
-	Suppressed: java.lang.ClassNotFoundException: com.secureops.entity.FileMessage
-		at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-		at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:206)
-		... 36 common frames omitted
-	Suppressed: java.lang.ClassNotFoundException: com.secureops.entity.FileMessage
-		at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-		at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at java.base/java.lang.Class.forName0(Native Method)
-		at java.base/java.lang.Class.forName(Class.java:529)
-		at java.base/java.lang.Class.forName(Class.java:508)
-		at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:206)
-		... 36 common frames omitted
-	Suppressed: java.lang.ClassNotFoundException: com.secureops.entity.FileMessage
-		at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-		at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-		at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
-		at org.hibernate.boot.registry.classloading.internal.AggregatedClassLoader.findClass(AggregatedClassLoader.java:206)
-		... 36 common frames omitted
-2025-05-20 12:02:54.578 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 11140 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
-2025-05-20 12:02:54.580 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-20 12:02:54.581 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-20 12:02:54.650 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-05-20 12:02:54.650 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-05-20 12:02:56.434 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-20 12:02:56.631 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 184 ms. Found 18 JPA repository interfaces.
-2025-05-20 12:02:57.976 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-20 12:02:57.997 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-20 12:02:57.997 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-20 12:02:58.074 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-20 12:02:58.074 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3423 ms
-2025-05-20 12:02:58.388 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-20 12:02:58.390 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-20 12:02:59.036 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-20 12:02:59.077 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-05-20 12:02:59.325 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@13d6d71d
-2025-05-20 12:02:59.328 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-05-20 12:03:03.022 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 12:03:03.690 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
-2025-05-20 12:03:03.727 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
-2025-05-20 12:03:03.732 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 12:03:03.733 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 12:03:03.736 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
-2025-05-20 12:03:03.805 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
-2025-05-20 12:03:03.845 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-05-20 12:03:04.539 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
-2025-05-20 12:03:04.898 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
-2025-05-20 12:03:04.904 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
-2025-05-20 12:03:05.875 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
-2025-05-20 12:03:07.070 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-20 12:03:07.330 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
-2025-05-20 12:03:07.851 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
-2025-05-20 12:03:08.172 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.AuthController:
-	
-2025-05-20 12:03:08.173 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.ChatController:
-	
-2025-05-20 12:03:08.174 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.FileController:
-	
-2025-05-20 12:03:08.174 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogAdminController:
-	
-2025-05-20 12:03:08.175 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogSecurityController:
-	
-2025-05-20 12:03:08.176 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.MessageController:
-	
-2025-05-20 12:03:08.176 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.TaskEventController:
-	
-2025-05-20 12:03:08.177 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.UserController:
-	
-2025-05-20 12:03:08.184 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.WebSocketController:
-	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
-2025-05-20 12:03:08.185 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.EmployeeController:
-	
-2025-05-20 12:03:08.186 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.HRTaskController:
-	
-2025-05-20 12:03:08.186 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ClientController:
-	
-2025-05-20 12:03:08.187 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.InvoiceController:
-	
-2025-05-20 12:03:08.188 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.OrderController:
-	
-2025-05-20 12:03:08.189 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ProductController:
-	
-2025-05-20 12:03:08.189 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.QuoteController:
-	
-2025-05-20 12:03:08.190 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ReportController:
-	
-2025-05-20 12:03:08.191 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.b.a.w.s.e.BasicErrorController:
-	
-2025-05-20 12:03:08.193 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.a.OpenApiWebMvcResource:
-	
-2025-05-20 12:03:08.194 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerWelcomeWebMvc:
-	
-2025-05-20 12:03:08.194 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerConfigResource:
-	
-2025-05-20 12:03:09.185 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-05-20 12:03:09.274 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 12:03:09.275 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 12:03:09.276 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2025-05-20 12:03:09.276 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4f86869f]
-2025-05-20 12:03:09.276 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4f86869f]
-2025-05-20 12:03:09.277 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4f86869f]]
-2025-05-20 12:03:09.278 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2025-05-20 12:03:09.279 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 12:03:09.279 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 12:03:09.679 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\zakar\.keystore] using alias [localhost] with trust store [null]
-2025-05-20 12:03:09.698 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
-2025-05-20 12:03:09.718 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 16.103 seconds (process running for 16.902)
-2025-05-20 23:24:28.480 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 25988 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
-2025-05-20 23:24:28.483 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-20 23:24:28.485 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-20 23:24:28.598 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-05-20 23:24:28.600 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-05-20 23:24:31.892 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-20 23:24:32.268 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 354 ms. Found 18 JPA repository interfaces.
-2025-05-20 23:24:34.830 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-20 23:24:34.878 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-20 23:24:34.879 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-20 23:24:35.028 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-20 23:24:35.029 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 6428 ms
-2025-05-20 23:24:35.651 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-20 23:24:35.654 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-20 23:24:37.229 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-20 23:24:37.306 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-05-20 23:24:37.726 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4caf832a
-2025-05-20 23:24:37.731 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-05-20 23:24:46.130 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:24:47.744 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
-2025-05-20 23:24:47.850 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
-2025-05-20 23:24:47.859 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:24:47.861 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:24:47.870 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
-2025-05-20 23:24:48.048 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
-2025-05-20 23:24:48.203 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-05-20 23:24:49.198 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
-2025-05-20 23:24:49.669 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
-2025-05-20 23:24:49.676 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
-2025-05-20 23:24:50.992 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
-2025-05-20 23:24:52.338 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-20 23:24:52.627 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
-2025-05-20 23:24:53.197 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
-2025-05-20 23:24:53.554 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.AuthController:
-	
-2025-05-20 23:24:53.555 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.ChatController:
-	
-2025-05-20 23:24:53.555 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.FileController:
-	
-2025-05-20 23:24:53.556 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogAdminController:
-	
-2025-05-20 23:24:53.556 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogSecurityController:
-	
-2025-05-20 23:24:53.556 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.MessageController:
-	
-2025-05-20 23:24:53.557 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.TaskEventController:
-	
-2025-05-20 23:24:53.557 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.UserController:
-	
-2025-05-20 23:24:53.562 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.WebSocketController:
-	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
-2025-05-20 23:24:53.563 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.EmployeeController:
-	
-2025-05-20 23:24:53.563 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.HRTaskController:
-	
-2025-05-20 23:24:53.564 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ClientController:
-	
-2025-05-20 23:24:53.564 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.InvoiceController:
-	
-2025-05-20 23:24:53.564 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.OrderController:
-	
-2025-05-20 23:24:53.565 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ProductController:
-	
-2025-05-20 23:24:53.565 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.QuoteController:
-	
-2025-05-20 23:24:53.565 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ReportController:
-	
-2025-05-20 23:24:53.566 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.b.a.w.s.e.BasicErrorController:
-	
-2025-05-20 23:24:53.566 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.a.OpenApiWebMvcResource:
-	
-2025-05-20 23:24:53.567 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerWelcomeWebMvc:
-	
-2025-05-20 23:24:53.567 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerConfigResource:
-	
-2025-05-20 23:24:54.591 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-05-20 23:24:54.678 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:24:54.679 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:24:54.680 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2025-05-20 23:24:54.680 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]
-2025-05-20 23:24:54.680 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]
-2025-05-20 23:24:54.681 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]]
-2025-05-20 23:24:54.683 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2025-05-20 23:24:54.683 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:24:54.684 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:24:54.938 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\zakar\.keystore] using alias [localhost] with trust store [null]
-2025-05-20 23:24:54.960 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
-2025-05-20 23:24:54.981 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 27.986 seconds (process running for 29.281)
-2025-05-20 23:25:54.640 [MessageBroker-1] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
-2025-05-20 23:29:21.712 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
-2025-05-20 23:29:21.728 [Thread-8] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-05-20 23:29:21.763 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
-2025-05-20 23:29:21.768 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:29:21.770 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:29:21.771 [Thread-8] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
-2025-05-20 23:29:21.773 [Thread-8] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]]
-2025-05-20 23:29:21.774 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]
-2025-05-20 23:29:21.774 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@99064dc]
-2025-05-20 23:29:21.775 [Thread-8] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
-2025-05-20 23:29:21.775 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:21.775 [Thread-8] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:21.797 [Thread-8] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:29:21.804 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2025-05-20 23:29:21.816 [Thread-8] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
-2025-05-20 23:29:22.065 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 25988 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
-2025-05-20 23:29:22.065 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-20 23:29:22.066 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-20 23:29:22.983 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-20 23:29:23.125 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 140 ms. Found 18 JPA repository interfaces.
-2025-05-20 23:29:23.494 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-20 23:29:23.498 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-20 23:29:23.498 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-20 23:29:23.534 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-20 23:29:23.534 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1464 ms
-2025-05-20 23:29:23.701 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-20 23:29:23.702 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-20 23:29:23.832 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-20 23:29:23.834 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
-2025-05-20 23:29:23.923 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@15616e95
-2025-05-20 23:29:23.924 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
-2025-05-20 23:29:26.278 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:29:26.583 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
-2025-05-20 23:29:26.608 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
-2025-05-20 23:29:26.613 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:29:26.614 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:29:26.617 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
-2025-05-20 23:29:26.646 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
-2025-05-20 23:29:26.698 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
-2025-05-20 23:29:27.009 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
-2025-05-20 23:29:27.012 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
-2025-05-20 23:29:27.106 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
-2025-05-20 23:29:27.720 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-20 23:29:27.822 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
-2025-05-20 23:29:28.117 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
-2025-05-20 23:29:28.388 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.AuthController:
-	
-2025-05-20 23:29:28.388 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.ChatController:
-	
-2025-05-20 23:29:28.388 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.FileController:
-	
-2025-05-20 23:29:28.389 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogAdminController:
-	
-2025-05-20 23:29:28.389 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogSecurityController:
-	
-2025-05-20 23:29:28.389 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.MessageController:
-	
-2025-05-20 23:29:28.390 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.TaskEventController:
-	
-2025-05-20 23:29:28.390 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.UserController:
-	
-2025-05-20 23:29:28.391 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.WebSocketController:
-	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
-2025-05-20 23:29:28.391 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.EmployeeController:
-	
-2025-05-20 23:29:28.391 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.HRTaskController:
-	
-2025-05-20 23:29:28.392 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ClientController:
-	
-2025-05-20 23:29:28.392 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.InvoiceController:
-	
-2025-05-20 23:29:28.392 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.OrderController:
-	
-2025-05-20 23:29:28.393 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ProductController:
-	
-2025-05-20 23:29:28.393 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.QuoteController:
-	
-2025-05-20 23:29:28.394 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ReportController:
-	
-2025-05-20 23:29:28.395 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.b.a.w.s.e.BasicErrorController:
-	
-2025-05-20 23:29:28.396 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.a.OpenApiWebMvcResource:
-	
-2025-05-20 23:29:28.396 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerWelcomeWebMvc:
-	
-2025-05-20 23:29:28.396 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerConfigResource:
-	
-2025-05-20 23:29:28.869 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-05-20 23:29:28.903 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:29:28.903 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:29:28.903 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2025-05-20 23:29:28.904 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]
-2025-05-20 23:29:28.904 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]
-2025-05-20 23:29:28.904 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]]
-2025-05-20 23:29:28.905 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2025-05-20 23:29:28.905 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:28.905 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:29.021 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\zakar\.keystore] using alias [localhost] with trust store [null]
-2025-05-20 23:29:29.024 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
-2025-05-20 23:29:29.035 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 7.111 seconds (process running for 303.335)
-2025-05-20 23:29:29.088 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2025-05-20 23:29:30.410 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
-2025-05-20 23:29:30.411 [Thread-10] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-05-20 23:29:30.435 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
-2025-05-20 23:29:30.437 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:29:30.437 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:29:30.437 [Thread-10] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
-2025-05-20 23:29:30.437 [Thread-10] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]]
-2025-05-20 23:29:30.438 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]
-2025-05-20 23:29:30.438 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@13d20f26]
-2025-05-20 23:29:30.438 [Thread-10] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
-2025-05-20 23:29:30.438 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:30.438 [Thread-10] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:30.444 [Thread-10] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:29:30.445 [Thread-10] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
-2025-05-20 23:29:30.447 [Thread-10] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
-2025-05-20 23:29:30.605 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 25988 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
-2025-05-20 23:29:30.605 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-20 23:29:30.606 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-20 23:29:31.295 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-20 23:29:31.419 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 121 ms. Found 18 JPA repository interfaces.
-2025-05-20 23:29:31.782 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-20 23:29:31.784 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-20 23:29:31.785 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-20 23:29:31.820 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-20 23:29:31.820 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1210 ms
-2025-05-20 23:29:32.022 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-20 23:29:32.023 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-20 23:29:32.130 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-20 23:29:32.133 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
-2025-05-20 23:29:32.218 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@38dc45b1
-2025-05-20 23:29:32.218 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
-2025-05-20 23:29:34.163 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:29:34.443 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
-2025-05-20 23:29:34.467 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
-2025-05-20 23:29:34.472 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:29:34.473 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\uploads
-2025-05-20 23:29:34.476 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
-2025-05-20 23:29:34.512 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
-2025-05-20 23:29:34.552 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
-2025-05-20 23:29:34.833 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
-2025-05-20 23:29:34.837 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
-2025-05-20 23:29:34.921 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
-2025-05-20 23:29:35.472 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-20 23:29:35.563 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
-2025-05-20 23:29:35.852 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
-2025-05-20 23:29:36.064 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.AuthController:
-	
-2025-05-20 23:29:36.064 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.ChatController:
-	
-2025-05-20 23:29:36.065 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.FileController:
-	
-2025-05-20 23:29:36.065 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogAdminController:
-	
-2025-05-20 23:29:36.065 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogSecurityController:
-	
-2025-05-20 23:29:36.066 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.MessageController:
-	
-2025-05-20 23:29:36.066 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.TaskEventController:
-	
-2025-05-20 23:29:36.066 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.UserController:
-	
-2025-05-20 23:29:36.067 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.WebSocketController:
-	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
-2025-05-20 23:29:36.067 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.EmployeeController:
-	
-2025-05-20 23:29:36.067 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.HRTaskController:
-	
-2025-05-20 23:29:36.067 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ClientController:
-	
-2025-05-20 23:29:36.068 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.InvoiceController:
-	
-2025-05-20 23:29:36.068 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.OrderController:
-	
-2025-05-20 23:29:36.068 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ProductController:
-	
-2025-05-20 23:29:36.068 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.QuoteController:
-	
-2025-05-20 23:29:36.069 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ReportController:
-	
-2025-05-20 23:29:36.070 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.b.a.w.s.e.BasicErrorController:
-	
-2025-05-20 23:29:36.071 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.a.OpenApiWebMvcResource:
-	
-2025-05-20 23:29:36.071 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerWelcomeWebMvc:
-	
-2025-05-20 23:29:36.072 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerConfigResource:
-	
-2025-05-20 23:29:36.790 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-05-20 23:29:36.840 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:29:36.840 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:29:36.840 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2025-05-20 23:29:36.840 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]
-2025-05-20 23:29:36.841 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]
-2025-05-20 23:29:36.841 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]]
-2025-05-20 23:29:36.842 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2025-05-20 23:29:36.842 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:36.842 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:29:36.954 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\zakar\.keystore] using alias [localhost] with trust store [null]
-2025-05-20 23:29:36.958 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
-2025-05-20 23:29:36.972 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 6.431 seconds (process running for 311.273)
-2025-05-20 23:29:37.040 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
-2025-05-20 23:30:36.834 [MessageBroker-1] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
-2025-05-20 23:42:33.021 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-05-20 23:42:33.043 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]]
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@735a3e20]
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
-2025-05-20 23:42:33.045 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:42:33.046 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-20 23:42:33.051 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-05-20 23:42:33.052 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
-2025-05-20 23:42:33.055 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
-2025-05-21 11:11:44.925 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 21.0.6 with PID 4780 (C:\Users\admin\IdeaProjects\demo\target\classes started by admin in C:\Users\admin\IdeaProjects\demo)
-2025-05-21 11:11:44.929 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-21 11:11:44.931 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-21 11:11:45.085 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-05-21 11:11:45.086 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-05-21 11:11:48.099 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.secureops.SecureOpsApplication]: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-2025-05-21 11:11:48.140 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2025-05-21 11:11:48.237 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
-org.springframework.beans.factory.BeanDefinitionStoreException: Failed to process import candidates for configuration class [com.secureops.SecureOpsApplication]: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:627)
-	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.lambda$processGroupImports$1(ConfigurationClassParser.java:850)
-	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
-	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorGroupingHandler.processGroupImports(ConfigurationClassParser.java:847)
-	at org.springframework.context.annotation.ConfigurationClassParser$DeferredImportSelectorHandler.process(ConfigurationClassParser.java:817)
-	at org.springframework.context.annotation.ConfigurationClassParser.parse(ConfigurationClassParser.java:198)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:418)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
-	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:791)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:609)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1362)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1351)
-	at com.secureops.SecureOpsApplication.main(SecureOpsApplication.java:16)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-Caused by: java.lang.IllegalStateException: Error processing condition on org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:60)
-	at org.springframework.context.annotation.ConditionEvaluator.shouldSkip(ConditionEvaluator.java:99)
-	at org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass(ConfigurationClassParser.java:247)
-	at org.springframework.context.annotation.ConfigurationClassParser.processImports(ConfigurationClassParser.java:617)
-	... 21 common frames omitted
-Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'MAIL_HOST' in value "${MAIL_HOST}"
-	at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81)
-	at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:423)
-	at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:128)
-	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:118)
-	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114)
-	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:255)
-	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:226)
-	at org.springframework.core.env.AbstractPropertyResolver.resolveNestedPlaceholders(AbstractPropertyResolver.java:246)
-	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:81)
-	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:62)
-	at org.springframework.core.env.AbstractEnvironment.getProperty(AbstractEnvironment.java:557)
-	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition$Spec.collectProperties(OnPropertyCondition.java:121)
-	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition.determineOutcome(OnPropertyCondition.java:71)
-	at org.springframework.boot.autoconfigure.condition.OnPropertyCondition.getMatchOutcome(OnPropertyCondition.java:58)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberOutcomes.getConditionOutcome(AbstractNestedCondition.java:195)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberOutcomes.<init>(AbstractNestedCondition.java:189)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberConditions.lambda$getMatchOutcomes$0(AbstractNestedCondition.java:169)
-	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:986)
-	at org.springframework.util.MultiValueMapAdapter.forEach(MultiValueMapAdapter.java:179)
-	at java.base/java.util.Collections$UnmodifiableMap.forEach(Collections.java:1707)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberConditions.getMatchOutcomes(AbstractNestedCondition.java:169)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition$MemberMatchOutcomes.<init>(AbstractNestedCondition.java:78)
-	at org.springframework.boot.autoconfigure.condition.AbstractNestedCondition.getMatchOutcome(AbstractNestedCondition.java:63)
-	at org.springframework.boot.autoconfigure.condition.SpringBootCondition.matches(SpringBootCondition.java:47)
-	... 24 common frames omitted
-2025-05-21 11:13:29.940 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 21.0.6 with PID 4260 (C:\Users\admin\IdeaProjects\demo\target\classes started by admin in C:\Users\admin\IdeaProjects\demo)
-2025-05-21 11:13:29.945 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
-2025-05-21 11:13:29.947 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
-2025-05-21 11:13:30.089 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-05-21 11:13:30.090 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-05-21 11:13:34.898 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-21 11:13:35.422 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 494 ms. Found 18 JPA repository interfaces.
-2025-05-21 11:13:38.480 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
-2025-05-21 11:13:38.516 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
-2025-05-21 11:13:38.518 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
-2025-05-21 11:13:38.649 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-05-21 11:13:38.650 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 8559 ms
-2025-05-21 11:13:39.248 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
-2025-05-21 11:13:39.262 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
-2025-05-21 11:13:40.844 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-05-21 11:13:40.941 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-2025-05-21 11:13:41.430 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@631aaeb7
-2025-05-21 11:13:41.433 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
-2025-05-21 11:13:50.686 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-21 11:13:51.846 [restartedMain] INFO  c.secureops.service.AuthServiceImpl - AuthServiceImpl initialized
-2025-05-21 11:13:51.937 [restartedMain] INFO  com.secureops.service.EmailService - EmailService initialized with mail sender: JavaMailSenderImpl
-2025-05-21 11:13:51.944 [restartedMain] INFO  c.s.service.FileStorageServiceImpl - Initializing FileStorageService with storage location: C:\Users\admin\IdeaProjects\demo\uploads
-2025-05-21 11:13:51.946 [restartedMain] DEBUG c.s.service.FileStorageServiceImpl - Storage directory created or already exists: C:\Users\admin\IdeaProjects\demo\uploads
-2025-05-21 11:13:51.952 [restartedMain] INFO  c.secureops.service.UserServiceImpl - UserServiceImpl initialized
-2025-05-21 11:13:52.174 [restartedMain] INFO  c.secureops.service.RecaptchaService - RecaptchaService initialized
-2025-05-21 11:13:52.252 [restartedMain] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-05-21 11:13:53.611 [restartedMain] INFO  c.secureops.service.ChatServiceImpl - ChatServiceImpl initialized
-2025-05-21 11:13:54.559 [restartedMain] INFO  c.secureops.service.WebSocketService - WebSocketService initialized
-2025-05-21 11:13:54.570 [restartedMain] INFO  c.s.service.MessageServiceImpl - MessageServiceImpl initialized
-2025-05-21 11:13:56.228 [restartedMain] INFO  c.s.service.TaskEventServiceImpl - TaskEventServiceImpl initialized
-2025-05-21 11:13:58.503 [restartedMain] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-21 11:13:59.017 [restartedMain] DEBUG o.s.w.s.s.s.WebSocketHandlerMapping - Patterns [/ws/**] in 'stompWebSocketHandlerMapping'
-2025-05-21 11:14:00.415 [restartedMain] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
-2025-05-21 11:14:00.934 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.AuthController:
-	
-2025-05-21 11:14:00.935 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.ChatController:
-	
-2025-05-21 11:14:00.936 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.FileController:
-	
-2025-05-21 11:14:00.938 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogAdminController:
-	
-2025-05-21 11:14:00.938 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.LogSecurityController:
-	
-2025-05-21 11:14:00.939 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.MessageController:
-	
-2025-05-21 11:14:00.939 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.TaskEventController:
-	
-2025-05-21 11:14:00.940 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.UserController:
-	
-2025-05-21 11:14:00.949 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.c.WebSocketController:
-	{[MESSAGE],[/chat/{chatId}/sendMessage]}: sendMessage(Long,MessageDto,SimpMessageHeaderAccessor)
-2025-05-21 11:14:00.949 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.EmployeeController:
-	
-2025-05-21 11:14:00.950 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.h.c.HRTaskController:
-	
-2025-05-21 11:14:00.950 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ClientController:
-	
-2025-05-21 11:14:00.952 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.InvoiceController:
-	
-2025-05-21 11:14:00.952 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.OrderController:
-	
-2025-05-21 11:14:00.952 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ProductController:
-	
-2025-05-21 11:14:00.953 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.QuoteController:
-	
-2025-05-21 11:14:00.953 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	c.s.s.c.ReportController:
-	
-2025-05-21 11:14:00.955 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.b.a.w.s.e.BasicErrorController:
-	
-2025-05-21 11:14:00.959 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.a.OpenApiWebMvcResource:
-	
-2025-05-21 11:14:00.960 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerWelcomeWebMvc:
-	
-2025-05-21 11:14:00.960 [restartedMain] DEBUG o.s.w.s.m.WebSocketAnnotationMethodMessageHandler - 
-	o.s.w.u.SwaggerConfigResource:
-	
-2025-05-21 11:14:02.972 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
-2025-05-21 11:14:03.163 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel added SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-21 11:14:03.163 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-21 11:14:03.164 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
-2025-05-21 11:14:03.165 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]
-2025-05-21 11:14:03.165 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]
-2025-05-21 11:14:03.166 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]]
-2025-05-21 11:14:03.169 [restartedMain] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
-2025-05-21 11:14:03.169 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-21 11:14:03.169 [restartedMain] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel added UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-21 11:14:03.724 [restartedMain] INFO  o.a.t.u.net.NioEndpoint.certificate - Connector [https-jsse-nio-8443], TLS virtual host [_default_], certificate type [UNDEFINED] configured from keystore [C:\Users\admin\.keystore] using alias [localhost] with trust store [null]
-2025-05-21 11:14:03.780 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8443 (https) with context path '/'
-2025-05-21 11:14:03.821 [restartedMain] INFO  com.secureops.SecureOpsApplication - Started SecureOpsApplication in 35.876 seconds (process running for 38.51)
-2025-05-21 11:14:08.858 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
-2025-05-21 11:14:08.880 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
-2025-05-21 11:14:08.883 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
-2025-05-21 11:14:08.883 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
-2025-05-21 11:14:08.883 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
-2025-05-21 11:14:08.884 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]]
-2025-05-21 11:14:08.884 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]
-2025-05-21 11:14:08.884 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@397d524e]
-2025-05-21 11:14:08.884 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
-2025-05-21 11:14:08.885 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-21 11:14:08.885 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
-2025-05-21 11:14:08.916 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-05-21 11:14:08.925 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
-2025-05-21 11:14:08.949 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-06-06 16:32:43.462 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:43.546 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:43.623 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:44.711 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:44.724 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:44.776 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products/new","logType":"SECURITY"}]
+2025-06-06 16:32:44.786 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products/new","logType":"NAVIGATION"}]
+2025-06-06 16:32:57.977 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/sales/products/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:58.065 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/sales/products/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"name":"Premium Widget","description":"sdad","unitPrice":11,"sku":"","stock":0,"minStock":0,"active":true,"category":""}]
+2025-06-06 16:32:59.203 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:59.203 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:59.212 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:59.290 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products","logType":"SECURITY"}]
+2025-06-06 16:32:59.309 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products","logType":"NAVIGATION"}]
+2025-06-06 16:32:59.327 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:59.384 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:32:59.439 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:00.950 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:00.950 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:00.972 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:01.067 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes","logType":"SECURITY"}]
+2025-06-06 16:33:01.101 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes","logType":"NAVIGATION"}]
+2025-06-06 16:33:01.366 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:01.391 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:01.717 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:02.927 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:02.928 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:02.973 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes/new","logType":"SECURITY"}]
+2025-06-06 16:33:03.007 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.016 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.026 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes/new","logType":"NAVIGATION"}]
+2025-06-06 16:33:03.232 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.299 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.311 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.392 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.420 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:03.447 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:15.681 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/sales/quotes/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:15.930 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/sales/quotes/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"clientId":"4","items":[{"productId":"11","quantity":1,"unitPrice":1200,"description":""}],"totalAmount":0,"notes":"","terms":"Standard terms and conditions apply.","status":"DRAFT","discount":0,"tax":0,"expiryDate":"2025-07-06"}]
+2025-06-06 16:33:16.122 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:16.123 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:16.124 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:16.202 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes","logType":"NAVIGATION"}]
+2025-06-06 16:33:16.210 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes","logType":"SECURITY"}]
+2025-06-06 16:33:16.421 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:16.448 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:16.663 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:18.538 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:18.540 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:18.575 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:18.580 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/orders","logType":"NAVIGATION"}]
+2025-06-06 16:33:18.589 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/orders","logType":"SECURITY"}]
+2025-06-06 16:33:18.944 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:18.972 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:19.380 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.669 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.672 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.799 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.874 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.903 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/orders/new","logType":"NAVIGATION"}]
+2025-06-06 16:33:21.921 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.934 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/orders/new","logType":"SECURITY"}]
+2025-06-06 16:33:21.958 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:21.979 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:22.015 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:22.016 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:22.044 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.118 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.127 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.129 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.180 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/invoices","logType":"SECURITY"}]
+2025-06-06 16:33:24.207 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/invoices","logType":"NAVIGATION"}]
+2025-06-06 16:33:24.427 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.494 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:24.885 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:25.983 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:25.989 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:26.005 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:26.043 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/reports","logType":"NAVIGATION"}]
+2025-06-06 16:33:26.066 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/reports","logType":"SECURITY"}]
+2025-06-06 16:33:26.077 [https-jsse-nio-8443-exec-10] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] for value [2025-05-06]]
+2025-06-06 16:33:26.099 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:26.111 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:26.124 [https-jsse-nio-8443-exec-5] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] for value [2025-05-06]]
+2025-06-06 16:33:26.133 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:27.287 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:27.290 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:27.299 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:27.346 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/invoices","logType":"NAVIGATION"}]
+2025-06-06 16:33:27.346 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/invoices","logType":"SECURITY"}]
+2025-06-06 16:33:27.579 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:27.608 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:28.059 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:32.246 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:32.280 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 16:33:32.289 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 16:33:32.319 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 17:02:31.443 [MessageBroker-1] INFO  o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 2, active threads = 1, queued tasks = 0, completed tasks = 1]
+2025-06-06 17:03:43.766 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:03:43.811 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:03:43.856 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:03:43.857 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:03:43.860 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:03:44.171 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"UNAUTHORIZED_ACCESS_ATTEMPT","details":"Attempted to access protected route: /","logType":"SECURITY"}]
+2025-06-06 17:03:44.172 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:03:44.172 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /login","logType":"NAVIGATION"}]
+2025-06-06 17:03:44.172 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:03:44.172 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:04:11.310 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:04:11.310 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/auth/login, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:04:11.338 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, payload={"userId":null,"action":"PAGE_VIEW","details":"Navigated to: /login","logType":"NAVIGATION"}]
+2025-06-06 17:04:11.475 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.RecaptchaService - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:11.475 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.RecaptchaService - Validating CAPTCHA token: 03AFcW****nvYU from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:11.475 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.RecaptchaService - Sending CAPTCHA verification request to Google for token: 03AFcW****nvYU
+2025-06-06 17:04:11.758 [https-jsse-nio-8443-exec-7] INFO  c.secureops.service.RecaptchaService - CAPTCHA validation successful for token: 03AFcW****nvYU from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:11.774 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.AuthServiceImpl - Login attempt for user: a***@s***.com
+2025-06-06 17:04:11.928 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.AuthServiceImpl - User found - ID: 1, Role: ADMIN, Active: true, Status: APPROVED
+2025-06-06 17:04:12.075 [https-jsse-nio-8443-exec-7] INFO  c.secureops.service.AuthServiceImpl - User successfully authenticated - UserID: 1
+2025-06-06 17:04:12.102 [https-jsse-nio-8443-exec-7] DEBUG c.secureops.service.AuthServiceImpl - JWT token generated for user: 1
+2025-06-06 17:04:12.116 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/auth/login, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"email":"admin@secureops.com","password":"password123","rememberMe":false,"recaptchaResponse":"03AFcWeA6inbLRYLDOJcxTcHP0sWx1gBsQCcEv5GbTOhLYzun1Mq14xqqW8Zt2JankR_rImtwTNW8VsfFzchFb4qTw3_vMnP-PRDwmjbRVmRw1eRU65oFJftuAqg_govIr5KXj_U7GQG1FnG4cPlbZsH0e73ek-fQ6eV_JlIV4H36i9aaDR9ndl0aw1_ou-BHweBzYDhrWG-3PwpU0_CCrSn6wfS7OF942GtPU5AhwS6z88mVWNv5WM5OeJM8493-yH5FLpFoBCg46TpN-W89PCCZ4Px6DTl81QWuO8aTNzJ-0RSzc-xwoIodRMsyTRJ2TWTUy_W8MZhiCV9VQqu14jxhpYhbSvuowaEZYtETQKsuKJp4wqdsHdLa6Yt3h3yyYPvaxY7E0Wd_bAftenVG0Avn2BIt8ToeQSoxygxuA_DlXRuCmN20_g5ktZGROGgo6kW03xQFGO8bZYgvcPlmFaOhMXybqBANP32K7gtMsMV_4LjHoMBSCrjkUCtSdxcTg4al2i6bgrRzhp_apA8DdwF_Q1Vk43J4idQzL5i6j5ospxlP97s_BC3F3WtFyJcj-40oKZ4Wqw3c9UAEWCQI1vYp0Ml8hmRYqX5d5wtXbt3B9nRJXYFElDNejgpudCNFMhs-rX2wiiJXOTt6PGYgQlC2FCcqTcGcmoZQ5jqOLvvbWKzpNvMkoeMP79-Bl-QO8SxdjUQSVdpg-kFjb083g7eEQF4atXYFRfTSGzWOIpS9-0roZEtQPSDUvWE9KvMVqEtExsqxEOA_k9Qlx5V1kL3K5tBCFbcY3jcENwAaEZYD2e7IOJNDvHbZCHLDQOxc2-tcFe56H6GN2FYMCl9SWDuNXTczT5Q2sbBpN8RgSEXOvAdc9Jnk3M-HyWWMxxNBWkldkY0cfvtQskMnhWy02CEUFRCC_G3atx-Ky_2ZrejAzV3QJBcBhDfw89IOxXx8lvFDxN9O_gKSk1Xa49-fUacg15iNR0XoG98KLP0RaQmAG-LS7CfK_vXS2RVdFAm9_pOq2IDmWISpOx8Wm6pn2M78i8s8Cco0k5o6_vZrw_sMo-802IZUf-O8_a_e43SXr1Y1LFyEu1ZP-dErIe8rsylFifbE6LQd0z3ozwuYvOsnJPKrEoP86K3bnhag0R72lKXMPvPpXYwnVCogT4TZ0L4kZn81IPKRxAjVNNC30P2VZwWyeprGMQNNnGjVFbB1sf52KuGiu61BaCFTyUP2qRB1J7vwE6xBzUFDmpRQoJgIql3qOhUkiZ8DA14diAQKyCffpIp3F2hOiHlkIVNzqKsgN4NcQXf0PCltF5fyl_QvjWpP-Oe7Tj28Zo3SCKjYZqgQW3TCiQcc4u9hTHmU3arPdCAjZfQZINyvWThXY52SWj_mzvQPtxx5ZQR40fY8bPRBNELI8WlRKWbullcQ-FQk9HXFXg19Wo4mL-h-OKVaj_WJIFMS2qTzoAYJyLB8PYeGrifBbX0Lq5ye1vS1sdTwllnACbagy6DW6opcIz7bsbaaJc0n0z3idVwszfjihFRBjwshFSqRozjCSlpo-gQYsW1AC6L97IMxxGrVqHmJo65LDmjrt18ZwEs_3UU_Pq-ffs2RrsojaYFzxphGAlo9QnHHCK4CO9FjzS2mcc_G8V8NdEHLrYUjV8y_5m885Dhu642NXgs77OTk-K_q_8deSUMtE-Q30AVvhxFpDDEYsowJgyjFjaS8tvEnsj4paZnpQwMO0Mbz7UR6gQuwgOZUqg9907NH201wLEJSj_BaSRlsggGa7tvRqXW1rDa7zXjFdi6fJT853PwIqxzAzBmsj2tL_C3Azx2ik46-MVbieFjK8Gc7qBomphuiJrzmQWI6cSSBxtloEf5rE_SOOFKw6niourBchxqMO7REvjSWsUp60rblVwC614KN651EDSGzmMwj0rGn0oEUrO7HXst-F1VZVCWe3ofIJ2KXK57mnhA2LhCpT3zcuy5FGyuLMb_Oo28FEASEItlsyxLa6Ta3D0HxFacELIxqS7kkA2ezvI2pLMLknvYU"}]
+2025-06-06 17:04:12.269 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.271 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.273 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.276 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.279 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.283 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:12.334 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Retrieving current user from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:12.349 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /login","logType":"NAVIGATION"}]
+2025-06-06 17:04:12.360 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 17:04:12.367 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 17:04:12.367 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Retrieving user by email: a***@s***.com
+2025-06-06 17:04:12.376 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:04:12.393 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - User retrieved: a***@s***.com
+2025-06-06 17:04:12.394 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Mapping user to DTO: a***@s***.com
+2025-06-06 17:04:12.394 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Generating avatar URL for file: default-avatar.png
+2025-06-06 17:04:12.398 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Generated avatar URL: https://localhost:8443/api/files/download/default-avatar.png
+2025-06-06 17:04:12.399 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Avatar URL set for user: a***@s***.com
+2025-06-06 17:04:12.399 [https-jsse-nio-8443-exec-2] DEBUG c.secureops.service.UserServiceImpl - Current user retrieved: a***@s***.com from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:12.402 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.442 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.446 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:12.478 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 17:04:12.488 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:04:12.514 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/files/download/default-avatar.png, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:04:12.523 [https-jsse-nio-8443-exec-8] DEBUG c.s.service.FileStorageServiceImpl - Attempting to load file as resource: default-avatar.png
+2025-06-06 17:04:12.529 [https-jsse-nio-8443-exec-8] INFO  c.s.service.FileStorageServiceImpl - File resource loaded successfully: default-avatar.png
+2025-06-06 17:04:12.533 [https-jsse-nio-8443-exec-8] DEBUG c.s.service.FileStorageServiceImpl - Retrieving storage directory: C:\Users\admin\IdeaProjects\demo\uploads
+2025-06-06 17:04:12.555 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/files/download/default-avatar.png, client=0:0:0:0:0:0:0:1]
+2025-06-06 17:04:15.471 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.471 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.471 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.474 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Client IP retrieved: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:15.479 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Retrieving current user from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:15.511 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 17:04:15.532 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Retrieving user by email: a***@s***.com
+2025-06-06 17:04:15.540 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:04:15.579 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - User retrieved: a***@s***.com
+2025-06-06 17:04:15.587 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Mapping user to DTO: a***@s***.com
+2025-06-06 17:04:15.594 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Generating avatar URL for file: default-avatar.png
+2025-06-06 17:04:15.594 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Generated avatar URL: https://localhost:8443/api/files/download/default-avatar.png
+2025-06-06 17:04:15.594 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Avatar URL set for user: a***@s***.com
+2025-06-06 17:04:15.594 [https-jsse-nio-8443-exec-5] DEBUG c.secureops.service.UserServiceImpl - Current user retrieved: a***@s***.com from IP: 0:0:0:0:0:0:0:1
+2025-06-06 17:04:15.594 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/users/me, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.644 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.645 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:15.689 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
+2025-06-06 17:04:15.695 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /","logType":"NAVIGATION"}]
+2025-06-06 17:04:22.964 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:22.969 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:23.042 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 17:04:23.048 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 17:04:24.487 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:24.498 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:24.500 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:24.538 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products","logType":"SECURITY"}]
+2025-06-06 17:04:24.565 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products","logType":"NAVIGATION"}]
+2025-06-06 17:04:24.647 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:24.685 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:24.707 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:25.570 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:25.588 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:25.609 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products/new","logType":"NAVIGATION"}]
+2025-06-06 17:04:25.627 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products/new","logType":"SECURITY"}]
+2025-06-06 17:04:39.750 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/sales/products/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:39.807 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/sales/products/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"name":"Premium ","description":"gcdsad","unitPrice":120,"sku":"","stock":0,"minStock":0,"active":true,"category":""}]
+2025-06-06 17:04:40.408 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:40.411 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:40.411 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:40.451 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/products","logType":"NAVIGATION"}]
+2025-06-06 17:04:40.453 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:40.458 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/products","logType":"SECURITY"}]
+2025-06-06 17:04:40.475 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:40.498 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=10&search=&sortBy=name&sortOrder=asc&category=&active=true, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:42.760 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:42.762 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:42.764 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:42.784 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes","logType":"SECURITY"}]
+2025-06-06 17:04:42.817 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes","logType":"NAVIGATION"}]
+2025-06-06 17:04:43.008 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:43.040 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:43.299 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:44.975 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:44.982 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:44.989 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:44.989 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.002 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.048 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes/new","logType":"SECURITY"}]
+2025-06-06 17:04:45.058 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.069 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.075 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes/new","logType":"NAVIGATION"}]
+2025-06-06 17:04:45.110 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.114 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/clients?page=0&size=100&sortBy=name&sortOrder=asc, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:45.140 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/products?page=0&size=100, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.595 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/sales/quotes/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.688 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/sales/quotes/create, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"clientId":"13","items":[{"productId":"15","quantity":133,"unitPrice":120,"description":""}],"totalAmount":0,"notes":"","terms":"Standard terms and conditions apply.","status":"DRAFT","discount":0,"tax":0,"expiryDate":"2025-07-06"}]
+2025-06-06 17:04:59.797 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.798 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.799 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.828 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/quotes","logType":"SECURITY"}]
+2025-06-06 17:04:59.843 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/quotes","logType":"NAVIGATION"}]
+2025-06-06 17:04:59.960 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:04:59.977 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:00.232 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:02.283 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:02.380 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:04.873 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:05.047 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:07.369 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:07.473 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:17.497 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : DELETE /api/sales/quotes/delete/23, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:17.684 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [DELETE /api/sales/quotes/delete/23, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:19.862 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:19.938 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:22.515 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:22.598 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/quotes?page=1&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:25.753 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:25.754 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:25.756 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:25.879 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/orders","logType":"SECURITY"}]
+2025-06-06 17:05:25.920 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/orders","logType":"NAVIGATION"}]
+2025-06-06 17:05:26.070 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:26.099 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:26.811 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/orders?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:28.885 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:28.885 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:28.885 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:28.917 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/invoices","logType":"NAVIGATION"}]
+2025-06-06 17:05:28.925 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/invoices","logType":"SECURITY"}]
+2025-06-06 17:05:29.032 [https-jsse-nio-8443-exec-1] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:29.049 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:29.172 [https-jsse-nio-8443-exec-6] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/invoices?page=0&size=10, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.717 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.717 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.718 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.735 [https-jsse-nio-8443-exec-2] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] for value [2025-05-06]]
+2025-06-06 17:05:32.747 [https-jsse-nio-8443-exec-2] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.754 [https-jsse-nio-8443-exec-5] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales/reports","logType":"SECURITY"}]
+2025-06-06 17:05:32.764 [https-jsse-nio-8443-exec-3] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales/reports","logType":"NAVIGATION"}]
+2025-06-06 17:05:32.774 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:32.786 [https-jsse-nio-8443-exec-7] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] for value [2025-05-06]]
+2025-06-06 17:05:32.789 [https-jsse-nio-8443-exec-7] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/reports/sales-summary?startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:35.326 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : GET /api/sales/reports/revenue-trends?period=monthly&startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:35.350 [https-jsse-nio-8443-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource api/sales/reports/revenue-trends.]
+2025-06-06 17:05:35.350 [https-jsse-nio-8443-exec-8] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/sales/reports/revenue-trends?period=monthly&startDate=2025-05-06&endDate=2025-06-06, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:36.903 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:36.907 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - REQUEST DATA : POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com]
+2025-06-06 17:05:36.962 [https-jsse-nio-8443-exec-4] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /sales","logType":"SECURITY"}]
+2025-06-06 17:05:36.971 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=admin@secureops.com, payload={"userId":1,"action":"PAGE_VIEW","details":"Navigated to: /sales","logType":"NAVIGATION"}]
+2025-06-06 17:07:20.002 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-06-06 17:07:20.040 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-06-06 17:07:20.090 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientOutboundChannel removed SubProtocolWebSocketHandler[StompSubProtocolHandler[v10.stomp, v11.stomp, v12.stomp]]
+2025-06-06 17:07:20.113 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed WebSocketAnnotationMethodMessageHandler[prefixes=[/app/]]
+2025-06-06 17:07:20.115 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopping...
+2025-06-06 17:07:20.116 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]]
+2025-06-06 17:07:20.117 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]
+2025-06-06 17:07:20.164 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@665bed52]
+2025-06-06 17:07:20.209 [SpringApplicationShutdownHook] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Stopped.
+2025-06-06 17:07:20.209 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - clientInboundChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-06-06 17:07:20.209 [SpringApplicationShutdownHook] DEBUG o.s.m.s.ExecutorSubscribableChannel - brokerChannel removed UserDestinationMessageHandler[DefaultUserDestinationResolver[prefix=/user/]]
+2025-06-06 17:07:20.243 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-06 17:07:20.276 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-06-06 17:07:20.306 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
