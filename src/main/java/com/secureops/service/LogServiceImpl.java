@@ -29,7 +29,9 @@ public class LogServiceImpl implements LogService {
         log.setIpAddress(ipAddress);
         log.setLogType(logType);
         log.setTimestamp(new Date());
-        
+
+        System.out.println("Log created service: " + log);
+
         if (userId != null) {
             Optional<User> userOptional = userRepository.findById(userId);
             userOptional.ifPresent(log::setUser);

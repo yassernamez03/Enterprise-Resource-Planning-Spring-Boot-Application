@@ -1,10 +1,15 @@
 package com.secureops.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +31,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class LogSecurityController {
 
     private static final Logger logger = LoggerFactory.getLogger(LogSecurityController.class);
-
-    // For security-specific logging, create a separate logger
     private static final Logger securityLogger = LoggerFactory.getLogger("com.secureops.security");
+
+    // Add this field for tracking duplicate UNAUTHORIZED_ADMIN_ACCESS logs with timestamps
+    private final Map<String, LocalDateTime> recentUnauthorizedAdminLogs = new ConcurrentHashMap<>();
 
     private final LogService logService;
     private final UserService userService;
@@ -179,11 +185,36 @@ public class LogSecurityController {
                         clientIp, currentUsername, currentUserId, details);
             }
 
+            if ("UNAUTHORIZED_ADMIN_ACCESS".equals(action)) {
+                String logKey = generateLogKey(currentUserId, clientIp);
+                LocalDateTime currentTime = LocalDateTime.now();
+                
+                if (!isDuplicateLogWithinOneSecond(recentUnauthorizedAdminLogs, logKey, currentTime)) {
+                    securityLogger.error(
+                            "UNAUTHORIZED_ADMIN_ACCESS - User: {} (ID: {}), IP: {}, Details: {}, LogId: {}, Timestamp: {}",
+                            currentUsername != null ? currentUsername : "UNKNOWN",
+                            targetUserId != null ? targetUserId : currentUserId,
+                            clientIp,
+                            details,
+                            createdLog.getId(),
+                            createdLog.getTimestamp());
+
+                    // Additional security alert for critical unauthorized admin access attempts
+                    securityLogger.error(
+                            "CRITICAL_SECURITY_ALERT - Unauthorized admin access attempt detected - IP: {}, User: {} (ID: {}), Action: {}",
+                            clientIp, currentUsername, currentUserId, details);
+                    
+                    recentUnauthorizedAdminLogs.put(logKey, currentTime);
+                }
+            }
+
             // logger.info("Security event logged successfully - logId: {},
             // requestingUserId: {}, targetUserId: {}",
             // createdLog.getId(), currentUserId, targetUserId);
 
             // Log the security log creation action itself
+            System.out.println("Log ready created controller: " + createdLog);
+
             logService.createLog(
                     AppConstants.LOG_ACTION_CREATE,
                     "Security event logged: " + action + " (LogId: " + createdLog.getId() + ")",
@@ -317,5 +348,28 @@ public class LogSecurityController {
             value = value.substring(0, 100);
         }
         return value;
+    }
+
+    // Add these helper methods at the end of the class
+    private String generateLogKey(Long userId, String clientIp) {
+        return (userId != null ? userId.toString() : "unknown") + "_" + clientIp;
+    }
+
+    private boolean isDuplicateLogWithinOneSecond(Map<String, LocalDateTime> logMap, String logKey, LocalDateTime currentTime) {
+        LocalDateTime lastLoggedTime = logMap.get(logKey);
+        if (lastLoggedTime != null) {
+            long millisBetween = ChronoUnit.MILLIS.between(lastLoggedTime, currentTime);
+            if (millisBetween <= 1000) { // 1 second or less
+                return true; // Duplicate - same user, IP, and within 1 second
+            }
+        }
+        return false;
+    }
+
+    // Clean up old log entries to prevent memory leaks
+    @Scheduled(fixedRate = 3600000) // Clean every hour
+    private void cleanupOldLogEntries() {
+        LocalDateTime oneHourAgo = LocalDateTime.now().minus(1, ChronoUnit.HOURS);
+        recentUnauthorizedAdminLogs.entrySet().removeIf(entry -> entry.getValue().isBefore(oneHourAgo));
     }
 }

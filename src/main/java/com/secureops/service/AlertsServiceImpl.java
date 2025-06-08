@@ -27,21 +27,27 @@ public class AlertsServiceImpl implements AlertsService {
 
     // BRUTE FORCE ATTACK PATTERNS
     private static final Pattern[] BRUTE_FORCE_PATTERNS = {
-            Pattern.compile("ERROR.*Authentication failed for user: ([^\\s]+).*Bad credentials",
-                    Pattern.CASE_INSENSITIVE),
-            Pattern.compile("WARN.*Failed login attempt for user '([^']+)': Bad credentials", Pattern.CASE_INSENSITIVE),
-            Pattern.compile("ERROR.*Login error - email: ([^,]+), IP: ([^,]+), Error: (.+)", Pattern.CASE_INSENSITIVE),
-            Pattern.compile("INFO.*AUTHENTICATION_FAILURE.*user=([^\\s]+).*ip=([\\d.:]+)", Pattern.CASE_INSENSITIVE),
-            Pattern.compile("ERROR.*Invalid username or password.*User: ([^\\s]+).*IP: ([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE),
-            Pattern.compile("WARN.*Multiple failed login attempts.*Username: ([^\\s]+).*Source: ([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("ERROR.*Authentication failed for user: ([^\\s]+).*Bad
+            // credentials",
+            // Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("WARN.*Failed login attempt for user '([^']+)': Bad
+            // credentials", Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("ERROR.*Login error - email: ([^,]+), IP: ([^,]+), Error:
+            // (.+)", Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("INFO.*AUTHENTICATION_FAILURE.*user=([^\\s]+).*ip=([\\d.:]+)",
+            // Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("ERROR.*Invalid username or password.*User: ([^\\s]+).*IP:
+            // ([\\d.:]+)",
+            // Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("WARN.*Multiple failed login attempts.*Username:
+            // ([^\\s]+).*Source: ([\\d.:]+)",
+            // Pattern.CASE_INSENSITIVE),
             Pattern.compile("ERROR.*Account locked.*User: ([^\\s]+).*IP: ([\\d.:]+).*Reason: Too many failed attempts",
                     Pattern.CASE_INSENSITIVE),
-            Pattern.compile("INFO.*SSH.*authentication failure.*user=([^\\s]+).*rhost=([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE),
-            Pattern.compile("ERROR.*LDAP authentication failed.*user=([^\\s]+).*client=([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE)
+            // Pattern.compile("INFO.*SSH.*authentication failure.*user=([^\\s]+).*rhost=([\\d.:]+)",
+            //         Pattern.CASE_INSENSITIVE),
+            // Pattern.compile("ERROR.*LDAP authentication failed.*user=([^\\s]+).*client=([\\d.:]+)",
+            //         Pattern.CASE_INSENSITIVE)
     };
 
     // DATA EXFILTRATION PATTERNS
@@ -178,8 +184,12 @@ public class AlertsServiceImpl implements AlertsService {
     private static final Pattern[] PRIVILEGE_ESCALATION_PATTERNS = {
             Pattern.compile("ERROR.*Privilege escalation attempt.*User: ([^\\s]+).*Target: ([^\\s]+).*IP: ([\\d.:]+)",
                     Pattern.CASE_INSENSITIVE),
-            Pattern.compile("WARN.*Unauthorized admin access.*User: ([^\\s]+).*Resource: ([^\\s]+).*IP: ([\\d.:]+)",
+            // Updated pattern to match your log format
+            Pattern.compile("ERROR.*UNAUTHORIZED_ADMIN_ACCESS.*User: ([^,]+).*IP: ([^,]+).*Details:", 
                     Pattern.CASE_INSENSITIVE),
+            // Alternative pattern that's more flexible
+            // Pattern.compile("ERROR.*UNAUTHORIZED_ADMIN_ACCESS.*User: ([^\\(]+).*\\(ID: \\d+\\).*IP: ([^,]+)", 
+            //         Pattern.CASE_INSENSITIVE),
             Pattern.compile("ERROR.*Sudo violation.*User: ([^\\s]+).*Command: ([^\\n]+).*Host: ([\\d.:]+)",
                     Pattern.CASE_INSENSITIVE),
             Pattern.compile(
@@ -201,6 +211,29 @@ public class AlertsServiceImpl implements AlertsService {
                     Pattern.CASE_INSENSITIVE),
             Pattern.compile("ERROR.*Invalid token access.*Token: ([^\\s]+).*IP: ([\\d.:]+)", Pattern.CASE_INSENSITIVE)
     };
+
+    // Add this method to AlertsServiceImpl class
+    @Override
+    public List<AlertResponse> getAllAlerts() {
+        System.out.println("---------- Starting getAllAlerts ----------");
+
+        // Get today's alerts
+        List<AlertResponse> allAlerts = new ArrayList<>(analyzeTodayLogs());
+
+        // Optionally, you can also include recent historical alerts
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(Integer.MAX_VALUE);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        allAlerts.addAll(analyzeHistoricalLogs(sevenDaysAgo, yesterday));
+
+        // Remove duplicates based on alert ID and sort by timestamp (newest first)
+        List<AlertResponse> uniqueAlerts = allAlerts.stream()
+                .distinct()
+                .sorted((a1, a2) -> a2.getTimestamp().compareTo(a1.getTimestamp()))
+                .collect(Collectors.toList());
+
+        System.out.println("---------- getAllAlerts completed with " + uniqueAlerts.size() + " alerts ----------");
+        return uniqueAlerts;
+    }
 
     @Override
     public List<AlertResponse> analyzeTodayLogs() {
@@ -389,6 +422,9 @@ public class AlertsServiceImpl implements AlertsService {
         List<String> recommendedActions = getRecommendedActions(threatType, sourceIp);
         List<String> affectedSystems = getAffectedSystems(threatType);
 
+        System.out
+                .println("---------- Creating incident for " + threatType + " with ID: " + incidentId + " ----------");
+
         return IncidentResponse.builder()
                 .id(incidentId)
                 .title(title + " - " + sourceIp)
@@ -554,15 +590,15 @@ public class AlertsServiceImpl implements AlertsService {
                         // Extract additional details if not already captured by matcher
                         String finalIp = alert.getSourceIp();
                         String finalUser = "unknown";
-                        
+
                         // If IP is still unknown, try extracting from alert details
                         if ("unknown".equals(finalIp) || finalIp == null || finalIp.isEmpty()) {
                             finalIp = extractIpFromAlert(alert);
                         }
-                        
+
                         // Extract user from alert details as fallback
                         finalUser = extractUserFromAlert(alert);
-                        
+
                         // Update the alert with final extracted values
                         alert = AlertResponse.builder()
                                 .id(alert.getId())
@@ -574,16 +610,16 @@ public class AlertsServiceImpl implements AlertsService {
                                 .alertType(alert.getAlertType())
                                 .details(alert.getDetails())
                                 .build();
-                        
+
                         alerts.add(alert);
                         // Enhanced System.out.println when alert is found
-                        System.out.println("ALERT FOUND - Type: " + alertType + 
-                                         ", User: " + finalUser +
-                                         ", IP: " + finalIp + 
-                                         ", Severity: " + alert.getSeverity() + 
-                                         ", Details: " + alert.getDetails());
-                        logger.info("ALERT_CREATED - Type: {}, User: {}, IP: {}, File: {}, Line: {}", 
-                                  alertType, finalUser, finalIp, logFilePath, lineNumber);
+                        System.out.println("ALERT FOUND - Type: " + alertType +
+                                ", User: " + finalUser +
+                                ", IP: " + finalIp +
+                                ", Severity: " + alert.getSeverity() +
+                                ", Details: " + alert.getDetails());
+                        logger.info("ALERT_CREATED - Type: {}, User: {}, IP: {}, File: {}, Line: {}",
+                                alertType, finalUser, finalIp, logFilePath, lineNumber);
                     }
                 }
             }
@@ -636,14 +672,16 @@ public class AlertsServiceImpl implements AlertsService {
                 case "RCE":
                     return builder
                             .title("Remote Code Execution Attempt")
-                            .description("Code injection or command execution attempt detected from user: " + extractedUser)
+                            .description(
+                                    "Code injection or command execution attempt detected from user: " + extractedUser)
                             .severity("CRITICAL")
                             .build();
 
                 case "LFI":
                     return builder
                             .title("Local File Inclusion Attack")
-                            .description("File inclusion vulnerability exploitation detected from user: " + extractedUser)
+                            .description(
+                                    "File inclusion vulnerability exploitation detected from user: " + extractedUser)
                             .severity("HIGH")
                             .build();
 
@@ -685,7 +723,8 @@ public class AlertsServiceImpl implements AlertsService {
                 case "UNAUTHORIZED_ACCESS":
                     return builder
                             .title("Unauthorized Access Attempt")
-                            .description("Attempt to access protected resource without authorization by user: " + extractedUser)
+                            .description("Attempt to access protected resource without authorization by user: "
+                                    + extractedUser)
                             .severity("HIGH")
                             .build();
 
@@ -788,7 +827,8 @@ public class AlertsServiceImpl implements AlertsService {
             // Continue to fallback extraction
         }
 
-        // Fallback: extract IP from log line using the specific format: IP: {ipv4 or ipv6}
+        // Fallback: extract IP from log line using the specific format: IP: {ipv4 or
+        // ipv6}
         Pattern ipPattern = Pattern.compile("IP: ([^,\\s]+)");
         Matcher ipMatcher = ipPattern.matcher(logLine);
         if (ipMatcher.find()) {
@@ -806,10 +846,10 @@ public class AlertsServiceImpl implements AlertsService {
         try {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String group = matcher.group(i);
-                if (group != null && !group.trim().isEmpty() && 
-                    !isValidIpAddress(group) && !group.matches("\\d+") && 
-                    !group.contains("req/sec") && !group.contains("MB") && 
-                    !group.toLowerCase().contains("error") && !group.toLowerCase().contains("bad")) {
+                if (group != null && !group.trim().isEmpty() &&
+                        !isValidIpAddress(group) && !group.matches("\\d+") &&
+                        !group.contains("req/sec") && !group.contains("MB") &&
+                        !group.toLowerCase().contains("error") && !group.toLowerCase().contains("bad")) {
                     // Additional validation to ensure it's likely a username
                     if (isLikelyUsername(group.trim())) {
                         return group.trim();
@@ -897,9 +937,9 @@ public class AlertsServiceImpl implements AlertsService {
         }
 
         // Handle compressed IPv6 addresses
-        if (trimmedIp.matches("^([0-9a-fA-F]{0,4}:){1,7}:$") || 
-            trimmedIp.matches("^:([0-9a-fA-F]{0,4}:){1,7}$") ||
-            trimmedIp.matches("^([0-9a-fA-F]{0,4}:){1,6}:[0-9a-fA-F]{0,4}$")) {
+        if (trimmedIp.matches("^([0-9a-fA-F]{0,4}:){1,7}:$") ||
+                trimmedIp.matches("^:([0-9a-fA-F]{0,4}:){1,7}$") ||
+                trimmedIp.matches("^([0-9a-fA-F]{0,4}:){1,6}:[0-9a-fA-F]{0,4}$")) {
             return true;
         }
 
@@ -937,13 +977,13 @@ public class AlertsServiceImpl implements AlertsService {
 
         // Exclude common non-username patterns
         if (trimmed.matches(".*\\.(exe|dll|bat|sh|log|txt|conf|config)$") ||
-            trimmed.toLowerCase().contains("error") ||
-            trimmed.toLowerCase().contains("failed") ||
-            trimmed.toLowerCase().contains("bad") ||
-            trimmed.toLowerCase().contains("req/sec") ||
-            trimmed.toLowerCase().contains("mb") ||
-            trimmed.toLowerCase().contains("gb") ||
-            trimmed.length() > 50) {
+                trimmed.toLowerCase().contains("error") ||
+                trimmed.toLowerCase().contains("failed") ||
+                trimmed.toLowerCase().contains("bad") ||
+                trimmed.toLowerCase().contains("req/sec") ||
+                trimmed.toLowerCase().contains("mb") ||
+                trimmed.toLowerCase().contains("gb") ||
+                trimmed.length() > 50) {
             return false;
         }
 
