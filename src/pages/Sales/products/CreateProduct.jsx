@@ -19,8 +19,6 @@ const CreateProduct = () => {
       
       // In a real app, call the create API
       const newProduct = await productService.createProduct(data);
-      console.log("New product created:", newProduct);
-      // navigate(`sales/products/${newProduct.id}`);
 
       // For development, just wait a bit then redirect
       setTimeout(() => {

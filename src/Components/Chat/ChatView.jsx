@@ -56,7 +56,7 @@ const ChatView = ({
   useEffect(() => {
     if (chatSearchQuery && chatSearchQuery.trim() !== "" && currentChat) {
       const results = currentChat.messages.filter((msg) => {
-        if (msg.messageType === "TEXT") {
+        if (msg.messageType === "TEXT" && msg.content) {
           return msg.content
             .toLowerCase()
             .includes(chatSearchQuery.toLowerCase());

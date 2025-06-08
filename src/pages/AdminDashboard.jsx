@@ -56,25 +56,6 @@ const AdminDashboard = () => {
 
   // Access Denied Component
   const AccessDenied = ({ user }) => {
-    useEffect(() => {
-      // Log the unauthorized access attempt
-      const logUnauthorizedAccess = async () => {
-        // Get the current path the user tried to access
-        const currentPath = window.location.pathname;
-
-        await logService.logSecurityEvent(
-          user?.id,
-          "UNAUTHORIZED_ACCESS",
-          `User attempted to access restricted page: ${currentPath}`,
-          "SECURITY"
-        );
-      };
-
-      if (user?.id) {
-        logUnauthorizedAccess();
-      }
-    }, [user]);
-
     return (
       <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
@@ -510,7 +491,7 @@ const AdminDashboard = () => {
     );
   };
 
-  
+  console.log(pendingUsers);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -692,6 +673,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-500">
+                            
                             {new Date(user.createdAt).toLocaleDateString(
                               "fr-FR"
                             )}

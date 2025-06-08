@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     // Validate reCAPTCHA
     if (!recaptchaValue) {
-      setError("Veuillez confirmer que vous n'êtes pas un robot");
+      setError("Please confirm that you are not a robot");
       return;
     }
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
       await login(email, password, rememberMe, recaptchaValue);
       navigate("/"); // Redirect to home page on successful login
     } catch (err) {
-      setError("Échec de la connexion. Veuillez vérifier vos identifiants.");
+      setError("Login failed. Please check your credentials.");
       console.error("Login error:", err);
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
@@ -57,9 +57,9 @@ export default function LoginPage() {
             <h1 className="text-xl font-semibold text-gray-800">SecureOps</h1>
           </div>
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Connexion
+            Sign In
           </h2>
-          <p className="text-gray-500">Accédez à votre espace de travail</p>
+          <p className="text-gray-500">Access your workspace</p>
         </div>
 
         {error && (
@@ -82,7 +82,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-600"
-              placeholder="votre@email.com"
+              placeholder="your@email.com"
               required
               disabled={isLoading}
             />
@@ -93,7 +93,7 @@ export default function LoginPage() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-800 mb-2"
             >
-              Mot de passe
+              Password
             </label>
             <div className="relative">
               <input
@@ -167,7 +167,7 @@ export default function LoginPage() {
                 htmlFor="remember-me"
                 className="ml-2 block text-sm text-gray-600"
               >
-                Se souvenir de moi
+                Remember me
               </label>
             </div>
             <div>
@@ -175,7 +175,7 @@ export default function LoginPage() {
                 to="/forgot-password"
                 className="text-indigo-600 text-sm font-medium hover:underline"
               >
-                Mot de passe oublié?
+                Forgot password?
               </Link>
             </div>
           </div>
@@ -197,22 +197,22 @@ export default function LoginPage() {
             {isLoading ? (
               <span className="flex items-center justify-center">
                 <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></div>
-                Connexion en cours...
+                Signing in...
               </span>
             ) : (
-              "Se connecter"
+              "Sign In"
             )}
           </button>
         </form>
 
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm">
-            Pas encore de compte?{" "}
+            Don't have an account?{" "}
             <Link
               to="/signup"
               className="text-indigo-600 font-medium hover:underline"
             >
-              S'inscrire
+              Sign up
             </Link>
           </p>
         </div>

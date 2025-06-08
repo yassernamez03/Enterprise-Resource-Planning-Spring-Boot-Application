@@ -50,7 +50,7 @@ export default function ForgotPasswordPage() {
     
     // Validate reCAPTCHA if on request step
     if ((!stepFromUrl || stepFromUrl === 'request') && !recaptchaValue) {
-      setError('Veuillez confirmer que vous n\'êtes pas un robot');
+      setError('Please confirm that you are not a robot');
       return;
     }
     
@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
       
     } catch (err) {
       console.error('Forgot password error:', err);
-      setError('Échec de la demande de réinitialisation. Veuillez réessayer.');
+      setError('Failed to request password reset. Please try again.');
       setIsSubmitting(false);
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
@@ -91,7 +91,7 @@ export default function ForgotPasswordPage() {
       
     } catch (err) {
       console.error('Verification error:', err);
-      setError('Code de vérification invalide ou expiré. Veuillez réessayer.');
+      setError('Invalid or expired verification code. Please try again.');
       setIsSubmitting(false);
     }
   }, [email, verificationCode, verifyResetCode, navigate]);
@@ -100,7 +100,7 @@ export default function ForgotPasswordPage() {
   const renderLoadingSpinner = () => (
     <span className="flex items-center justify-center">
       <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></div>
-      {stepFromUrl === 'verify' ? 'Vérification en cours...' : 'Envoi en cours...'}
+      {stepFromUrl === 'verify' ? 'Verifying...' : 'Sending...'}
     </span>
   );
 
@@ -117,18 +117,18 @@ export default function ForgotPasswordPage() {
             </div>
             <h1 className="text-xl font-semibold text-gray-800">SecureOps</h1>
           </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Mot de passe oublié</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Forgot Password</h2>
           
           {(!stepFromUrl || stepFromUrl === 'request') && (
-            <p className="text-gray-500">Entrez votre email pour recevoir un code de vérification</p>
+            <p className="text-gray-500">Enter your email to receive a verification code</p>
           )}
           
           {stepFromUrl === 'verify' && (
-            <p className="text-gray-500">Entrez le code de vérification reçu par email</p>
+            <p className="text-gray-500">Enter the verification code sent to your email</p>
           )}
           
           {stepFromUrl === 'success' && (
-            <p className="text-gray-500">Votre mot de passe a été réinitialisé avec succès</p>
+            <p className="text-gray-500">Your password has been reset successfully</p>
           )}
         </div>
 
@@ -152,7 +152,7 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-600"
-                placeholder="votre@email.com"
+                placeholder="your@email.com"
                 required
                 disabled={isSubmitting}
                 data-testid="email-input"
@@ -174,12 +174,12 @@ export default function ForgotPasswordPage() {
               className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-colors"
               data-testid="request-button"
             >
-              {isSubmitting ? renderLoadingSpinner() : 'Envoyer le code de vérification'}
+              {isSubmitting ? renderLoadingSpinner() : 'Send verification code'}
             </button>
 
             <div className="text-center mt-6">
               <Link to="/login" className="text-indigo-600 font-medium hover:underline text-sm">
-                Retour à la connexion
+                Back to login
               </Link>
             </div>
           </form>
@@ -190,7 +190,7 @@ export default function ForgotPasswordPage() {
           <form onSubmit={handleVerifyCode} data-testid="verify-form">
             <div className="mb-6">
               <label htmlFor="verificationCode" className="block text-sm font-medium text-gray-800 mb-2">
-                Code de vérification
+                Verification Code
               </label>
               <input
                 id="verificationCode"
@@ -198,14 +198,14 @@ export default function ForgotPasswordPage() {
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-600"
-                placeholder="Entrez le code à 6 chiffres"
+                placeholder="Enter 6-digit code"
                 required
                 maxLength={6}
                 disabled={isSubmitting}
                 data-testid="code-input"
               />
               <p className="mt-2 text-sm text-gray-500">
-                Le code a été envoyé à {email}
+                Code sent to {email}
               </p>
             </div>
 
@@ -215,7 +215,7 @@ export default function ForgotPasswordPage() {
               className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-colors"
               data-testid="verify-button"
             >
-              {isSubmitting ? renderLoadingSpinner() : 'Vérifier et réinitialiser le mot de passe'}
+              {isSubmitting ? renderLoadingSpinner() : 'Verify and reset password'}
             </button>
 
             <div className="text-center mt-6 flex flex-col space-y-2">
@@ -226,10 +226,10 @@ export default function ForgotPasswordPage() {
                 disabled={isSubmitting}
                 data-testid="resend-button"
               >
-                Renvoyer le code
+                Resend code
               </button>
               <Link to="/login" className="text-indigo-600 font-medium hover:underline text-sm">
-                Retour à la connexion
+                Back to login
               </Link>
             </div>
           </form>
@@ -238,14 +238,14 @@ export default function ForgotPasswordPage() {
         {/* Step 3: Success message */}
         {stepFromUrl === 'success' && (
           <div className="bg-green-50 text-green-700 p-4 rounded-lg mb-6" data-testid="success-message">
-            <h3 className="font-medium text-lg mb-2">Mot de passe réinitialisé!</h3>
-            <p>Votre nouveau mot de passe a été envoyé à votre adresse email.</p>
+            <h3 className="font-medium text-lg mb-2">Password reset!</h3>
+            <p>Your new password has been sent to your email address.</p>
             <div className="mt-4">
               <Link
                 to="/login"
                 className="inline-block text-indigo-600 font-medium hover:underline"
               >
-                Retour à la connexion
+                Back to login
               </Link>
             </div>
           </div>
