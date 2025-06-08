@@ -118,8 +118,8 @@ public class UserController {
         logger.info("Pending approvals request - adminUserId: {}, adminUsername: {}, ip: {}", 
                 currentUserId, currentUsername, clientIp);
         
-        securityLogger.info("ADMIN_PENDING_APPROVALS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_PENDING_APPROVALS", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("ADMIN_PENDING_APPROVALS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_PENDING_APPROVALS", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             List<UserDto> pendingUsers = userService.getPendingApprovals().stream()
@@ -165,8 +165,8 @@ public class UserController {
         logger.info("User approval request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("ADMIN_USER_APPROVAL - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: APPROVE_USER", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("ADMIN_USER_APPROVAL - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: APPROVE_USER", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -228,8 +228,8 @@ public class UserController {
         logger.info("User rejection request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("ADMIN_USER_REJECTION - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: REJECT_USER", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("ADMIN_USER_REJECTION - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: REJECT_USER", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -334,8 +334,8 @@ public class UserController {
         logger.info("Password change request - userId: {}, username: {}, ip: {}", 
                 currentUserId, currentUsername, clientIp);
         
-        securityLogger.info("PASSWORD_CHANGE_REQUEST - User: {} (ID: {}), IP: {}, Action: CHANGE_PASSWORD", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("PASSWORD_CHANGE_REQUEST - User: {} (ID: {}), IP: {}, Action: CHANGE_PASSWORD", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             // Input validation
@@ -393,8 +393,8 @@ public class UserController {
 
             if (changed) {
                 logger.info("Password changed successfully - userId: {}", currentUserId);
-                securityLogger.info("PASSWORD_CHANGED_SUCCESS - User: {} (ID: {}), IP: {}", 
-                        currentUsername, currentUserId, clientIp);
+                // securityLogger.info("PASSWORD_CHANGED_SUCCESS - User: {} (ID: {}), IP: {}", 
+                //         currentUsername, currentUserId, clientIp);
                 
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
@@ -450,8 +450,8 @@ public class UserController {
         logger.info("User role change request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("ADMIN_ROLE_CHANGE - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: CHANGE_USER_ROLE", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("ADMIN_ROLE_CHANGE - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: CHANGE_USER_ROLE", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -551,8 +551,8 @@ public class UserController {
         logger.info("Admin password reset request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("ADMIN_PASSWORD_RESET - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: RESET_USER_PASSWORD", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("ADMIN_PASSWORD_RESET - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: RESET_USER_PASSWORD", 
+        //         currentUsername, currentUserId, clientIp, id);
 
         try {
             // Input validation
@@ -609,8 +609,8 @@ public class UserController {
             boolean success = userService.adminResetPassword(id, newPassword);
             if (success) {
                 logger.info("Admin password reset successful - adminUserId: {}, targetUserId: {}", currentUserId, id);
-                securityLogger.info("ADMIN_PASSWORD_RESET_SUCCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}", 
-                        currentUsername, currentUserId, clientIp, id);
+                // securityLogger.info("ADMIN_PASSWORD_RESET_SUCCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}", 
+                //         currentUsername, currentUserId, clientIp, id);
                 
                 logService.createLog(
                         AppConstants.LOG_ACTION_UPDATE,
@@ -778,8 +778,8 @@ public class UserController {
         logger.info("Avatar update request - userId: {}, username: {}, fileName: {}, fileSize: {}, ip: {}", 
                 currentUserId, currentUsername, file.getOriginalFilename(), file.getSize(), clientIp);
         
-        securityLogger.info("AVATAR_UPDATE_REQUEST - User: {} (ID: {}), IP: {}, FileName: {}, FileSize: {}, Action: UPDATE_AVATAR", 
-                currentUsername, currentUserId, clientIp, file.getOriginalFilename(), file.getSize());
+        // securityLogger.info("AVATAR_UPDATE_REQUEST - User: {} (ID: {}), IP: {}, FileName: {}, FileSize: {}, Action: UPDATE_AVATAR", 
+        //         currentUsername, currentUserId, clientIp, file.getOriginalFilename(), file.getSize());
         
         try {
             // Check if file is empty
@@ -897,6 +897,7 @@ public class UserController {
         userDto.setActive(user.isActive());
         userDto.setRole(user.getRole());
         userDto.setApprovalStatus(user.getApprovalStatus());
+        userDto.setCreatedAt(user.getCreatedAt());
         return userDto;
     }
 

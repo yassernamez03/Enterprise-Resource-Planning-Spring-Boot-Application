@@ -62,8 +62,8 @@ public class MessageController {
                 currentUserId, currentUsername, chatId, clientIp);
         
         // Security logging for message access
-        securityLogger.info("CHAT_MESSAGE_ACCESS - User: {} (ID: {}), IP: {}, ChatId: {}, Action: VIEW_MESSAGES", 
-                currentUsername, currentUserId, clientIp, chatId);
+        // securityLogger.info("CHAT_MESSAGE_ACCESS - User: {} (ID: {}), IP: {}, ChatId: {}, Action: VIEW_MESSAGES", 
+        //         currentUsername, currentUserId, clientIp, chatId);
         
         // Input validation
         if (chatId == null || chatId <= 0) {

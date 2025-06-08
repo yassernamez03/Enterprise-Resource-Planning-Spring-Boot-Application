@@ -49,8 +49,8 @@ public class LogAdminController {
                 currentUserId, currentUsername, clientIp);
         
         // Security logging for admin access
-        securityLogger.info("ADMIN_LOG_ACCESS - User: {} (ID: {}), IP: {}, Action: VIEW_ALL_LOGS", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("ADMIN_LOG_ACCESS - User: {} (ID: {}), IP: {}, Action: VIEW_ALL_LOGS", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             // Validate admin access

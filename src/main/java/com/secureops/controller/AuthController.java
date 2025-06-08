@@ -67,7 +67,7 @@ public class AuthController {
         String email = loginDto.getEmail();
 
         logger.debug("Login request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("AUTHENTICATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("AUTHENTICATION_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
             if (isAccountLocked(email, clientIp)) {
@@ -81,7 +81,7 @@ public class AuthController {
             // Proceed with authentication
             var authResponse = authService.login(loginDto);
             logger.info("Authentication successful for user: {} IP: {}", email, clientIp);
-            securityLogger.info("AUTHENTICATION_SUCCESS user={} ip={}", email, clientIp);
+            // securityLogger.info("AUTHENTICATION_SUCCESS user={} ip={}", email, clientIp);
             clearFailedAttempts(email, clientIp);
             return ResponseEntity.ok(authResponse);
 
@@ -110,7 +110,7 @@ public class AuthController {
         String email = registrationDto.getEmail();
 
         logger.debug("Registration request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("REGISTRATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("REGISTRATION_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
             validateRequest(registrationDto.getEmail(), null, 
@@ -122,7 +122,7 @@ public class AuthController {
             // Proceed with registration
             userService.register(registrationDto);
             logger.info("Registration successful for user: {} IP: {}", email, clientIp);
-            securityLogger.info("REGISTRATION_SUCCESS user={} ip={}", email, clientIp);
+            // securityLogger.info("REGISTRATION_SUCCESS user={} ip={}", email, clientIp);
 
             return new ResponseEntity<>(
                     Map.of("message", "User registered successfully. Please wait for admin approval."),
@@ -147,7 +147,7 @@ public class AuthController {
         String email = resetRequestDto.getEmail();
 
         logger.debug("Password reset request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("PASSWORD_RESET_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("PASSWORD_RESET_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
             validateRequest(resetRequestDto.getEmail(), null, 
@@ -156,7 +156,7 @@ public class AuthController {
             // Proceed with password reset
             userService.sendPasswordResetCode(resetRequestDto.getEmail());
             logger.info("Password reset code sent for user: {} IP: {}", email, clientIp);
-            securityLogger.info("PASSWORD_RESET_CODE_SENT user={} ip={}", email, clientIp);
+            // securityLogger.info("PASSWORD_RESET_CODE_SENT user={} ip={}", email, clientIp);
 
             return ResponseEntity.ok(Map.of(
                     "message", "If your email is registered, you will receive a verification code shortly."));
@@ -177,7 +177,7 @@ public class AuthController {
         String email = verificationDto.getEmail();
 
         logger.debug("Password reset verification request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("PASSWORD_RESET_VERIFICATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("PASSWORD_RESET_VERIFICATION_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
             // Validation
@@ -198,7 +198,7 @@ public class AuthController {
 
             if (result) {
                 logger.info("Password reset verification successful for user: {} IP: {}", email, clientIp);
-                securityLogger.info("PASSWORD_RESET_SUCCESS user={} ip={}", email, clientIp);
+                // securityLogger.info("PASSWORD_RESET_SUCCESS user={} ip={}", email, clientIp);
                 return ResponseEntity.ok(Map.of(
                         "message", "Password has been reset successfully. Check your email for new credentials."));
             } else {

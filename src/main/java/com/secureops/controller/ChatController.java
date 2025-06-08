@@ -41,7 +41,7 @@ public class ChatController {
         String maskedTitle = maskChatTitle(chatDto != null ? chatDto.getTitle() : null);
         
         logger.debug("Create chat request received - Title: {}, IP: {}", maskedTitle, clientIp);
-        securityLogger.info("Chat creation attempt from IP: {} - Title: {}", clientIp, maskedTitle);
+        // securityLogger.info("Chat creation attempt from IP: {} - Title: {}", clientIp, maskedTitle);
 
         try {
             // Validation checks
@@ -81,8 +81,8 @@ public class ChatController {
 
             logger.info("Chat created successfully - ChatID: {}, Title: {}, IP: {}", 
                     chat.getId(), maskedTitle, clientIp);
-            securityLogger.info("Successful chat creation - ChatID: {}, Title: {}, IP: {}", 
-                    chat.getId(), maskedTitle, clientIp);
+            // securityLogger.info("Successful chat creation - ChatID: {}, Title: {}, IP: {}", 
+                    // chat.getId(), maskedTitle, clientIp);
 
             return new ResponseEntity<>(mapToDto(chat), HttpStatus.CREATED);
 
@@ -99,7 +99,7 @@ public class ChatController {
         String clientIp = getClientIp();
         
         logger.debug("Get user chats request from IP: {}", clientIp);
-        securityLogger.info("User chats request from IP: {}", clientIp);
+        // securityLogger.info("User chats request from IP: {}", clientIp);
         
         logger.debug("getUserChats - Starting method");
         try {
@@ -145,7 +145,7 @@ public class ChatController {
         String clientIp = getClientIp();
         
         logger.debug("Get chat by ID request - ChatID: {}, IP: {}", id, clientIp);
-        securityLogger.info("Chat details request from IP: {} for ChatID: {}", clientIp, id);
+        // securityLogger.info("Chat details request from IP: {} for ChatID: {}", clientIp, id);
         
         logger.debug("getChatById - Starting method with ID: {}", id);
         
@@ -187,7 +187,7 @@ public class ChatController {
         String clientIp = getClientIp();
         
         logger.debug("Archive chat request - ChatID: {}, IP: {}", id, clientIp);
-        securityLogger.info("Chat archive request from IP: {} for ChatID: {}", clientIp, id);
+        // securityLogger.info("Chat archive request from IP: {} for ChatID: {}", clientIp, id);
         
         logger.debug("archiveChat - Starting method with ID: {}", id);
         
@@ -209,7 +209,7 @@ public class ChatController {
             
             logger.info("Chat archived successfully - ChatID: {}, Status: {}, IP: {}", 
                     chat.getId(), chat.getStatus(), clientIp);
-            securityLogger.info("Chat archived - ChatID: {}, IP: {}", id, clientIp);
+            // securityLogger.info("Chat archived - ChatID: {}, IP: {}", id, clientIp);
             
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
@@ -227,7 +227,7 @@ public class ChatController {
         String clientIp = getClientIp();
         
         logger.debug("Unarchive chat request - ChatID: {}, IP: {}", id, clientIp);
-        securityLogger.info("Chat unarchive request from IP: {} for ChatID: {}", clientIp, id);
+        // securityLogger.info("Chat unarchive request from IP: {} for ChatID: {}", clientIp, id);
         
         logger.debug("unarchiveChat - Starting method with ID: {}", id);
         
@@ -249,7 +249,7 @@ public class ChatController {
             
             logger.info("Chat unarchived successfully - ChatID: {}, Status: {}, IP: {}", 
                     chat.getId(), chat.getStatus(), clientIp);
-            securityLogger.info("Chat unarchived - ChatID: {}, IP: {}", id, clientIp);
+            // securityLogger.info("Chat unarchived - ChatID: {}, IP: {}", id, clientIp);
             
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
@@ -267,9 +267,7 @@ public class ChatController {
         String clientIp = getClientIp();
         
         logger.debug("Leave chat request - ChatID: {}, IP: {}", id, clientIp);
-        securityLogger.info("Leave chat request from IP: {} for ChatID: {}", clientIp, id);
-        
-        logger.debug("leaveChat - Starting method with ID: {}", id);
+        // securityLogger.info("Leave chat request from IP: {} for ChatID: {}", clientIp, id);
         
         try {
             // Validation checks
