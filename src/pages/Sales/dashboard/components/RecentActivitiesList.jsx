@@ -65,14 +65,13 @@ const RecentActivitiesList = ({ activities, loading = false }) => {
       </div>
     )
   }
-
   return (
     <div className="bg-white rounded-lg shadow-card overflow-hidden">
       <div className="p-4 border-b border-gray-200">
         <h3 className="text-lg font-medium text-gray-800">Recent Activities</h3>
       </div>
 
-      {activities.length === 0 ? (
+      {!activities || activities.length === 0 ? (
         <div className="p-6 text-center text-gray-500">
           No recent activities to display
         </div>
@@ -94,9 +93,15 @@ const RecentActivitiesList = ({ activities, loading = false }) => {
                   <div className="flex items-baseline justify-between">
                     <p className="text-sm font-medium text-gray-900">
                       {activity.user}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {format(new Date(activity.timestamp), "MMM d, h:mm a")}
+                    </p>                    <p className="text-xs text-gray-500">
+                      {(() => {
+                        try {
+                          const date = new Date(activity.timestamp);
+                          return isNaN(date.getTime()) ? 'N/A' : format(date, "MMM d, h:mm a");
+                        } catch (error) {
+                          return 'N/A';
+                        }
+                      })()}
                     </p>
                   </div>
 

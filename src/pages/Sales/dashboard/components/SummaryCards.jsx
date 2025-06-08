@@ -3,8 +3,7 @@ import StatsCard from "../../../../Components/Sales/common/StatsCard"
 import { DollarSign, FileText, FileCheck, TrendingUp } from "lucide-react"
 import { format } from "date-fns"
 
-const SummaryCards = ({ data, loading = false }) => {
-  if (loading) {
+const SummaryCards = ({ data, loading = false }) => {  if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {Array.from({ length: 4 }).map((_, index) => (
@@ -23,37 +22,46 @@ const SummaryCards = ({ data, loading = false }) => {
     )
   }
 
+  // Provide default values if data is null or missing properties
+  const summaryData = {
+    totalSales: data?.totalSales || 0,
+    pendingQuotes: data?.pendingQuotes || 0,
+    outstandingInvoices: data?.outstandingInvoices || 0,
+    revenueThisMonth: data?.revenueThisMonth || 0,
+    percentChange: data?.percentChange || 0
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatsCard
         title="Total Sales"
-        value={`$${data.totalSales.toLocaleString()}`}
+        value={`$${summaryData.totalSales.toLocaleString()}`}
         icon={<DollarSign size={24} />}
         change={{
-          value: data.percentChange,
-          isPositive: data.percentChange > 0
+          value: summaryData.percentChange,
+          isPositive: summaryData.percentChange > 0
         }}
       />
 
       <StatsCard
         title="Pending Quotes"
-        value={data.pendingQuotes}
+        value={summaryData.pendingQuotes}
         icon={<FileText size={24} />}
       />
 
       <StatsCard
         title="Outstanding Invoices"
-        value={data.outstandingInvoices}
+        value={summaryData.outstandingInvoices}
         icon={<FileCheck size={24} />}
       />
 
       <StatsCard
         title={`Revenue (${format(new Date(), "MMM yyyy")})`}
-        value={`$${data.revenueThisMonth.toLocaleString()}`}
+        value={`$${summaryData.revenueThisMonth.toLocaleString()}`}
         icon={<TrendingUp size={24} />}
         change={{
-          value: data.percentChange,
-          isPositive: data.percentChange > 0
+          value: summaryData.percentChange,
+          isPositive: summaryData.percentChange > 0
         }}
       />
     </div>

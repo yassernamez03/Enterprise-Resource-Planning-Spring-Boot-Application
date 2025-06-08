@@ -5,9 +5,9 @@ import RecentActivitiesList from "./components/RecentActivitiesList"
 import SalesChart from "./components/SalesChart"
 import QuickActions from "./components/QuickActions"
 import {
-  getMockSalesSummary,
-  getMockRecentActivities,
-  getMockSalesPerformance
+  getSalesSummary,
+  getRecentActivities,
+  getSalesPerformance
 } from "../../../services/Sales/dashboardService"
 
 const Dashboard = () => {
@@ -19,39 +19,51 @@ const Dashboard = () => {
     activities: true,
     performance: true
   })
+  const [error, setError] = useState({
+    summary: null,
+    activities: null,
+    performance: null
+  })
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      // Fetch sales summary
       try {
-        // In a real app, use the API services
-        // const summaryData = await getSalesSummary();
-        // const activitiesData = await getRecentActivities(5);
-        // const performanceData = await getSalesPerformance('month');
-
-        // Using mock data for development
-        const summaryData = getMockSalesSummary()
-        const activitiesData = getMockRecentActivities()
-        const performanceData = getMockSalesPerformance()
-
+        setLoading(prev => ({ ...prev, summary: true }))
+        const summaryData = await getSalesSummary()
         setSalesSummary(summaryData)
+        setError(prev => ({ ...prev, summary: null }))
+      } catch (err) {
+        console.error("Error fetching sales summary:", err)
+        setError(prev => ({ ...prev, summary: "Failed to load sales summary" }))
+      } finally {
+        setLoading(prev => ({ ...prev, summary: false }))
+      }
+
+      // Fetch recent activities
+      try {
+        setLoading(prev => ({ ...prev, activities: true }))
+        const activitiesData = await getRecentActivities(5)
         setRecentActivities(activitiesData)
+        setError(prev => ({ ...prev, activities: null }))
+      } catch (err) {
+        console.error("Error fetching recent activities:", err)
+        setError(prev => ({ ...prev, activities: "Failed to load recent activities" }))
+      } finally {
+        setLoading(prev => ({ ...prev, activities: false }))
+      }
+
+      // Fetch sales performance
+      try {
+        setLoading(prev => ({ ...prev, performance: true }))
+        const performanceData = await getSalesPerformance('month')
         setSalesPerformance(performanceData)
-
-        // Simulate loading states for development
-        setTimeout(() => {
-          setLoading(prev => ({ ...prev, summary: false }))
-        }, 500)
-
-        setTimeout(() => {
-          setLoading(prev => ({ ...prev, activities: false }))
-        }, 800)
-
-        setTimeout(() => {
-          setLoading(prev => ({ ...prev, performance: false }))
-        }, 1200)
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error)
-        // In a real app, handle error properly
+        setError(prev => ({ ...prev, performance: null }))
+      } catch (err) {
+        console.error("Error fetching sales performance:", err)
+        setError(prev => ({ ...prev, performance: "Failed to load sales performance" }))
+      } finally {
+        setLoading(prev => ({ ...prev, performance: false }))
       }
     }
 
@@ -66,10 +78,16 @@ const Dashboard = () => {
       />
 
       <div className="grid grid-cols-1 gap-6 mb-6">
-        <SummaryCards
-          data={salesSummary || getMockSalesSummary()}
-          loading={loading.summary}
-        />
+        {error.summary ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            {error.summary}
+          </div>
+        ) : (
+          <SummaryCards
+            data={salesSummary}
+            loading={loading.summary}
+          />
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 mb-6">
@@ -78,17 +96,27 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <SalesChart
-            data={salesPerformance || getMockSalesPerformance()}
-            loading={loading.performance}
-          />
-        </div>
-
-        <div>
-          <RecentActivitiesList
-            activities={recentActivities}
-            loading={loading.activities}
-          />
+          {error.performance ? (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {error.performance}
+            </div>
+          ) : (
+            <SalesChart
+              data={salesPerformance}
+              loading={loading.performance}
+            />
+          )}
+        </div>        <div>
+          {error.activities ? (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {error.activities}
+            </div>
+          ) : (
+            <RecentActivitiesList
+              activities={recentActivities}
+              loading={loading.activities}
+            />
+          )}
         </div>
       </div>
     </div>

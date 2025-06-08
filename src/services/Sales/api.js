@@ -2,10 +2,14 @@ import axios from "axios"
 
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8443/api",
+  baseURL: import.meta.env.VITE_API_URL || "https://localhost:8443/api",
   headers: {
     "Content-Type": "application/json"
-  }
+  },
+  // Allow self-signed certificates for development
+  httpsAgent: typeof window === 'undefined' ? new (require('https').Agent)({
+    rejectUnauthorized: false
+  }) : undefined
 })
 
 // Add request interceptor for auth token

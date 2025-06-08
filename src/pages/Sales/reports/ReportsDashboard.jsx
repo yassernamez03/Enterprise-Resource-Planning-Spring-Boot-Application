@@ -58,7 +58,6 @@ const ReportsDashboard = () => {
   useEffect(() => {
     loadReportData()
   }, [dateRange, activeReport, periodFilter])
-
   const loadReportData = async () => {
     setError(null)
     
@@ -89,8 +88,8 @@ const ReportsDashboard = () => {
           break
       }
     } catch (err) {
-      console.error(err)
-      setError("Failed to load report data")
+      console.error("Error loading report data:", err)
+      setError(`Failed to load ${activeReport.replace('-', ' ')} report`)
     } finally {
       setLoadingStates(prev => ({ ...prev, [activeReport]: false }))
     }

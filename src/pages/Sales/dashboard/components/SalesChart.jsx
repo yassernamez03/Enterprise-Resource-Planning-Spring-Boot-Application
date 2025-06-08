@@ -50,13 +50,13 @@ const SalesChart = ({ data, loading = false, title = "Sales Performance" }) => {
       }
     }
   }
-
+  // Provide default values if data is null or missing properties
   const chartData = {
-    labels: data.labels,
+    labels: data?.labels || [],
     datasets: [
       {
         label: "Sales",
-        data: data.datasets[0].data,
+        data: data?.datasets?.[0]?.data || [],
         borderColor: "rgb(59, 130, 246)",
         backgroundColor: "rgba(59, 130, 246, 0.1)",
         borderWidth: 2,
@@ -65,7 +65,6 @@ const SalesChart = ({ data, loading = false, title = "Sales Performance" }) => {
       }
     ]
   }
-
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow-card overflow-hidden">
@@ -78,6 +77,22 @@ const SalesChart = ({ data, loading = false, title = "Sales Performance" }) => {
         </div>
         <div className="p-4">
           <div className="h-64 bg-gray-100 rounded animate-pulse"></div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show message if no data is available
+  if (!data || !data.labels || data.labels.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow-card overflow-hidden">
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-800">{title}</h3>
+        </div>
+        <div className="p-4">
+          <div className="h-64 flex items-center justify-center text-gray-500">
+            No sales data available
+          </div>
         </div>
       </div>
     )
