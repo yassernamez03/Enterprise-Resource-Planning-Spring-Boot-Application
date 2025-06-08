@@ -68,3 +68,4 @@
 2025-06-08 13:27:11.755 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
 2025-06-08 13:27:12.046 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
 2025-06-08 15:55:07.843 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-08 15:55:41.821 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
