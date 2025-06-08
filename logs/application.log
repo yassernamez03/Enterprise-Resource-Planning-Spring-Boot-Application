@@ -24690,3 +24690,21 @@ Caused by: java.io.IOException: An established connection was aborted by the sof
 2025-06-08 13:27:13.909 [https-jsse-nio-8443-exec-10] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [POST /api/security/logs, client=0:0:0:0:0:0:0:1, user=zakariyablagrae@gmail.com, payload={"userId":4,"action":"PROTECTED_ACCESS","details":"Accessed protected route: /","logType":"SECURITY"}]
 2025-06-08 13:27:13.956 [https-jsse-nio-8443-exec-9] DEBUG o.s.w.f.CommonsRequestLoggingFilter - After request [GET /api/files/download/afa899a5-e198-4abd-bd38-0941ab3d6cbb.jpg, client=0:0:0:0:0:0:0:1]
 2025-06-08 13:27:19.141 [MessageBroker-6] DEBUG o.s.w.s.s.t.h.DefaultSockJsService - Closed 1 sessions: [cw4d1pvz]
+2025-06-08 15:54:49.636 [restartedMain] INFO  com.secureops.SecureOpsApplication - Starting SecureOpsApplication using Java 22.0.1 with PID 1992 (C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend\target\classes started by zakar in C:\Users\zakar\OneDrive\Desktop\SecureOpsFinal\Backend)
+2025-06-08 15:54:49.638 [restartedMain] DEBUG com.secureops.SecureOpsApplication - Running with Spring Boot v3.4.5, Spring v6.2.6
+2025-06-08 15:54:49.639 [restartedMain] INFO  com.secureops.SecureOpsApplication - The following 1 profile is active: "dev"
+2025-06-08 15:54:49.723 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-06-08 15:54:49.723 [restartedMain] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-06-08 15:54:52.757 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-06-08 15:54:53.039 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 267 ms. Found 18 JPA repository interfaces.
+2025-06-08 15:54:55.375 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8443 (https)
+2025-06-08 15:54:55.423 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-08 15:54:55.427 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-06-08 15:54:55.714 [restartedMain] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-08 15:54:55.715 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5990 ms
+2025-06-08 15:54:56.495 [restartedMain] DEBUG c.s.config.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-06-08 15:54:56.505 [restartedMain] DEBUG o.s.w.f.CommonsRequestLoggingFilter - Filter 'requestLoggingFilter' configured for use
+2025-06-08 15:54:57.669 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-06-08 15:54:57.754 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-06-08 15:54:58.141 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7db7267d
+2025-06-08 15:54:58.146 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
