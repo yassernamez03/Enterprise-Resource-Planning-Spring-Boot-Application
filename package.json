@@ -23,6 +23,7 @@
     "chart.js": "^4.4.1",
     "date-fns": "^3.3.1",
     "emoji-picker-react": "^4.12.2",
+    "framer-motion": "^12.16.0",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.2.0",

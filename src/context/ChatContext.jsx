@@ -93,7 +93,7 @@ export const ChatProvider = ({ children }) => {
       const chatsWithMessages = await Promise.all(
         chatsData.map(async (chat) => {
           try {
-            console.log(`Fetching messages for chat ID: ${chat.id}`);
+            // console.log(`Fetching messages for chat ID: ${chat.id}`);
             const messages = await apiService.get(`/messages/chat/${chat.id}`);
 
             // Sort messages by timestamp to ensure proper order
@@ -195,13 +195,13 @@ export const ChatProvider = ({ children }) => {
   const handleNewMessage = (message) => {
     // Check if we've already processed this message
     if (processedMessages.current.has(message.id)) {
-      console.log(`Skipping already processed message: ${message.id}`);
+      // console.log(`Skipping already processed message: ${message.id}`);
       return;
     }
 
     // Add to processed set
     processedMessages.current.add(message.id);
-    console.log(`New message received: ${message.id}`, message);
+    // console.log(`New message received: ${message.id}`, message);
 
     setConversations((prevConversations) => {
       return prevConversations.map((conv) => {

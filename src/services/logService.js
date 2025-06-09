@@ -36,7 +36,7 @@ const logService = {
       };
       
       const response = await apiService.post('/security/logs', logData);
-      console.log('Security event logged:', response);
+      // console.log('Security event logged:', response);
       return response;
     } catch (error) {
       console.error('Error logging security event:', error);

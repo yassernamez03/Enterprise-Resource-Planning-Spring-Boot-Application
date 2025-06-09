@@ -1,8 +1,8 @@
 // src/Components/ProtectedRoute.js
-import React, { useEffect } from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import logService from '../services/logService';
+import React, { useEffect } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import logService from "../services/logService";
 
 const ProtectedRoute = () => {
   const { isAuthenticated, loading, user } = useAuth();
@@ -11,22 +11,44 @@ const ProtectedRoute = () => {
   useEffect(() => {
     if (!loading) {
       if (isAuthenticated()) {
-        // Log successful access to protected route
-        logService.logSecurityEvent(
-          user?.id,
-          'PROTECTED_ACCESS',
-          `Accessed protected route: ${location.pathname}`,
-          'SECURITY'
-        ).catch(console.error);
+        // Check if user is trying to access admin routes without admin privileges
+        const adminRoutes = ['/security', '/admin', '/sales', '/Employee'];
+        const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
+        
+        if (isAdminRoute && user?.role !== 'ADMIN') {
+          // Log unauthorized admin access attempt
+          logService
+            .logSecurityEvent(
+              user?.id,
+              "UNAUTHORIZED_ADMIN_ACCESS",
+              `User attempted to access restricted page: ${location.pathname}`,
+              "SECURITY"
+            )
+            .catch(console.error);
+        } else {
+          // Log successful access to protected route
+          logService
+            .logSecurityEvent(
+              user?.id,
+              "PROTECTED_ACCESS",
+              `Accessed protected route: ${location.pathname}`,
+              "SECURITY"
+            )
+            .catch(console.error);
+        }
       } else {
         // Log unauthorized access attempt
-        logService.logSecurityEvent(
-          null,
-          'UNAUTHORIZED_ACCESS_ATTEMPT',
-          `Attempted to access protected route: ${location.pathname}`,
-          'SECURITY',
-          { attemptedPath: location.pathname }
-        ).catch(console.error);
+        if (location.pathname !== "/") {
+          logService
+            .logSecurityEvent(
+              null,
+              "UNAUTHORIZED_ACCESS_ATTEMPT",
+              `Attempted to access protected route: ${location.pathname}`,
+              "SECURITY",
+              { attemptedPath: location.pathname }
+            )
+            .catch(console.error);
+        }
       }
     }
   }, [loading, isAuthenticated, location.pathname, user]);

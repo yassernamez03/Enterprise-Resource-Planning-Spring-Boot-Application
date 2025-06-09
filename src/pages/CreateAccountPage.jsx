@@ -24,7 +24,7 @@ function CreateAccountPage() {
     
     // Validate reCAPTCHA
     if (!recaptchaValue) {
-      setError('Veuillez confirmer que vous n\'êtes pas un robot');
+      setError('Please confirm that you are not a robot');
       return;
     }
     
@@ -40,7 +40,7 @@ function CreateAccountPage() {
         navigate('/login');
       }, 3000);
     } catch (err) {
-      setError('Échec de la création du compte. Veuillez réessayer.');
+      setError('Failed to create account. Please try again.');
       console.error('Registration error:', err);
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
@@ -60,8 +60,8 @@ function CreateAccountPage() {
             </div>
             <h1 className="text-xl font-semibold text-gray-800">SecureOps</h1>
           </div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Créer un compte</h2>
-          <p className="text-gray-500">Rejoignez-nous pour accéder à toutes nos applications</p>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Create Account</h2>
+          <p className="text-gray-500">Join us to access all our applications</p>
         </div>
         
         {error && (
@@ -72,18 +72,18 @@ function CreateAccountPage() {
 
         {success ? (
           <div className="bg-green-50 text-green-700 p-4 rounded-lg mb-6 animate-pulse">
-            <h3 className="font-medium text-lg mb-2">Compte créé avec succès!</h3>
-            <p className="mb-2">Un administrateur examinera votre demande. Vous recevrez un email de confirmation une fois approuvée.</p>
+            <h3 className="font-medium text-lg mb-2">Account created successfully!</h3>
+            <p className="mb-2">An administrator will review your request. You will receive a confirmation email once approved.</p>
             <div className="flex items-center justify-center mt-4">
               <div className="animate-spin h-5 w-5 border-t-2 border-b-2 border-green-600 rounded-full mr-2"></div>
-              <p>Redirection vers la page de connexion...</p>
+              <p>Redirecting to login page...</p>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-800 mb-2">
-                Nom complet
+                Full Name
               </label>
               <input
                 type="text"
@@ -91,7 +91,7 @@ function CreateAccountPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-600"
-                placeholder="Votre nom complet"
+                placeholder="Your full name"
                 required
                 disabled={isSubmitting}
               />
@@ -107,7 +107,7 @@ function CreateAccountPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-600"
-                placeholder="votre@email.com"
+                placeholder="your@email.com"
                 required
                 disabled={isSubmitting}
               />
@@ -115,7 +115,7 @@ function CreateAccountPage() {
             
             <div className="bg-gray-50 rounded-lg p-3 mb-6">
               <p className="text-gray-500 text-sm leading-relaxed">
-                Votre demande d'inscription sera examinée par un administrateur. Vous recevrez un email de confirmation une fois approuvée.
+                Your registration request will be reviewed by an administrator. You will receive a confirmation email once approved.
               </p>
             </div>
             
@@ -139,10 +139,10 @@ function CreateAccountPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Création en cours...
+                  Creating account...
                 </span>
               ) : (
-                'Créer mon compte'
+                'Create my account'
               )}
             </button>
           </form>
@@ -150,9 +150,9 @@ function CreateAccountPage() {
         
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm">
-            Vous avez déjà un compte?{" "}
+            Already have an account?{" "}
             <Link to="/login" className="text-indigo-600 font-medium hover:underline">
-              Se connecter
+              Sign in
             </Link>
           </p>
         </div>
