@@ -1,10 +1,10 @@
 package com.secureops.service;
 
 import com.secureops.dto.AlertResponse;
-import com.secureops.dto.IncidentResponse;
 import com.secureops.dto.AlertSummaryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -23,31 +23,10 @@ public class AlertsServiceImpl implements AlertsService {
 
     private static final Logger logger = LoggerFactory.getLogger(AlertsServiceImpl.class);
 
-    private final Map<String, IncidentResponse> activeIncidents = new ConcurrentHashMap<>();
-
     // BRUTE FORCE ATTACK PATTERNS
     private static final Pattern[] BRUTE_FORCE_PATTERNS = {
-            // Pattern.compile("ERROR.*Authentication failed for user: ([^\\s]+).*Bad
-            // credentials",
-            // Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("WARN.*Failed login attempt for user '([^']+)': Bad
-            // credentials", Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("ERROR.*Login error - email: ([^,]+), IP: ([^,]+), Error:
-            // (.+)", Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("INFO.*AUTHENTICATION_FAILURE.*user=([^\\s]+).*ip=([\\d.:]+)",
-            // Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("ERROR.*Invalid username or password.*User: ([^\\s]+).*IP:
-            // ([\\d.:]+)",
-            // Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("WARN.*Multiple failed login attempts.*Username:
-            // ([^\\s]+).*Source: ([\\d.:]+)",
-            // Pattern.CASE_INSENSITIVE),
             Pattern.compile("ERROR.*Account locked.*User: ([^\\s]+).*IP: ([\\d.:]+).*Reason: Too many failed attempts",
                     Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("INFO.*SSH.*authentication failure.*user=([^\\s]+).*rhost=([\\d.:]+)",
-            //         Pattern.CASE_INSENSITIVE),
-            // Pattern.compile("ERROR.*LDAP authentication failed.*user=([^\\s]+).*client=([\\d.:]+)",
-            //         Pattern.CASE_INSENSITIVE)
     };
 
     // DATA EXFILTRATION PATTERNS
@@ -182,21 +161,8 @@ public class AlertsServiceImpl implements AlertsService {
 
     // PRIVILEGE ESCALATION PATTERNS
     private static final Pattern[] PRIVILEGE_ESCALATION_PATTERNS = {
-            Pattern.compile("ERROR.*Privilege escalation attempt.*User: ([^\\s]+).*Target: ([^\\s]+).*IP: ([\\d.:]+)",
+            Pattern.compile("ERROR.*UNAUTHORIZED_ADMIN_ACCESS.*User: ([^,]+).*IP: ([^,]+).*Details:",
                     Pattern.CASE_INSENSITIVE),
-            // Updated pattern to match your log format
-            Pattern.compile("ERROR.*UNAUTHORIZED_ADMIN_ACCESS.*User: ([^,]+).*IP: ([^,]+).*Details:", 
-                    Pattern.CASE_INSENSITIVE),
-            // Alternative pattern that's more flexible
-            // Pattern.compile("ERROR.*UNAUTHORIZED_ADMIN_ACCESS.*User: ([^\\(]+).*\\(ID: \\d+\\).*IP: ([^,]+)", 
-            //         Pattern.CASE_INSENSITIVE),
-            Pattern.compile("ERROR.*Sudo violation.*User: ([^\\s]+).*Command: ([^\\n]+).*Host: ([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE),
-            Pattern.compile(
-                    "WARN.*Role elevation detected.*From: ([^\\s]+).*To: ([^\\s]+).*User: ([^\\s]+).*IP: ([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE),
-            Pattern.compile("ERROR.*Root access attempt.*User: ([^\\s]+).*Method: ([^\\s]+).*Source: ([\\d.:]+)",
-                    Pattern.CASE_INSENSITIVE)
     };
 
     // UNAUTHORIZED ACCESS PATTERNS
@@ -212,344 +178,138 @@ public class AlertsServiceImpl implements AlertsService {
             Pattern.compile("ERROR.*Invalid token access.*Token: ([^\\s]+).*IP: ([\\d.:]+)", Pattern.CASE_INSENSITIVE)
     };
 
-    // Add this method to AlertsServiceImpl class
+    // Fixed getAllAlerts to include both today's and historical alerts without
+    // duplicates
     @Override
     public List<AlertResponse> getAllAlerts() {
-        System.out.println("---------- Starting getAllAlerts ----------");
+        Set<AlertResponse> uniqueAlerts = new HashSet<>();
 
-        // Get today's alerts
-        List<AlertResponse> allAlerts = new ArrayList<>(analyzeTodayLogs());
+        // Get today's alerts (without duplicates from runComprehensiveThreatScan)
+        List<AlertResponse> todayAlerts = analyzeLogs(getTodayLogFiles());
+        uniqueAlerts.addAll(todayAlerts);
 
-        // Optionally, you can also include recent historical alerts
-        LocalDate sevenDaysAgo = LocalDate.now().minusDays(Integer.MAX_VALUE);
+        // Get recent historical alerts (last 7 days)
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
         LocalDate yesterday = LocalDate.now().minusDays(1);
-        allAlerts.addAll(analyzeHistoricalLogs(sevenDaysAgo, yesterday));
+        List<AlertResponse> historicalAlerts = analyzeHistoricalLogs(sevenDaysAgo, yesterday);
+        uniqueAlerts.addAll(historicalAlerts);
 
-        // Remove duplicates based on alert ID and sort by timestamp (newest first)
-        List<AlertResponse> uniqueAlerts = allAlerts.stream()
-                .distinct()
+        // Sort by timestamp (newest first) and return
+        return uniqueAlerts.stream()
                 .sorted((a1, a2) -> a2.getTimestamp().compareTo(a1.getTimestamp()))
                 .collect(Collectors.toList());
-
-        System.out.println("---------- getAllAlerts completed with " + uniqueAlerts.size() + " alerts ----------");
-        return uniqueAlerts;
     }
 
+    // Fixed analyzeTodayLogs to avoid duplicate processing
     @Override
     public List<AlertResponse> analyzeTodayLogs() {
-        System.out.println("---------- Starting analyzeTodayLogs ----------");
-        List<AlertResponse> alerts = analyzeLogs(getTodayLogFiles());
-        System.out.println("---------- analyzeTodayLogs completed with " + alerts.size() + " alerts ----------");
-        return alerts;
+        // Only analyze logs once, don't call runComprehensiveThreatScan separately
+        return analyzeLogs(getTodayLogFiles());
     }
 
     @Override
     public List<AlertResponse> analyzeHistoricalLogs(LocalDate startDate, LocalDate endDate) {
-        System.out.println(
-                "---------- Starting analyzeHistoricalLogs from " + startDate + " to " + endDate + " ----------");
-        List<AlertResponse> alerts = analyzeLogs(getHistoricalLogFiles(startDate, endDate));
-        System.out.println("---------- analyzeHistoricalLogs completed with " + alerts.size() + " alerts ----------");
-        return alerts;
-    }
-
-    @Override
-    public List<IncidentResponse> getActiveIncidents() {
-        System.out.println("---------- Getting active incidents: " + activeIncidents.size() + " ----------");
-        return new ArrayList<>(activeIncidents.values());
+        return analyzeLogs(getHistoricalLogFiles(startDate, endDate));
     }
 
     @Override
     public AlertSummaryResponse getAlertSummary() {
-        System.out.println("---------- Starting getAlertSummary ----------");
         List<AlertResponse> todayAlerts = analyzeTodayLogs();
 
         Map<String, Long> alertCounts = todayAlerts.stream()
                 .collect(Collectors.groupingBy(AlertResponse::getSeverity, Collectors.counting()));
 
-        System.out.println("---------- Alert counts by severity: " + alertCounts + " ----------");
-
-        AlertSummaryResponse summary = AlertSummaryResponse.builder()
+        return AlertSummaryResponse.builder()
                 .totalAlerts(todayAlerts.size())
                 .criticalAlerts(alertCounts.getOrDefault("CRITICAL", 0L).intValue())
                 .highAlerts(alertCounts.getOrDefault("HIGH", 0L).intValue())
                 .mediumAlerts(alertCounts.getOrDefault("MEDIUM", 0L).intValue())
                 .lowAlerts(alertCounts.getOrDefault("LOW", 0L).intValue())
-                .activeIncidents(activeIncidents.size())
                 .lastUpdated(LocalDateTime.now())
                 .build();
-
-        System.out.println("---------- getAlertSummary completed ----------");
-        return summary;
     }
 
-    @Override
-    public void resolveIncident(String incidentId) {
-        System.out.println("---------- Resolving incident: " + incidentId + " ----------");
-        IncidentResponse incident = activeIncidents.remove(incidentId);
-        if (incident != null) {
-            logger.info("INCIDENT_RESOLVED - IncidentID: {}, Title: {}", incidentId, incident.getTitle());
-            System.out.println("---------- Incident resolved successfully: " + incident.getTitle() + " ----------");
-        } else {
-            System.out.println("---------- Incident not found: " + incidentId + " ----------");
-        }
-    }
-
+    // Individual threat detection methods now use the centralized logic
     @Override
     public List<AlertResponse> detectBruteForceAttempts() {
-        System.out.println("---------- Starting detectBruteForceAttempts ----------");
         return detectThreatPattern("BRUTE_FORCE", BRUTE_FORCE_PATTERNS, 3, "CRITICAL",
                 "Brute Force Attack Detected", "Multiple failed login attempts detected");
     }
 
     @Override
     public List<AlertResponse> detectDataExfiltration() {
-        System.out.println("---------- Starting detectDataExfiltration ----------");
         return detectThreatPattern("DATA_EXFILTRATION", DATA_EXFILTRATION_PATTERNS, 5, "HIGH",
                 "Potential Data Exfiltration", "Suspicious data transfer activity detected");
     }
 
     public List<AlertResponse> detectPathTraversal() {
-        System.out.println("---------- Starting detectPathTraversal ----------");
         return detectThreatPattern("PATH_TRAVERSAL", PATH_TRAVERSAL_PATTERNS, 2, "HIGH",
                 "Path Traversal Attack", "Directory traversal attempts detected");
     }
 
     public List<AlertResponse> detectRemoteCodeExecution() {
-        System.out.println("---------- Starting detectRemoteCodeExecution ----------");
         return detectThreatPattern("RCE", RCE_PATTERNS, 1, "CRITICAL",
                 "Remote Code Execution Attempt", "Code injection attempts detected");
     }
 
     public List<AlertResponse> detectLocalFileInclusion() {
-        System.out.println("---------- Starting detectLocalFileInclusion ----------");
         return detectThreatPattern("LFI", LFI_PATTERNS, 2, "HIGH",
                 "Local File Inclusion Attack", "File inclusion attempts detected");
     }
 
     public List<AlertResponse> detectSqlInjection() {
-        System.out.println("---------- Starting detectSqlInjection ----------");
         return detectThreatPattern("SQL_INJECTION", SQL_INJECTION_PATTERNS, 1, "CRITICAL",
                 "SQL Injection Attack", "Database injection attempts detected");
     }
 
     public List<AlertResponse> detectXssAttempts() {
-        System.out.println("---------- Starting detectXssAttempts ----------");
         return detectThreatPattern("XSS", XSS_PATTERNS, 2, "HIGH",
                 "Cross-Site Scripting Attack", "Script injection attempts detected");
     }
 
     public List<AlertResponse> detectMalware() {
-        System.out.println("---------- Starting detectMalware ----------");
         return detectThreatPattern("MALWARE", MALWARE_PATTERNS, 1, "CRITICAL",
                 "Malware Detected", "Malicious software activity detected");
     }
 
     public List<AlertResponse> detectDdosAttempts() {
-        System.out.println("---------- Starting detectDdosAttempts ----------");
         return detectThreatPattern("DDOS", DDOS_PATTERNS, 10, "HIGH",
                 "DDoS Attack Detected", "Distributed denial of service activity detected");
     }
 
     public List<AlertResponse> detectPrivilegeEscalation() {
-        System.out.println("---------- Starting detectPrivilegeEscalation ----------");
         return detectThreatPattern("PRIVILEGE_ESCALATION", PRIVILEGE_ESCALATION_PATTERNS, 1, "CRITICAL",
                 "Privilege Escalation Attempt", "Unauthorized privilege elevation detected");
     }
 
     public List<AlertResponse> detectUnauthorizedAccess() {
-        System.out.println("---------- Starting detectUnauthorizedAccess ----------");
         return detectThreatPattern("UNAUTHORIZED_ACCESS", UNAUTHORIZED_ACCESS_PATTERNS, 3, "HIGH",
                 "Unauthorized Access Attempt", "Unauthorized resource access attempts detected");
     }
 
+    // Centralized threat detection logic - creates alerts AND incidents when
+    // threshold is met
     private List<AlertResponse> detectThreatPattern(String threatType, Pattern[] patterns, int threshold,
             String severity, String title, String description) {
+
         List<String> logFiles = getTodayLogFiles();
-        Map<String, List<AlertResponse>> ipAttempts = new HashMap<>();
+        List<AlertResponse> threatAlerts = new ArrayList<>();
 
         for (String logFile : logFiles) {
-            System.out.println("---------- Analyzing file for " + threatType + ": " + logFile + " ----------");
-
             for (Pattern pattern : patterns) {
-                List<AlertResponse> alerts = analyzeLogFile(logFile, pattern, threatType);
-                for (AlertResponse alert : alerts) {
-                    String ip = extractIpFromAlert(alert);
-                    ipAttempts.computeIfAbsent(ip, k -> new ArrayList<>()).add(alert);
-                }
+                threatAlerts.addAll(analyzeLogFile(logFile, pattern, threatType));
             }
         }
 
-        List<AlertResponse> threatAlerts = new ArrayList<>();
-        for (Map.Entry<String, List<AlertResponse>> entry : ipAttempts.entrySet()) {
-            int attemptCount = entry.getValue().size();
-            System.out.println("---------- IP " + entry.getKey() + " has " + attemptCount + " " + threatType
-                    + " attempts ----------");
-
-            if (attemptCount >= threshold) {
-                String incidentId = UUID.randomUUID().toString();
-                AlertResponse alert = AlertResponse.builder()
-                        .id(UUID.randomUUID().toString())
-                        .title(title)
-                        .description(description + " from IP: " + entry.getKey())
-                        .severity(severity)
-                        .sourceIp(entry.getKey())
-                        .timestamp(LocalDateTime.now())
-                        .alertType(threatType)
-                        .details("Attempts: " + attemptCount)
-                        .build();
-
-                threatAlerts.add(alert);
-                logger.info("{}_DETECTED - IP: {}, Attempts: {}, IncidentID: {}",
-                        threatType, entry.getKey(), attemptCount, incidentId);
-
-                // Create incident
-                IncidentResponse incident = createIncident(incidentId, title, description,
-                        entry.getKey(), severity, threatType, attemptCount);
-                activeIncidents.put(incidentId, incident);
-
-                System.out.println(
-                        "---------- Created " + threatType + " incident for IP: " + entry.getKey() + " ----------");
-            }
-        }
-
-        System.out.println(
-                "---------- " + threatType + " detection completed with " + threatAlerts.size() + " alerts ----------");
         return threatAlerts;
     }
 
-    private IncidentResponse createIncident(String incidentId, String title, String description,
-            String sourceIp, String severity, String threatType, int attemptCount) {
-        List<String> recommendedActions = getRecommendedActions(threatType, sourceIp);
-        List<String> affectedSystems = getAffectedSystems(threatType);
-
-        System.out
-                .println("---------- Creating incident for " + threatType + " with ID: " + incidentId + " ----------");
-
-        return IncidentResponse.builder()
-                .id(incidentId)
-                .title(title + " - " + sourceIp)
-                .description(description + " from IP: " + sourceIp + " with " + attemptCount + " attempts")
-                .severity(severity)
-                .status("ACTIVE")
-                .createdAt(LocalDateTime.now())
-                .affectedSystems(affectedSystems)
-                .recommendedActions(recommendedActions)
-                .build();
-    }
-
-    private List<String> getRecommendedActions(String threatType, String sourceIp) {
-        List<String> actions = new ArrayList<>();
-        actions.add("Block IP address: " + sourceIp);
-
-        switch (threatType) {
-            case "BRUTE_FORCE":
-                actions.addAll(Arrays.asList(
-                        "Review authentication logs",
-                        "Implement rate limiting",
-                        "Enable account lockout policies",
-                        "Consider multi-factor authentication"));
-                break;
-            case "DATA_EXFILTRATION":
-                actions.addAll(Arrays.asList(
-                        "Review user access permissions",
-                        "Audit downloaded files",
-                        "Monitor data loss prevention systems",
-                        "Contact user for verification"));
-                break;
-            case "PATH_TRAVERSAL":
-                actions.addAll(Arrays.asList(
-                        "Review application input validation",
-                        "Update web application firewall rules",
-                        "Patch application vulnerabilities",
-                        "Implement file access controls"));
-                break;
-            case "RCE":
-                actions.addAll(Arrays.asList(
-                        "Immediately patch vulnerable applications",
-                        "Review server configurations",
-                        "Implement input sanitization",
-                        "Monitor system processes"));
-                break;
-            case "SQL_INJECTION":
-                actions.addAll(Arrays.asList(
-                        "Review database query implementations",
-                        "Implement prepared statements",
-                        "Update database security policies",
-                        "Monitor database access logs"));
-                break;
-            case "XSS":
-                actions.addAll(Arrays.asList(
-                        "Review input validation and output encoding",
-                        "Update content security policies",
-                        "Implement XSS protection headers",
-                        "Audit web application code"));
-                break;
-            case "MALWARE":
-                actions.addAll(Arrays.asList(
-                        "Quarantine affected systems",
-                        "Run full system scan",
-                        "Update antivirus signatures",
-                        "Restore from clean backup if necessary"));
-                break;
-            case "DDOS":
-                actions.addAll(Arrays.asList(
-                        "Implement traffic filtering",
-                        "Scale server resources",
-                        "Contact ISP for mitigation",
-                        "Monitor network capacity"));
-                break;
-            case "PRIVILEGE_ESCALATION":
-                actions.addAll(Arrays.asList(
-                        "Review user permissions",
-                        "Audit system configurations",
-                        "Implement least privilege principle",
-                        "Monitor administrative activities"));
-                break;
-            default:
-                actions.addAll(Arrays.asList(
-                        "Review security logs",
-                        "Update security policies",
-                        "Monitor system activities"));
-        }
-        return actions;
-    }
-
-    private List<String> getAffectedSystems(String threatType) {
-        switch (threatType) {
-            case "BRUTE_FORCE":
-                return Arrays.asList("Authentication System", "User Management");
-            case "DATA_EXFILTRATION":
-                return Arrays.asList("File Management System", "Database", "Network Storage");
-            case "PATH_TRAVERSAL":
-            case "LFI":
-                return Arrays.asList("Web Application", "File System");
-            case "RCE":
-                return Arrays.asList("Application Server", "Operating System");
-            case "SQL_INJECTION":
-                return Arrays.asList("Database Server", "Web Application");
-            case "XSS":
-                return Arrays.asList("Web Application", "User Browser");
-            case "MALWARE":
-                return Arrays.asList("Endpoints", "File System", "Network");
-            case "DDOS":
-                return Arrays.asList("Network Infrastructure", "Web Servers");
-            case "PRIVILEGE_ESCALATION":
-                return Arrays.asList("Operating System", "Access Control");
-            case "UNAUTHORIZED_ACCESS":
-                return Arrays.asList("Access Control", "Protected Resources");
-            default:
-                return Arrays.asList("System");
-        }
-    }
-
+    // Core log analysis method - processes logs once and creates all alerts
     private List<AlertResponse> analyzeLogs(List<String> logFiles) {
-        System.out.println("---------- Starting analyzeLogs with " + logFiles.size() + " files ----------");
         List<AlertResponse> allAlerts = new ArrayList<>();
 
         for (String logFile : logFiles) {
-            System.out.println("---------- Analyzing log file: " + logFile + " ----------");
-
-            // Analyze all threat patterns
+            // Analyze all threat patterns for each file
             allAlerts.addAll(analyzeFileForAllPatterns(logFile, BRUTE_FORCE_PATTERNS, "BRUTE_FORCE"));
             allAlerts.addAll(analyzeFileForAllPatterns(logFile, DATA_EXFILTRATION_PATTERNS, "DATA_EXFILTRATION"));
             allAlerts.addAll(analyzeFileForAllPatterns(logFile, PATH_TRAVERSAL_PATTERNS, "PATH_TRAVERSAL"));
@@ -563,7 +323,6 @@ public class AlertsServiceImpl implements AlertsService {
             allAlerts.addAll(analyzeFileForAllPatterns(logFile, UNAUTHORIZED_ACCESS_PATTERNS, "UNAUTHORIZED_ACCESS"));
         }
 
-        System.out.println("---------- analyzeLogs completed with " + allAlerts.size() + " total alerts ----------");
         return allAlerts;
     }
 
@@ -612,14 +371,6 @@ public class AlertsServiceImpl implements AlertsService {
                                 .build();
 
                         alerts.add(alert);
-                        // Enhanced System.out.println when alert is found
-                        System.out.println("ALERT FOUND - Type: " + alertType +
-                                ", User: " + finalUser +
-                                ", IP: " + finalIp +
-                                ", Severity: " + alert.getSeverity() +
-                                ", Details: " + alert.getDetails());
-                        logger.info("ALERT_CREATED - Type: {}, User: {}, IP: {}, File: {}, Line: {}",
-                                alertType, finalUser, finalIp, logFilePath, lineNumber);
                     }
                 }
             }
@@ -645,7 +396,7 @@ public class AlertsServiceImpl implements AlertsService {
                     .timestamp(alertTime)
                     .alertType(alertType)
                     .details(logLine)
-                    .sourceIp(extractedIp); // Set IP directly from matcher
+                    .sourceIp(extractedIp);
 
             switch (alertType) {
                 case "BRUTE_FORCE":
@@ -749,7 +500,6 @@ public class AlertsServiceImpl implements AlertsService {
     }
 
     private String extractTimestamp(String logLine) {
-        // Extract timestamp from log line format: "2025-06-06 12:30:06"
         Pattern timestampPattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})");
         Matcher matcher = timestampPattern.matcher(logLine);
         return matcher.find() ? matcher.group(1)
@@ -761,13 +511,11 @@ public class AlertsServiceImpl implements AlertsService {
             return alert.getSourceIp();
         }
 
-        // Extract IP from details string
         String details = alert.getDetails();
         if (details == null || details.isEmpty()) {
             return "unknown";
         }
 
-        // Prioritize the exact format: IP: {ipv4 or ipv6}
         Pattern ipPattern = Pattern.compile("IP: ([^,\\s]+)");
         Matcher matcher = ipPattern.matcher(details);
         if (matcher.find()) {
@@ -786,7 +534,6 @@ public class AlertsServiceImpl implements AlertsService {
             return "unknown";
         }
 
-        // Enhanced user extraction patterns
         Pattern[] userPatterns = {
                 Pattern.compile("User: ([^\\s\\(,]+)"),
                 Pattern.compile("user=([^\\s,]+)"),
@@ -815,7 +562,6 @@ public class AlertsServiceImpl implements AlertsService {
     }
 
     private String extractIpFromMatcher(Matcher matcher, String logLine) {
-        // Try to extract IP from different group positions first
         try {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String group = matcher.group(i);
@@ -827,8 +573,6 @@ public class AlertsServiceImpl implements AlertsService {
             // Continue to fallback extraction
         }
 
-        // Fallback: extract IP from log line using the specific format: IP: {ipv4 or
-        // ipv6}
         Pattern ipPattern = Pattern.compile("IP: ([^,\\s]+)");
         Matcher ipMatcher = ipPattern.matcher(logLine);
         if (ipMatcher.find()) {
@@ -842,7 +586,6 @@ public class AlertsServiceImpl implements AlertsService {
     }
 
     private String extractUserFromMatcher(Matcher matcher, String logLine) {
-        // Try to extract user from different group positions first
         try {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String group = matcher.group(i);
@@ -850,7 +593,6 @@ public class AlertsServiceImpl implements AlertsService {
                         !isValidIpAddress(group) && !group.matches("\\d+") &&
                         !group.contains("req/sec") && !group.contains("MB") &&
                         !group.toLowerCase().contains("error") && !group.toLowerCase().contains("bad")) {
-                    // Additional validation to ensure it's likely a username
                     if (isLikelyUsername(group.trim())) {
                         return group.trim();
                     }
@@ -860,7 +602,6 @@ public class AlertsServiceImpl implements AlertsService {
             // Continue to fallback extraction
         }
 
-        // Fallback: extract user from log line using multiple patterns
         Pattern[] userPatterns = {
                 Pattern.compile("User: ([^\\s\\(,]+)"),
                 Pattern.compile("user=([^\\s,]+)"),
@@ -895,12 +636,10 @@ public class AlertsServiceImpl implements AlertsService {
 
         String trimmedIp = ip.trim();
 
-        // Check for IPv6 addresses (including localhost ::1 and 0:0:0:0:0:0:0:1)
         if (trimmedIp.contains(":")) {
             return isValidIPv6(trimmedIp);
         }
 
-        // Check for IPv4 addresses
         String[] parts = trimmedIp.split("\\.");
         if (parts.length != 4) {
             return false;
@@ -992,7 +731,6 @@ public class AlertsServiceImpl implements AlertsService {
     }
 
     private List<String> getTodayLogFiles() {
-        System.out.println("---------- Getting today's log files ----------");
         List<String> logFiles = new ArrayList<>();
         Path logsDir = Paths.get("logs");
 
@@ -1003,25 +741,16 @@ public class AlertsServiceImpl implements AlertsService {
                         .filter(path -> path.toString().endsWith(".log"))
                         .filter(path -> path.getFileName().toString().startsWith("security"))
                         .map(Path::toString)
-                        .forEach(logFile -> {
-                            logFiles.add(logFile);
-                            System.out.println("---------- Found log file: " + logFile + " ----------");
-                        });
-            } else {
-                System.out.println("---------- Logs directory does not exist: " + logsDir + " ----------");
+                        .forEach(logFiles::add);
             }
         } catch (IOException e) {
             logger.error("ERROR_READING_LOG_DIRECTORY - Directory: {}, Error: {}", logsDir, e.getMessage());
-            System.out.println("---------- Error reading log directory: " + e.getMessage() + " ----------");
         }
 
-        System.out.println("---------- Found " + logFiles.size() + " log files ----------");
         return logFiles;
     }
 
     private List<String> getHistoricalLogFiles(LocalDate startDate, LocalDate endDate) {
-        System.out.println(
-                "---------- Getting historical log files from " + startDate + " to " + endDate + " ----------");
         List<String> logFiles = new ArrayList<>();
         Path archivedDir = Paths.get("logs", "archived");
 
@@ -1033,89 +762,53 @@ public class AlertsServiceImpl implements AlertsService {
                         .filter(path -> path.getFileName().toString().startsWith("security"))
                         .filter(path -> isDateInRange(path, startDate, endDate))
                         .map(Path::toString)
-                        .forEach(logFile -> {
-                            logFiles.add(logFile);
-                            System.out.println("---------- Found historical log file: " + logFile + " ----------");
-                        });
-            } else {
-                System.out.println("---------- Archived logs directory does not exist: " + archivedDir + " ----------");
+                        .forEach(logFiles::add);
             }
         } catch (IOException e) {
             logger.error("ERROR_READING_ARCHIVED_LOG_DIRECTORY - Directory: {}, Error: {}", archivedDir,
                     e.getMessage());
-            System.out.println("---------- Error reading archived log directory: " + e.getMessage() + " ----------");
         }
 
-        System.out.println("---------- Found " + logFiles.size() + " historical log files ----------");
         return logFiles;
     }
 
     private boolean isDateInRange(Path path, LocalDate startDate, LocalDate endDate) {
         String fileName = path.getFileName().toString();
-        // Assuming log files are named with date pattern like "app-2024-01-01.log"
         Pattern datePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
         Matcher matcher = datePattern.matcher(fileName);
 
         if (matcher.find()) {
             try {
                 LocalDate fileDate = LocalDate.parse(matcher.group());
-                boolean inRange = !fileDate.isBefore(startDate) && !fileDate.isAfter(endDate);
-                System.out.println(
-                        "---------- File " + fileName + " date " + fileDate + " in range: " + inRange + " ----------");
-                return inRange;
+                return !fileDate.isBefore(startDate) && !fileDate.isAfter(endDate);
             } catch (Exception e) {
                 logger.warn("DATE_PARSE_ERROR - Filename: {}, Error: {}", fileName, e.getMessage());
-                System.out.println("---------- Could not parse date from filename: " + fileName + " ----------");
             }
         }
 
         return false;
     }
 
-    // Additional comprehensive threat detection methods
+    // Comprehensive threat scan - now just calls individual detection methods
     public List<AlertResponse> runComprehensiveThreatScan() {
-        System.out.println("---------- Starting comprehensive threat scan ----------");
-        List<AlertResponse> allThreats = new ArrayList<>();
-
-        // Run all threat detection methods
-        allThreats.addAll(detectBruteForceAttempts());
-        allThreats.addAll(detectDataExfiltration());
-        allThreats.addAll(detectPathTraversal());
-        allThreats.addAll(detectRemoteCodeExecution());
-        allThreats.addAll(detectLocalFileInclusion());
-        allThreats.addAll(detectSqlInjection());
-        allThreats.addAll(detectXssAttempts());
-        allThreats.addAll(detectMalware());
-        allThreats.addAll(detectDdosAttempts());
-        allThreats.addAll(detectPrivilegeEscalation());
-        allThreats.addAll(detectUnauthorizedAccess());
-
-        System.out.println("---------- Comprehensive threat scan completed with " + allThreats.size()
-                + " total threats ----------");
-        return allThreats;
+        return analyzeLogs(getTodayLogFiles());
     }
 
     public Map<String, Integer> getThreatStatistics() {
-        System.out.println("---------- Generating threat statistics ----------");
         List<AlertResponse> allAlerts = analyzeTodayLogs();
 
-        Map<String, Integer> stats = allAlerts.stream()
+        return allAlerts.stream()
                 .collect(Collectors.groupingBy(
                         AlertResponse::getAlertType,
                         Collectors.collectingAndThen(Collectors.counting(), Math::toIntExact)));
-
-        System.out.println("---------- Threat statistics: " + stats + " ----------");
-        return stats;
     }
 
     public List<AlertResponse> getHighSeverityAlerts() {
-        System.out.println("---------- Getting high severity alerts ----------");
         List<AlertResponse> allAlerts = analyzeTodayLogs();
 
-        List<AlertResponse> highSeverityAlerts = allAlerts.stream()
+        return allAlerts.stream()
                 .filter(alert -> "CRITICAL".equals(alert.getSeverity()) || "HIGH".equals(alert.getSeverity()))
                 .sorted((a1, a2) -> {
-                    // Sort by severity (CRITICAL first, then HIGH) and then by timestamp
                     int severityCompare = getSeverityWeight(a2.getSeverity()) - getSeverityWeight(a1.getSeverity());
                     if (severityCompare != 0) {
                         return severityCompare;
@@ -1123,9 +816,6 @@ public class AlertsServiceImpl implements AlertsService {
                     return a2.getTimestamp().compareTo(a1.getTimestamp());
                 })
                 .collect(Collectors.toList());
-
-        System.out.println("---------- Found " + highSeverityAlerts.size() + " high severity alerts ----------");
-        return highSeverityAlerts;
     }
 
     private int getSeverityWeight(String severity) {
@@ -1144,40 +834,26 @@ public class AlertsServiceImpl implements AlertsService {
     }
 
     public List<String> getTopAttackingIPs() {
-        System.out.println("---------- Getting top attacking IPs ----------");
         List<AlertResponse> allAlerts = analyzeTodayLogs();
 
         Map<String, Long> ipCounts = allAlerts.stream()
                 .filter(alert -> alert.getSourceIp() != null && !"unknown".equals(alert.getSourceIp()))
                 .collect(Collectors.groupingBy(AlertResponse::getSourceIp, Collectors.counting()));
 
-        List<String> topIPs = ipCounts.entrySet().stream()
+        return ipCounts.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
                 .limit(10)
                 .map(entry -> entry.getKey() + " (" + entry.getValue() + " attacks)")
                 .collect(Collectors.toList());
-
-        System.out.println("---------- Top attacking IPs: " + topIPs + " ----------");
-        return topIPs;
     }
 
     public void generateThreatReport() {
-        System.out.println("---------- Generating comprehensive threat report ----------");
-
         Map<String, Integer> threatStats = getThreatStatistics();
         List<AlertResponse> highSeverityAlerts = getHighSeverityAlerts();
         List<String> topAttackingIPs = getTopAttackingIPs();
-        int activeIncidentCount = activeIncidents.size();
 
         logger.info(
-                "THREAT_REPORT_GENERATED - ThreatTypes: {}, HighSeverityAlerts: {}, TopIPs: {}, ActiveIncidents: {}",
-                threatStats.size(), highSeverityAlerts.size(), topAttackingIPs.size(), activeIncidentCount);
-
-        System.out.println("---------- THREAT REPORT ----------");
-        System.out.println("Threat Statistics: " + threatStats);
-        System.out.println("High Severity Alerts: " + highSeverityAlerts.size());
-        System.out.println("Top Attacking IPs: " + topAttackingIPs);
-        System.out.println("Active Incidents: " + activeIncidentCount);
-        System.out.println("---------- END THREAT REPORT ----------");
+                "THREAT_REPORT_GENERATED - ThreatTypes: {}, HighSeverityAlerts: {}, TopIPs: {}",
+                threatStats.size(), highSeverityAlerts.size(), topAttackingIPs.size());
     }
 }

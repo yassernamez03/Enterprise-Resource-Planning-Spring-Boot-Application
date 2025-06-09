@@ -2,7 +2,6 @@ package com.secureops.controller;
 
 import com.secureops.service.AlertsService;
 import com.secureops.dto.AlertResponse;
-import com.secureops.dto.IncidentResponse;
 import com.secureops.dto.AlertSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,22 +39,10 @@ public class AlertsController {
         return ResponseEntity.ok(alerts);
     }
 
-    @GetMapping("/incidents")
-    public ResponseEntity<List<IncidentResponse>> getActiveIncidents() {
-        List<IncidentResponse> incidents = alertsService.getActiveIncidents();
-        return ResponseEntity.ok(incidents);
-    }
-
     @GetMapping("/summary")
     public ResponseEntity<AlertSummaryResponse> getAlertSummary() {
         AlertSummaryResponse summary = alertsService.getAlertSummary();
         return ResponseEntity.ok(summary);
-    }
-
-    @PostMapping("/incidents/{incidentId}/resolve")
-    public ResponseEntity<String> resolveIncident(@PathVariable String incidentId) {
-        alertsService.resolveIncident(incidentId);
-        return ResponseEntity.ok("Incident resolved successfully");
     }
 
     @GetMapping("/bruteforce")
