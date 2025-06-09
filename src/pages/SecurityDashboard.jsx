@@ -32,7 +32,6 @@ const SecurityDashboard = () => {
   // State management
   const [dashboardData, setDashboardData] = useState(null);
   const [alerts, setAlerts] = useState([]);
-  const [incidents, setIncidents] = useState([]);
   const [threatIntel, setThreatIntel] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -107,13 +106,11 @@ const SecurityDashboard = () => {
       const [
         dashboard,
         allAlerts,
-        activeIncidents,
         intelligence,
         securityMetrics,
       ] = await Promise.all([
         alertsService.getSecurityDashboard(),
         alertsService.getAllAlerts(),
-        alertsService.getActiveIncidents(),
         alertsService.getThreatIntelligence(),
         alertsService.getSecurityMetrics(filters.dateRange),
       ]);
@@ -138,22 +135,9 @@ const SecurityDashboard = () => {
       });
 
       setAlerts(sortedAlerts);
-      setIncidents(activeIncidents);
       setThreatIntel(intelligence);
       setMetrics(securityMetrics);
       setLastRefresh(new Date());
-
-      console.log("Enhanced dashboard data loaded:", {
-        totalAlerts: allAlerts.length,
-        filteredAlerts: sortedAlerts.length,
-        dateRange: filters.dateRange,
-        filterDate: filterDate.toISOString(),
-        todaysAlerts: dashboard?.summary?.todaysAlerts,
-        criticalAlerts: dashboard?.summary?.criticalAlertsToday,
-        threatSources: intelligence?.uniqueThreatSources,
-        riskLevel: intelligence?.riskLevel,
-        emergingThreats: intelligence?.emergingThreats?.length || 0,
-      });
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
       setError("Failed to load security information. Please try again.");
@@ -192,25 +176,17 @@ const SecurityDashboard = () => {
 
         // Refresh all dashboard data periodically
         try {
-          const [dashboard, activeIncidents, intelligence, securityMetrics] =
+          const [dashboard, intelligence, securityMetrics] =
             await Promise.all([
               alertsService.getSecurityDashboard(),
-              alertsService.getActiveIncidents(),
               alertsService.getThreatIntelligence(),
               alertsService.getSecurityMetrics(filters.dateRange),
             ]);
 
           setDashboardData(dashboard);
-          setIncidents(activeIncidents);
           setThreatIntel(intelligence);
           setMetrics(securityMetrics);
 
-          console.log("Dashboard data refreshed:", {
-            dashboard: dashboard?.summary,
-            incidents: activeIncidents?.length,
-            threatLevel: intelligence?.riskLevel,
-            metricsTotal: securityMetrics?.totalAlerts,
-          });
         } catch (error) {
           console.error("Failed to refresh dashboard data:", error);
           // Don't set error state here to avoid disrupting the UI during auto-refresh
@@ -239,18 +215,6 @@ const SecurityDashboard = () => {
       filters.alertType === "ALL" || alert.alertType === filters.alertType;
     return severityMatch && typeMatch;
   });
-
-  // Handle incident resolution
-  const handleResolveIncident = async (incidentId) => {
-    try {
-      await alertsService.resolveIncident(incidentId);
-      setIncidents((prev) =>
-        prev.filter((incident) => incident.id !== incidentId)
-      );
-    } catch (error) {
-      console.error("Failed to resolve incident:", error);
-    }
-  };
 
   // Handle IP search
   const handleIPSearch = async () => {
@@ -366,13 +330,10 @@ const SecurityDashboard = () => {
   const tabs = [
     { id: "overview", name: "Security Overview", icon: Shield },
     { id: "alerts", name: "Alerts", icon: AlertTriangle },
-    { id: "incidents", name: "Incidents", icon: Activity },
     { id: "intelligence", name: "Threat Intel", icon: Globe },
     { id: "analytics", name: "Analytics", icon: BarChart3 },
   ];
 
-  console.log("Metrics data loaded:", metrics);
-  console.log("Threat intelligence data loaded:", threatIntel);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -456,7 +417,7 @@ const SecurityDashboard = () => {
         {/* Page description */}
         <div className="mb-6">
           <p className="text-gray-600">
-            Monitor and analyze security threats and incidents
+            Monitor and analyze security threats
           </p>
         </div>
 
@@ -992,123 +953,6 @@ const SecurityDashboard = () => {
                         </div>
                       )}
                     </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Incidents Tab */}
-            {activeTab === "incidents" && (
-              <motion.div
-                key="incidents"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6"
-              >
-                <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-                  <div className="p-6 border-b border-gray-100">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Active Security Incidents ({incidents.length})
-                    </h3>
-                  </div>
-                  <div className="p-6">
-                    {incidents.length > 0 ? (
-                      <div className="space-y-6">
-                        {incidents.map((incident) => (
-                          <motion.div
-                            key={incident.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
-                          >
-                            <div className="flex items-start justify-between mb-4">
-                              <div>
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <StatusBadge status={incident.severity} />
-                                  <StatusBadge status={incident.status} />
-                                </div>
-                                <h4 className="text-xl font-semibold text-gray-900">
-                                  {incident.title}
-                                </h4>
-                                <p className="text-gray-600 mt-1">
-                                  {incident.description}
-                                </p>
-                              </div>
-                              <button
-                                onClick={() =>
-                                  handleResolveIncident(incident.id)
-                                }
-                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                              >
-                                Resolve
-                              </button>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div>
-                                <h5 className="font-medium text-gray-900 mb-2">
-                                  Affected Systems
-                                </h5>
-                                <ul className="text-sm text-gray-600 space-y-1">
-                                  {incident.affectedSystems?.map(
-                                    (system, index) => (
-                                      <li
-                                        key={index}
-                                        className="flex items-center"
-                                      >
-                                        <span className="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
-                                        {system}
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                              <div>
-                                <h5 className="font-medium text-gray-900 mb-2">
-                                  Recommended Actions
-                                </h5>
-                                <ul className="text-sm text-gray-600 space-y-1">
-                                  {incident.recommendedActions?.map(
-                                    (action, index) => (
-                                      <li
-                                        key={index}
-                                        className="flex items-start"
-                                      >
-                                        <span className="w-2 h-2 bg-blue-400 rounded-full mr-2 mt-1.5"></span>
-                                        {action}
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                            </div>
-
-                            <div className="mt-4 pt-4 border-t border-gray-200">
-                              <p className="text-sm text-gray-500">
-                                Created:{" "}
-                                {new Date(incident.createdAt).toLocaleString()}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    ) : (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="text-center py-12"
-                      >
-                        <Activity className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
-                          No Active Incidents
-                        </h3>
-                        <p className="text-gray-500">
-                          All security incidents have been resolved.
-                        </p>
-                      </motion.div>
-                    )}
                   </div>
                 </div>
               </motion.div>

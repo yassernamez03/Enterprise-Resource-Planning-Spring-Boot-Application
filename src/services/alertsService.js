@@ -41,16 +41,6 @@ class AlertsService {
     }
   }
 
-  async getActiveIncidents() {
-    try {
-      const response = await apiService.get('/alerts/incidents');
-      return response;
-    } catch (error) {
-      console.error('Error fetching active incidents:', error);
-      throw new Error('Failed to fetch active incidents');
-    }
-  }
-
   async getAlertsSummary() {
     try {
       const response = await apiService.get('/alerts/summary');
@@ -58,16 +48,6 @@ class AlertsService {
     } catch (error) {
       console.error('Error fetching alerts summary:', error);
       throw new Error('Failed to fetch alerts summary');
-    }
-  }
-
-  async resolveIncident(incidentId) {
-    try {
-      const response = await apiService.post(`/alerts/incidents/${incidentId}/resolve`);
-      return response;
-    } catch (error) {
-      console.error('Error resolving incident:', error);
-      throw new Error('Failed to resolve incident');
     }
   }
 
