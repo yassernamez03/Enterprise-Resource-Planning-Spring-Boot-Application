@@ -834,3 +834,136 @@
 2025-06-06 19:33:03.966 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
 2025-06-06 19:33:04.219 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
 2025-06-06 19:33:04.219 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS
+2025-06-09 03:43:22.097 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 03:44:06.057 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:06.253 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:06.272 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:06.272 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 03:44:06.272 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 03:44:06.895 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:06.911 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:06.936 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:06.936 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 03:44:06.952 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 03:44:06.991 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:06.994 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 03:44:07.259 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 03:44:07.260 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 03:44:07.660 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:07.706 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 03:44:07.906 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 03:44:08.010 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 03:44:08.018 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:08.059 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 03:44:08.085 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 03:44:08.233 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 03:44:08.289 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 03:44:08.331 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 03:44:10.239 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_DELETE_ATTEMPT - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 11
+2025-06-09 03:44:10.314 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_DELETE_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 11
+2025-06-09 03:44:10.413 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 03:44:10.495 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 6
+2025-06-09 03:44:11.547 [https-jsse-nio-8443-exec-7] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:15.487 [https-jsse-nio-8443-exec-4] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:31.657 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - HR_EMPLOYEE_CREATE_ATTEMPT - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_EMPLOYEE
+2025-06-09 03:44:31.658 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - HR_MALWARE_PATTERN_DETECTED - Field: email, Input: namezyasser3@gmail.com, IP: 0:0:0:0:0:0:0:1
+2025-06-09 03:44:31.743 [https-jsse-nio-8443-exec-9] ERROR com.secureops.security - HR_EMPLOYEE_CREATE_ERROR - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Error: Invalid input detected in email
+2025-06-09 03:44:49.966 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 03:59:30.176 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 04:03:53.683 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 04:04:43.604 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:04:43.756 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:43.757 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:43.764 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 04:04:43.775 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 04:04:44.176 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:04:44.421 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:04:44.561 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:44.616 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:44.616 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:04:44.633 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:04:44.635 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 04:04:44.667 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:04:45.172 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 6
+2025-06-09 04:04:45.456 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:45.484 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:04:45.484 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 04:04:45.503 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:04:45.544 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:04:45.595 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:04:45.721 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:04:45.849 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 04:04:45.975 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 6
+2025-06-09 04:04:46.107 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 04:04:48.508 [https-jsse-nio-8443-exec-1] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:05:13.074 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_CREATE_ATTEMPT - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_EMPLOYEE
+2025-06-09 04:05:13.132 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_CREATE_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:15.916 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:15.921 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_BY_ID - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:15.922 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:15.933 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:05:15.935 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:05:15.974 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:16.102 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_BY_ID - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:16.139 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:18.745 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:18.771 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:05:18.782 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:05:18.814 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:18.861 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:05:18.934 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:05:19.006 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:05:19.140 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:05:21.582 [https-jsse-nio-8443-exec-2] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:05:21.599 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:05:21.680 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:05:36.259 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEE_UPDATE_ATTEMPT - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:36.378 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEE_UPDATE_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:45.710 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:05:45.722 [https-jsse-nio-8443-exec-10] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:05:45.888 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:05:49.932 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEE_UPDATE_ATTEMPT - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:49.984 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEE_UPDATE_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:05:52.306 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:52.308 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:52.310 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:05:52.315 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:05:53.461 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:53.465 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:05:53.466 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:05:53.475 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:05:53.509 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS
+2025-06-09 04:05:53.516 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
+2025-06-09 04:05:53.662 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
+2025-06-09 04:05:53.704 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS
+2025-06-09 04:05:56.431 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:05:56.584 [https-jsse-nio-8443-exec-8] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 04:06:17.651 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - TASK_EVENT_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_TASK_EVENT
+2025-06-09 04:06:17.779 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - ADMIN_ALL_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_TASKS
+2025-06-09 04:06:17.784 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - ADMIN_ALL_EVENTS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EVENTS
+2025-06-09 04:06:20.855 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:20.871 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:06:20.871 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:20.888 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:06:22.478 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:06:22.481 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:22.511 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:22.512 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:06:22.531 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:06:22.605 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:06:22.690 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 04:06:22.818 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 04:06:24.826 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:24.826 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 04:06:24.838 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 04:06:24.838 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 04:06:24.840 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_BY_ID - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:24.870 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:24.927 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_BY_ID - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:24.956 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:24.961 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - ADMIN_USER_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, TargetUserId: 1, Action: VIEW_USER_TASKS
+2025-06-09 04:06:25.104 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - ADMIN_USER_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, TargetUserId: 1, Action: VIEW_USER_TASKS
+2025-06-09 04:06:56.971 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - TASK_EVENT_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_TASK_EVENT
+2025-06-09 04:06:57.125 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_BY_ID - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:57.146 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - HR_EMPLOYEE_ACCESS_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, EmployeeId: 12
+2025-06-09 04:06:57.195 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - ADMIN_USER_TASKS_ACCESS - Admin: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, TargetUserId: 1, Action: VIEW_USER_TASKS

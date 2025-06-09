@@ -85,4 +85,10 @@ public class HRTaskService {
                 .map(taskMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public HRTaskDTO getTaskById(Long id) {
+        HRTask task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+        return taskMapper.toDto(task);
+    }
 }
