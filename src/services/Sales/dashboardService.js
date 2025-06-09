@@ -5,10 +5,9 @@ const REPORTS_URL = "/sales/reports"
 
 export const getSalesSummary = async () => {
   try {
-    // Get current month date range
-    const now = new Date()
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-    const endDate = now.toISOString()
+    // Use wide date range to capture all available data
+    const startDate = new Date('1900-01-01T00:00:00').toISOString()
+    const endDate = new Date('2099-12-31T23:59:59').toISOString()
       const response = await apiService.get(`${REPORTS_URL}/sales-summary?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
     
     const data = response.data || response || {}
