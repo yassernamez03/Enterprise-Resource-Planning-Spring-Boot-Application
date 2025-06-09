@@ -32,14 +32,9 @@ export const apiRequest = async (endpoint, options = {}) => {
     headers,
   };
   
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-  requestOptions.signal = controller.signal;
-
   try {
     // Make the request
     const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
-    clearTimeout(timeoutId);
     
     // Handle 401 Unauthorized (token expired or invalid)
     if (response.status === 401) {
@@ -65,20 +60,8 @@ export const apiRequest = async (endpoint, options = {}) => {
     
     throw new Error(errorMessage || defaultMessage);
   } catch (error) {
-    clearTimeout(timeoutId);
     console.error('API request error:', error);
-    
-    let errorMessage = 'An unexpected error occurred';
-    
-    if (error.name === 'AbortError') {
-      errorMessage = 'Request timed out. Please check your connection and try again.';
-    } else if (error.message === 'Failed to fetch') {
-      errorMessage = 'Unable to connect to the server. Please check your network connection.';
-    } else {
-      errorMessage = error.message || errorMessage;
-    }
-    
-    throw new Error(errorMessage);
+    throw error;
   }
 };
 
