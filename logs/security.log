@@ -1096,3 +1096,48 @@
 2025-06-09 11:51:50.246 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
 2025-06-09 11:51:50.256 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
 2025-06-09 11:51:50.461 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 13:12:21.704 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 13:21:08.428 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 13:21:08.643 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:08.643 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 13:21:08.748 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:08.853 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: null
+2025-06-09 13:21:09.451 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 13:21:09.485 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 13:21:09.595 [https-jsse-nio-8443-exec-12] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:09.691 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:09.714 [https-jsse-nio-8443-exec-13] INFO  com.secureops.security - User chats request from IP: 0:0:0:0:0:0:0:1
+2025-06-09 13:21:09.763 [https-jsse-nio-8443-exec-12] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 13:21:09.841 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 13:21:09.920 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 13:21:10.075 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 13:21:10.717 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 13:21:10.718 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:10.719 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:10.787 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 13:21:10.816 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 13:21:10.822 [https-jsse-nio-8443-exec-13] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 13:21:10.988 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 4, Action: VIEW_MESSAGES
+2025-06-09 13:21:11.010 [https-jsse-nio-8443-exec-14] INFO  com.secureops.security - CHAT_MESSAGE_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, ChatId: 5, Action: VIEW_MESSAGES
+2025-06-09 13:21:16.611 [https-jsse-nio-8443-exec-12] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 13:21:16.674 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:16.675 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:16.683 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 13:21:16.684 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 13:21:16.917 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 13:21:20.863 [https-jsse-nio-8443-exec-13] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:20.864 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 13:21:20.867 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 13:21:20.894 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:20.894 [https-jsse-nio-8443-exec-13] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 13:21:20.952 [https-jsse-nio-8443-exec-2] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 13:21:21.034 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 13:21:21.067 [https-jsse-nio-8443-exec-14] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 13:21:34.493 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_QUOTE_CREATE_REQUEST - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_QUOTE
+2025-06-09 13:21:34.617 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_QUOTE_CREATED - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, QuoteId: 30, QuoteNumber: SO30
+2025-06-09 13:21:35.035 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:35.068 [https-jsse-nio-8443-exec-12] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 13:21:35.068 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SECURITY_LOG_CREATION - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: CREATE_SECURITY_LOG
+2025-06-09 13:21:35.084 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PAGE_VIEW, LogType: NAVIGATION, TargetUserId: 1
+2025-06-09 13:21:35.119 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - CREATING_SECURITY_LOG - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: PROTECTED_ACCESS, LogType: SECURITY, TargetUserId: 1
+2025-06-09 13:21:35.559 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
