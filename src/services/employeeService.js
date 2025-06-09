@@ -2,10 +2,7 @@ import { apiService } from './apiInterceptor';
 
 const TASKS_ENDPOINT = '/task-events';
 const employeeService = {
-  /**
-   * Get all employees
-   * @returns {Promise<Array>} Promise resolving to an array of employee objects
-   */
+
   getAllEmployees: async () => {
     try {
       return await apiService.get('/hr/employees');
