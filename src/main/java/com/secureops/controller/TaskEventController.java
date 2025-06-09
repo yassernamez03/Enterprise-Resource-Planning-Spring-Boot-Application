@@ -57,8 +57,8 @@ public class TaskEventController {
         logger.info("Task event creation request - userId: {}, username: {}, ip: {}", 
                 currentUserId, currentUsername, clientIp);
         
-        securityLogger.info("TASK_EVENT_CREATION - User: {} (ID: {}), IP: {}, Action: CREATE_TASK_EVENT", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("TASK_EVENT_CREATION - User: {} (ID: {}), IP: {}, Action: CREATE_TASK_EVENT", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             // Input validation
@@ -188,8 +188,8 @@ public class TaskEventController {
         logger.info("Task event update request - userId: {}, username: {}, eventId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("TASK_EVENT_UPDATE - User: {} (ID: {}), IP: {}, EventId: {}, Action: UPDATE_TASK_EVENT", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("TASK_EVENT_UPDATE - User: {} (ID: {}), IP: {}, EventId: {}, Action: UPDATE_TASK_EVENT", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -273,8 +273,8 @@ public class TaskEventController {
         logger.info("Task event deletion request - userId: {}, username: {}, eventId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("TASK_EVENT_DELETION - User: {} (ID: {}), IP: {}, EventId: {}, Action: DELETE_TASK_EVENT", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("TASK_EVENT_DELETION - User: {} (ID: {}), IP: {}, EventId: {}, Action: DELETE_TASK_EVENT", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -570,8 +570,8 @@ public class TaskEventController {
         logger.info("Task completion toggle request - userId: {}, username: {}, taskId: {}, ip: {}", 
                 currentUserId, currentUsername, id, clientIp);
         
-        securityLogger.info("TASK_COMPLETION_TOGGLE - User: {} (ID: {}), IP: {}, TaskId: {}, Action: TOGGLE_COMPLETION", 
-                currentUsername, currentUserId, clientIp, id);
+        // securityLogger.info("TASK_COMPLETION_TOGGLE - User: {} (ID: {}), IP: {}, TaskId: {}, Action: TOGGLE_COMPLETION", 
+        //         currentUsername, currentUserId, clientIp, id);
         
         try {
             // Input validation
@@ -633,8 +633,8 @@ public class TaskEventController {
         logger.info("Admin tasks for user request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, userId, clientIp);
         
-        securityLogger.info("ADMIN_USER_TASKS_ACCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: VIEW_USER_TASKS", 
-                currentUsername, currentUserId, clientIp, userId);
+        // securityLogger.info("ADMIN_USER_TASKS_ACCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: VIEW_USER_TASKS", 
+        //         currentUsername, currentUserId, clientIp, userId);
         
         try {
             // Input validation
@@ -929,8 +929,8 @@ public class TaskEventController {
         logger.info("Admin events for user request - adminUserId: {}, adminUsername: {}, targetUserId: {}, ip: {}", 
                 currentUserId, currentUsername, userId, clientIp);
         
-        securityLogger.info("ADMIN_USER_EVENTS_ACCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: VIEW_USER_EVENTS", 
-                currentUsername, currentUserId, clientIp, userId);
+        // securityLogger.info("ADMIN_USER_EVENTS_ACCESS - Admin: {} (ID: {}), IP: {}, TargetUserId: {}, Action: VIEW_USER_EVENTS", 
+        //         currentUsername, currentUserId, clientIp, userId);
         
         try {
             if (userId == null || userId <= 0) {
@@ -993,8 +993,8 @@ public class TaskEventController {
         logger.info("Admin all tasks request - adminUserId: {}, adminUsername: {}, ip: {}", 
                 currentUserId, currentUsername, clientIp);
         
-        securityLogger.info("ADMIN_ALL_TASKS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_ALL_TASKS", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("ADMIN_ALL_TASKS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_ALL_TASKS", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             List<TaskEventDto> tasks = taskEventService.getAllTasks().stream()
@@ -1042,8 +1042,8 @@ public class TaskEventController {
         logger.info("Admin all tasks by date range request - adminUserId: {}, adminUsername: {}, startDate: {}, endDate: {}, ip: {}", 
                 currentUserId, currentUsername, startDate, endDate, clientIp);
         
-        securityLogger.info("ADMIN_ALL_TASKS_DATE_RANGE_ACCESS - Admin: {} (ID: {}), IP: {}, StartDate: {}, EndDate: {}, Action: VIEW_ALL_TASKS_RANGE", 
-                currentUsername, currentUserId, clientIp, startDate, endDate);
+        // securityLogger.info("ADMIN_ALL_TASKS_DATE_RANGE_ACCESS - Admin: {} (ID: {}), IP: {}, StartDate: {}, EndDate: {}, Action: VIEW_ALL_TASKS_RANGE", 
+        //         currentUsername, currentUserId, clientIp, startDate, endDate);
         
         try {
             if (!validateDateRange(startDate, endDate, currentUserId, clientIp)) {
@@ -1093,8 +1093,8 @@ public class TaskEventController {
         logger.info("Admin all events request - adminUserId: {}, adminUsername: {}, ip: {}", 
                 currentUserId, currentUsername, clientIp);
         
-        securityLogger.info("ADMIN_ALL_EVENTS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_ALL_EVENTS", 
-                currentUsername, currentUserId, clientIp);
+        // securityLogger.info("ADMIN_ALL_EVENTS_ACCESS - Admin: {} (ID: {}), IP: {}, Action: VIEW_ALL_EVENTS", 
+        //         currentUsername, currentUserId, clientIp);
         
         try {
             List<TaskEventDto> events = taskEventService.getAllEvents().stream()
@@ -1142,8 +1142,8 @@ public class TaskEventController {
         logger.info("Admin all events by date range request - adminUserId: {}, adminUsername: {}, startDate: {}, endDate: {}, ip: {}", 
                 currentUserId, currentUsername, startDate, endDate, clientIp);
         
-        securityLogger.info("ADMIN_ALL_EVENTS_DATE_RANGE_ACCESS - Admin: {} (ID: {}), IP: {}, StartDate: {}, EndDate: {}, Action: VIEW_ALL_EVENTS_RANGE", 
-                currentUsername, currentUserId, clientIp, startDate, endDate);
+        // securityLogger.info("ADMIN_ALL_EVENTS_DATE_RANGE_ACCESS - Admin: {} (ID: {}), IP: {}, StartDate: {}, EndDate: {}, Action: VIEW_ALL_EVENTS_RANGE", 
+        //         currentUsername, currentUserId, clientIp, startDate, endDate);
         
         try {
             if (!validateDateRange(startDate, endDate, currentUserId, clientIp)) {

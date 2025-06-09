@@ -1,5 +1,7 @@
 package com.secureops.dto;
 
+import java.util.Date;
+
 import com.secureops.entity.User.ApprovalStatus;
 import com.secureops.entity.User.UserRole;
 import lombok.AllArgsConstructor;
@@ -17,4 +19,5 @@ public class UserDto {
     private UserRole role;
     private ApprovalStatus approvalStatus;
     private String avatarUrl;
+    private Date createdAt;
 }

@@ -43,10 +43,11 @@ public class AuthController {
     // TODO: Replace with Redis/Database for production scalability
     private static final ConcurrentHashMap<String, AtomicInteger> loginAttempts = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, LocalDateTime> lastAttemptTime = new ConcurrentHashMap<>();
-    
+    private static final ConcurrentHashMap<String, Boolean> lockLoggedMap = new ConcurrentHashMap<>();
+
     @Value("${app.security.max-login-attempts:5}")
     private int maxLoginAttempts;
-    
+
     @Value("${app.security.lockout-duration-minutes:15}")
     private int lockoutDurationMinutes;
 
@@ -66,36 +67,48 @@ public class AuthController {
         String clientIp = getClientIp();
         String email = loginDto.getEmail();
 
+        System.out.println("\n=== LOGIN ATTEMPT STARTED ===");
+        System.out.println("Email: " + email);
+        System.out.println("IP: " + clientIp);
+        System.out.println("Timestamp: " + LocalDateTime.now());
+
         logger.debug("Login request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("AUTHENTICATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("AUTHENTICATION_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
+            System.out.println(">>> Checking if account is locked...");
             if (isAccountLocked(email, clientIp)) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                         .body(Map.of("message", "Account temporarily locked due to too many failed attempts"));
             }
 
-            validateRequest(loginDto.getEmail(), loginDto.getPassword(), 
-                          loginDto.getRecaptchaResponse(), clientIp, bindingResult);
+            validateRequest(loginDto.getEmail(), loginDto.getPassword(),
+                    loginDto.getRecaptchaResponse(), clientIp, bindingResult);
 
             // Proceed with authentication
             var authResponse = authService.login(loginDto);
+            System.out.println(">>> AUTHENTICATION SUCCESSFUL <<<");
             logger.info("Authentication successful for user: {} IP: {}", email, clientIp);
-            securityLogger.info("AUTHENTICATION_SUCCESS user={} ip={}", email, clientIp);
+            // securityLogger.info("AUTHENTICATION_SUCCESS user={} ip={}", email, clientIp);
             clearFailedAttempts(email, clientIp);
             return ResponseEntity.ok(authResponse);
 
         } catch (UnauthorizedException ex) {
+            System.out.println(">>> AUTHENTICATION FAILED - Recording failed attempt <<<");
             recordFailedAttempt(email, clientIp);
             logger.error("Authentication failed for user: {} Bad credentials", email);
             securityLogger.error("AUTHENTICATION_FAILURE user={} ip={} error={}", email, clientIp, ex.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", ex.getMessage()));
         } catch (BadRequestException ex) {
+            System.out.println(">>> BAD REQUEST: " + ex.getMessage() + " <<<");
+            recordFailedAttempt(email, clientIp);
             logger.warn("Failed login attempt for user '{}': {}", email, ex.getMessage());
             securityLogger.warn("Login error - email: {}, IP: {}, Error: {}", email, clientIp, ex.getMessage());
             return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
         } catch (Exception ex) {
+            System.out.println(">>> UNEXPECTED ERROR: " + ex.getMessage() + " <<<");
+            recordFailedAttempt(email, clientIp);
             logger.error("Login error - email: {}, IP: {}, Error: {}", email, clientIp, ex.getMessage());
             securityLogger.error("Login error - email: {}, IP: {}, Error: {}", email, clientIp, ex.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -110,19 +123,19 @@ public class AuthController {
         String email = registrationDto.getEmail();
 
         logger.debug("Registration request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("REGISTRATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("REGISTRATION_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
-            validateRequest(registrationDto.getEmail(), null, 
-                          registrationDto.getRecaptchaResponse(), clientIp, bindingResult);
-            
+            validateRequest(registrationDto.getEmail(), null,
+                    registrationDto.getRecaptchaResponse(), clientIp, bindingResult);
+
             validateRequiredField(registrationDto.getFullName(), "Full name");
             validateInputSecurity(registrationDto.getFullName(), clientIp);
 
             // Proceed with registration
             userService.register(registrationDto);
             logger.info("Registration successful for user: {} IP: {}", email, clientIp);
-            securityLogger.info("REGISTRATION_SUCCESS user={} ip={}", email, clientIp);
+            // securityLogger.info("REGISTRATION_SUCCESS user={} ip={}", email, clientIp);
 
             return new ResponseEntity<>(
                     Map.of("message", "User registered successfully. Please wait for admin approval."),
@@ -147,16 +160,17 @@ public class AuthController {
         String email = resetRequestDto.getEmail();
 
         logger.debug("Password reset request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("PASSWORD_RESET_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("PASSWORD_RESET_ATTEMPT user={} ip={}", email, clientIp);
 
         try {
-            validateRequest(resetRequestDto.getEmail(), null, 
-                          resetRequestDto.getRecaptchaResponse(), clientIp, bindingResult);
+            validateRequest(resetRequestDto.getEmail(), null,
+                    resetRequestDto.getRecaptchaResponse(), clientIp, bindingResult);
 
             // Proceed with password reset
             userService.sendPasswordResetCode(resetRequestDto.getEmail());
             logger.info("Password reset code sent for user: {} IP: {}", email, clientIp);
-            securityLogger.info("PASSWORD_RESET_CODE_SENT user={} ip={}", email, clientIp);
+            // securityLogger.info("PASSWORD_RESET_CODE_SENT user={} ip={}", email,
+            // clientIp);
 
             return ResponseEntity.ok(Map.of(
                     "message", "If your email is registered, you will receive a verification code shortly."));
@@ -177,7 +191,8 @@ public class AuthController {
         String email = verificationDto.getEmail();
 
         logger.debug("Password reset verification request received for email: {} from IP: {}", email, clientIp);
-        securityLogger.info("PASSWORD_RESET_VERIFICATION_ATTEMPT user={} ip={}", email, clientIp);
+        // securityLogger.info("PASSWORD_RESET_VERIFICATION_ATTEMPT user={} ip={}",
+        // email, clientIp);
 
         try {
             // Validation
@@ -198,7 +213,7 @@ public class AuthController {
 
             if (result) {
                 logger.info("Password reset verification successful for user: {} IP: {}", email, clientIp);
-                securityLogger.info("PASSWORD_RESET_SUCCESS user={} ip={}", email, clientIp);
+                // securityLogger.info("PASSWORD_RESET_SUCCESS user={} ip={}", email, clientIp);
                 return ResponseEntity.ok(Map.of(
                         "message", "Password has been reset successfully. Check your email for new credentials."));
             } else {
@@ -221,8 +236,8 @@ public class AuthController {
 
     // ============== HELPER METHODS ==============
 
-    private void validateRequest(String email, String password, String recaptchaResponse, 
-                               String clientIp, BindingResult bindingResult) {
+    private void validateRequest(String email, String password, String recaptchaResponse,
+            String clientIp, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestException("Invalid input data");
         }
@@ -268,13 +283,13 @@ public class AuthController {
         try {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                     .getRequest();
-            
+
             // Check multiple headers for real IP
-            String[] headers = {"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", 
-                              "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", 
-                              "HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", 
-                              "REMOTE_ADDR"};
-            
+            String[] headers = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+                    "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP",
+                    "HTTP_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA",
+                    "REMOTE_ADDR" };
+
             for (String header : headers) {
                 String ipAddress = request.getHeader(header);
                 if (ipAddress != null && !ipAddress.isEmpty() && !"unknown".equalsIgnoreCase(ipAddress)) {
@@ -286,11 +301,11 @@ public class AuthController {
                     return ipAddress;
                 }
             }
-            
+
             String remoteAddr = request.getRemoteAddr();
             logger.debug("Client IP retrieved from RemoteAddr: {}", remoteAddr);
             return remoteAddr;
-            
+
         } catch (IllegalStateException e) {
             logger.debug("No HTTP request context available, returning unknown IP");
             return "unknown";
@@ -305,20 +320,41 @@ public class AuthController {
         AtomicInteger attempts = loginAttempts.get(key);
         LocalDateTime lastAttempt = lastAttemptTime.get(key);
 
+        System.out.println("=== CHECKING ACCOUNT LOCK STATUS ===");
+        System.out.println("Key: " + key);
+        System.out.println("Current attempts: " + (attempts != null ? attempts.get() : 0));
+        System.out.println("Max allowed attempts: " + maxLoginAttempts);
+
         if (attempts != null && lastAttempt != null) {
             long minutesSinceLastAttempt = ChronoUnit.MINUTES.between(lastAttempt, LocalDateTime.now());
+            System.out.println("Minutes since last attempt: " + minutesSinceLastAttempt);
+            System.out.println("Lockout duration: " + lockoutDurationMinutes + " minutes");
 
             if (attempts.get() >= maxLoginAttempts && minutesSinceLastAttempt < lockoutDurationMinutes) {
-                securityLogger.error("Account locked - User: {} IP: {} Reason: Too many failed attempts", email, clientIp);
+                System.out.println(">>> ACCOUNT IS LOCKED! <<<");
+
+                // Only log if not already logged for this lockout period
+                Boolean alreadyLogged = lockLoggedMap.get(key);
+                if (alreadyLogged == null || !alreadyLogged) {
+                    System.out.println(">>> LOGGING ACCOUNT LOCK FOR FIRST TIME <<<");
+                    securityLogger.error("Account locked - User: {} IP: {} Reason: Too many failed attempts", email,
+                            clientIp);
+                    lockLoggedMap.put(key, true); // Mark as logged
+                } else {
+                    System.out.println(">>> ACCOUNT LOCK ALREADY LOGGED - SKIPPING <<<");
+                }
                 return true;
             }
 
             // Reset counter if lockout period has passed
             if (minutesSinceLastAttempt >= lockoutDurationMinutes) {
+                System.out.println(">>> LOCKOUT PERIOD EXPIRED - RESETTING ATTEMPTS <<<");
                 loginAttempts.remove(key);
                 lastAttemptTime.remove(key);
+                lockLoggedMap.remove(key); // Reset the lock logged flag
             }
         }
+        System.out.println(">>> ACCOUNT IS NOT LOCKED <<<");
         return false;
     }
 
@@ -328,21 +364,31 @@ public class AuthController {
         lastAttemptTime.put(key, LocalDateTime.now());
 
         int attempts = loginAttempts.get(key).get();
-        securityLogger.warn("Multiple failed login attempts - Username: {} Source: {} Attempts: {}", 
-                           email, clientIp, attempts);
+        System.out.println("=== RECORDING FAILED ATTEMPT ===");
+        System.out.println("Email: " + email);
+        System.out.println("IP: " + clientIp);
+        System.out.println("Total attempts for this key: " + attempts);
+        System.out.println("Time: " + LocalDateTime.now());
+        System.out.println(">>> SECURITY LOGGER WARNING TRIGGERED <<<");
+
+        securityLogger.warn("Multiple failed login attempts - Username: {} Source: {} Attempts: {}",
+                email, clientIp, attempts);
     }
 
     private void clearFailedAttempts(String email, String clientIp) {
         String key = email + ":" + clientIp;
         loginAttempts.remove(key);
         lastAttemptTime.remove(key);
+        lockLoggedMap.remove(key); // Also clear the lock logged flag when successful login
+        System.out.println(">>> CLEARED ALL FAILED ATTEMPTS AND LOCK FLAGS <<<");
     }
 
     private boolean containsSqlInjectionPatterns(String input) {
-        if (input == null) return false;
+        if (input == null)
+            return false;
         String lowerInput = input.toLowerCase();
-        String[] sqlPatterns = {"'", "\"", ";", "--", "/*", "*/", "union", "select", "insert", 
-                               "update", "delete", "drop", "exec", "script", "xp_", "sp_"};
+        String[] sqlPatterns = { "'", "\"", ";", "--", "/*", "*/", "union", "select", "insert",
+                "update", "delete", "drop", "exec", "script", "xp_", "sp_" };
 
         for (String pattern : sqlPatterns) {
             if (lowerInput.contains(pattern)) {
@@ -353,10 +399,11 @@ public class AuthController {
     }
 
     private boolean containsXssPatterns(String input) {
-        if (input == null) return false;
+        if (input == null)
+            return false;
         String lowerInput = input.toLowerCase();
-        String[] xssPatterns = {"<script", "</script>", "javascript:", "onload=", "onclick=", "onerror=",
-                               "onmouseover=", "eval(", "alert(", "confirm(", "prompt(", "document.cookie"};
+        String[] xssPatterns = { "<script", "</script>", "javascript:", "onload=", "onclick=", "onerror=",
+                "onmouseover=", "eval(", "alert(", "confirm(", "prompt(", "document.cookie" };
 
         for (String pattern : xssPatterns) {
             if (lowerInput.contains(pattern)) {
@@ -367,9 +414,10 @@ public class AuthController {
     }
 
     private boolean containsPathTraversalPatterns(String input) {
-        if (input == null) return false;
-        return input.contains("../") || input.contains("..\\") || input.contains("/etc/") 
-               || input.contains("\\windows\\") || input.contains("%2e%2e");
+        if (input == null)
+            return false;
+        return input.contains("../") || input.contains("..\\") || input.contains("/etc/")
+                || input.contains("\\windows\\") || input.contains("%2e%2e");
     }
 
     private void validateInputSecurity(String input, String clientIp) {
