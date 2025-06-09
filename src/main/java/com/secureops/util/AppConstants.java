@@ -35,8 +35,9 @@ public class AppConstants {
     public static final String LOG_ACTION_DELETE = "DELETE";
     public static final String LOG_ACTION_LOGIN = "LOGIN";
     public static final String LOG_ACTION_LOGOUT = "LOGOUT";
-    public static final String LOG_ACTION_REGISTER = "REGISTER";
+    public static final String LOG_ACTION_REGISTER = "REGISTER";    
     public static final String LOG_ACTION_APPROVE = "APPROVE";
     public static final String LOG_ACTION_REJECT = "REJECT";
     public static final String LOG_ACTION_PASSWORD_RESET = "PASSWORD_RESET";
+    public static final String LOG_ACTION_SECURITY = "SECURITY";
 }
