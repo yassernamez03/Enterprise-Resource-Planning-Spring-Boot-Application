@@ -1146,3 +1146,132 @@
 2025-06-09 00:06:57.529 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
 2025-06-09 00:06:57.934 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 4, ChatCount: 5, IP: 0:0:0:0:0:0:0:1
 >>>>>>> origin/V2
+2025-06-09 14:08:15.289 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-06-09 14:14:02.945 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:14:03.105 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:14:03.405 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:14:04.218 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:14:57.054 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:14:58.005 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:19:01.704 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:19:02.018 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:20:04.731 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:20:05.913 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:21:21.339 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:21:21.882 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:21:21.902 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:21:21.941 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:21:22.148 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:21:22.636 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:21:22.638 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:21:22.642 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:21:22.717 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:21:22.568, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:21:23.221 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:21:23.170, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:21:25.151 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:21:25.286 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:21:26.383 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:21:26.498 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:21:27.518 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:21:27.750 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:21:28.419 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:21:28.788 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:21:29.397 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:21:29.857 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:21:30.649 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:21:30.737 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:21:34.699 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2025-01-01T00:00, EndDate: 2025-12-31T00:00, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:32:48.638 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:32:49.715 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:34:26.634 [https-jsse-nio-8443-exec-6] WARN  com.secureops.security - UNPROTECTED_ALL_USERS_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:34:40.699 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:34:41.036 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:34:41.069 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:34:41.086 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:34:41.117 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:34:41.422 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:34:41.525 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:34:41.540 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:34:41.576 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:34:41.448, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:34:41.897 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:34:41.836, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:34:45.248 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:34:45.379 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:34:46.221 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:34:46.375 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:34:48.418 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:34:48.681 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:34:53.110 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:34:53.128 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:34:53.284 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:34:53.312 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_CLIENTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_CLIENTS
+2025-06-09 14:35:00.297 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:00.686 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:05.446 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_ORDER_DETAIL_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, OrderId: 3, Action: VIEW_ORDER
+2025-06-09 14:35:05.658 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_ORDER_DETAIL_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, OrderId: 3, Action: VIEW_ORDER
+2025-06-09 14:35:12.327 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:14.972 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:35:15.038 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:15.310 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:35:18.479 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:18.885 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:20.245 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_ORDER_DETAIL_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, OrderId: 3, Action: VIEW_ORDER
+2025-06-09 14:35:20.438 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDER_DETAIL_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, OrderId: 3, Action: VIEW_ORDER
+2025-06-09 14:35:24.507 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:35:25.014 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:35:31.184 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:35:31.340 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:35:31.407 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:35:31.522 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:35:34.904 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:35:35.378 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:35:35.362 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:35.411 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:35:35.427 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:35:35.908 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:35:36.042 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:35:36.091 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:35:36.174 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:35:35.897, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:35:36.559 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:35:36.480, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:35:39.445 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:35:39.608 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:36:02.358 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:36:03.248 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:36:03.302 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:03.572 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:36:03.582 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:03.602 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:36:03.648 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:36:04.154 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:36:04.155 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:36:04.167 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:36:04.235 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:36:04.101, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:04.633 [https-jsse-nio-8443-exec-10] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:36:04.597, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:05.628 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:36:05.725 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:36:05.799 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:36:06.004 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:36:35.868 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:36.118 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 1900-01-01T00:30:20, EndDate: 2099-12-31T22:59:59, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:36.118 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:36:36.132 [https-jsse-nio-8443-exec-11] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:36:36.129 [https-jsse-nio-8443-exec-7] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:36:36.428 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - SALES_QUOTES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_QUOTES
+2025-06-09 14:36:36.789 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - SALES_ORDERS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_ORDERS
+2025-06-09 14:36:36.812 [https-jsse-nio-8443-exec-6] INFO  com.secureops.security - SALES_INVOICES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_INVOICES
+2025-06-09 14:36:36.813 [https-jsse-nio-8443-exec-8] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:36:36.441, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:37.184 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_SUMMARY_REPORT_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, StartDate: 2024-12-31T23:00, EndDate: 2025-06-09T13:36:37.125, Action: VIEW_SALES_SUMMARY
+2025-06-09 14:36:39.544 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:36:39.681 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:37:12.087 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:37:12.238 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - SALES_PRODUCTS_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_PRODUCTS
+2025-06-09 14:37:17.330 [https-jsse-nio-8443-exec-1] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:37:18.092 [https-jsse-nio-8443-exec-9] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 14:37:23.857 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:37:24.035 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:37:24.101 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:37:24.227 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:37:45.738 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:37:46.010 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 14:37:46.354 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - HR_EMPLOYEES_LIST_ACCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Action: VIEW_ALL_EMPLOYEES
+2025-06-09 14:37:46.484 [https-jsse-nio-8443-exec-5] INFO  com.secureops.security - HR_EMPLOYEES_LIST_SUCCESS - User: admin@secureops.com (ID: 1), IP: 0:0:0:0:0:0:0:1, Count: 7
+2025-06-09 18:22:44.648 [https-jsse-nio-8443-exec-4] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
+2025-06-09 18:22:44.789 [https-jsse-nio-8443-exec-3] INFO  com.secureops.security - User chats retrieved - UserID: 1, ChatCount: 2, IP: 0:0:0:0:0:0:0:1
