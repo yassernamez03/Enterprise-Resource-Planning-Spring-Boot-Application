@@ -80,21 +80,20 @@ const ReportsDashboard = () => {  const [dateRange, setDateRange] = useState({
   const handleExportData = async () => {
     setLoadingStates(prev => ({ ...prev, exporting: true }))
     try {
-      const blob = await reportService.exportReportData(activeReport, dateRange)
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = url
-      link.setAttribute(
-        "download",
-        `${activeReport}-${dateRange.startDate}-to-${dateRange.endDate}.csv`
-      )
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      window.URL.revokeObjectURL(url) // Clean up to avoid memory leaks
+      // The reportService.exportReportData already handles the download internally
+        // It returns a success/error object, not a blob
+      const result = await reportService.exportReportData(activeReport, dateRange)
+      
+      if (result.success) {
+        // Success message could be shown here if needed
+        console.log(result.message)
+      } else {
+        throw new Error(result.message || 'Export failed')
+      }
+      
     } catch (err) {
       console.error(err)
-      setError("Failed to export data")
+      setError("Failed to export data: " + (err.message || err))
     } finally {
       setLoadingStates(prev => ({ ...prev, exporting: false }))
     }

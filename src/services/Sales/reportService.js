@@ -96,28 +96,57 @@ export const getEmployeePerformance = async (dateRange) => {
 
 export const getClientSpending = async (dateRange) => {
   try {
-    // Since backend only has client-specific spending, we'll:
-    // 1. Get all clients
-    // 2. Get spending for each client (or use mock data for now)
-    // 3. Aggregate the data
-    
+    // Get all clients first
     const clientService = await import('./clientService');
     const clientsResponse = await clientService.clientService.getClients({ page: 0, pageSize: 100 }, { search: '' });
-    const clients = clientsResponse.content || [];
+    const clients = extractResponseData(clientsResponse);
     
-    // Generate mock spending data for clients since the actual endpoint requires clientId
-    const clientSpendingData = clients.map(client => ({
-      clientId: client.id,
-      clientName: client.name,
-      totalSpent: Math.floor(Math.random() * 50000) + 10000, // Random amount between 10k-60k
-      orderCount: Math.floor(Math.random() * 20) + 1,
-      averageOrderValue: Math.floor(Math.random() * 5000) + 1000,
-      lastOrderDate: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString()
-    }));
+    if (!clients || clients.length === 0) {
+      console.warn("No clients found for spending report");
+      return [];
+    }
+
+    // Fetch real spending data for each client using the backend endpoint
+    const clientSpendingPromises = clients.map(async (client) => {
+      try {
+        const params = getDateRangeParams(dateRange);
+        const response = await apiService.get(`${BASE_URL}/client-spending/${client.id}?${params}`);
+        
+        // Transform the backend response to match frontend expectations
+        const spendingData = response.data || response;
+        
+        return {
+          clientId: client.id,
+          clientName: client.name,
+          totalSpent: spendingData.totalSpent || 0,
+          orderCount: spendingData.orderCount || 0,
+          averageOrderValue: spendingData.averageOrderValue || 0,
+          lastOrderDate: spendingData.lastOrderDate || null
+        };
+      } catch (error) {
+        console.warn(`Failed to fetch spending data for client ${client.id}:`, error);
+        // Return zero data for clients that fail instead of failing the whole request
+        return {
+          clientId: client.id,
+          clientName: client.name,
+          totalSpent: 0,
+          orderCount: 0,
+          averageOrderValue: 0,
+          lastOrderDate: null
+        };
+      }
+    });
+
+    const clientSpendingData = await Promise.all(clientSpendingPromises);
     
-    return clientSpendingData;
+    // Filter out clients with no spending data if desired
+    return clientSpendingData.filter(client => client.totalSpent > 0 || client.orderCount > 0);
+    
   } catch (error) {
-    console.error("Error generating client spending data:", error);
+    console.error("Error fetching client spending data:", error);
+    
+    // Fallback: if the API calls fail completely, return empty array
+    // You could also return mock data here as a last resort
     return [];
   }
 };
@@ -129,9 +158,149 @@ export const getProductSales = async (dateRange) => {
 };
 
 export const exportReportData = async (reportType, dateRange) => {
-  // Note: Export endpoints are not implemented in the current backend
-  console.warn("Export endpoints not implemented in backend");
-  throw new Error("Export functionality not available");
+  try {
+    let data = [];
+    let filename = '';
+    let headers = [];
+
+    // Get the appropriate data based on report type
+    switch (reportType) {
+      case 'sales-summary':
+        data = await getSalesSummary(dateRange);
+        filename = 'sales-summary-report.csv';
+        headers = ['Period', 'Total Sales', 'Total Orders', 'Total Invoices', 'Total Quotes', 'Accepted Quotes', 'Rejected Quotes', 'Completed Orders', 'Cancelled Orders', 'Paid Invoices', 'Overdue Invoices', 'Average Order Value'];
+        break;
+        
+      case 'client-spending':
+        data = await getClientSpending(dateRange);
+        filename = 'client-spending-report.csv';
+        headers = ['Client ID', 'Client Name', 'Total Spent', 'Order Count', 'Average Order Value', 'Last Order Date'];
+        break;
+        
+      case 'product-sales':
+        data = await getProductSales(dateRange);
+        filename = 'product-sales-report.csv';
+        headers = ['Product ID', 'Product Name', 'Units Sold', 'Revenue', 'Profit'];
+        break;
+        
+      case 'top-selling-products':
+        data = await getTopSellingProducts(10); // Get top 10 for export
+        filename = 'top-selling-products-report.csv';
+        headers = ['Product ID', 'Product Name', 'Units Sold', 'Revenue'];
+        break;
+        
+      case 'overdue-invoices':
+        data = await getOverdueInvoicesReport();
+        filename = 'overdue-invoices-report.csv';
+        headers = ['Invoice ID', 'Invoice Number', 'Client Name', 'Total Amount', 'Amount Due', 'Due Date', 'Days Past Due'];
+        break;
+        
+      case 'revenue-trends':
+        data = await getRevenueTrends('monthly', dateRange);
+        filename = 'revenue-trends-report.csv';
+        headers = ['Period', 'Revenue', 'Growth %', 'Order Count'];
+        break;
+        
+      default:
+        throw new Error(`Unknown report type: ${reportType}`);
+    }
+
+    if (!data || data.length === 0) {
+      throw new Error('No data available to export');
+    }
+
+    // Convert data to CSV format
+    let csvContent = headers.join(',') + '\n';
+    
+    data.forEach(row => {
+      let csvRow = [];
+      
+      switch (reportType) {
+        case 'sales-summary':
+          csvRow = [
+            row.period,
+            row.totalSales,
+            row.totalOrders,
+            row.totalInvoices,
+            row.totalQuotes,
+            row.acceptedQuotes,
+            row.rejectedQuotes,
+            row.completedOrders,
+            row.cancelledOrders,
+            row.paidInvoices,
+            row.overdueInvoices,
+            row.averageOrderValue
+          ];
+          break;
+          
+        case 'client-spending':
+          csvRow = [
+            row.clientId,
+            `"${row.clientName}"`, // Wrap in quotes to handle commas in names
+            row.totalSpent,
+            row.orderCount,
+            row.averageOrderValue,
+            row.lastOrderDate || 'N/A'
+          ];
+          break;
+          
+        case 'product-sales':
+        case 'top-selling-products':
+          csvRow = [
+            row.productId,
+            `"${row.productName}"`,
+            row.unitsSold,
+            row.revenue,
+            ...(reportType === 'product-sales' ? [row.profit] : [])
+          ];
+          break;
+          
+        case 'overdue-invoices':
+          csvRow = [
+            row.invoiceId,
+            row.invoiceNumber,
+            `"${row.clientName}"`,
+            row.totalAmount,
+            row.amountDue,
+            row.dueDate,
+            row.daysPastDue
+          ];
+          break;
+          
+        case 'revenue-trends':
+          csvRow = [
+            row.period,
+            row.revenue,
+            row.growth || 0,
+            row.orderCount || row.orders || 0
+          ];
+          break;
+      }
+      
+      csvContent += csvRow.join(',') + '\n';
+    });
+
+    // Create and download the file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    return { success: true, message: `Report exported successfully as ${filename}` };
+    
+  } catch (error) {
+    console.error("Error exporting report data:", error);
+    throw new Error(`Export failed: ${error.message}`);
+  }
 };
 
 // Specialized functions
