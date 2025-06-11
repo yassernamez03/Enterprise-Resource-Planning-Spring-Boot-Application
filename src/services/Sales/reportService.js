@@ -318,47 +318,194 @@ export const getTopSellingProducts = async (limit = 5) => {
 
 export const getRevenueTrends = async (period = 'monthly', dateRange) => {
   try {
-    // Since the revenue trends endpoint doesn't exist, we'll generate mock data
-    // based on the available sales summary data
-    
-    const salesSummary = await getSalesSummary(dateRange);
-    
-    // If we have sales summary data, use it to generate trends
-    if (salesSummary.length > 0 && salesSummary[0].monthlySales) {
-      const monthlySales = salesSummary[0].monthlySales;
-      
-      // Convert monthly sales object to trend data
-      const trendData = Object.entries(monthlySales).map(([month, sales]) => ({
-        period: month,
-        revenue: sales || 0,
-        growth: Math.random() * 20 - 10, // Random growth between -10% and +10%
-        orders: Math.floor((sales || 0) / 1000) // Estimate orders based on revenue
-      }));
-      
-      return trendData.sort((a, b) => a.period.localeCompare(b.period));
-    }
-    
-    // Fallback: Generate mock trend data for the past 12 months
     const trends = [];
-    const currentDate = new Date();
+    const endDate = new Date(dateRange.endDate);
+    const startDate = new Date(dateRange.startDate);
     
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-      const monthName = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-      
-      trends.push({
-        period: monthName,
-        revenue: Math.floor(Math.random() * 100000) + 50000, // Random revenue 50k-150k
-        growth: Math.random() * 30 - 15, // Random growth -15% to +15%
-        orders: Math.floor(Math.random() * 50) + 20 // Random orders 20-70
-      });
+    let periodRanges = [];
+    
+    // Generate date ranges based on the selected period
+    switch (period) {
+      case 'weekly':
+        periodRanges = generateWeeklyRanges(startDate, endDate);
+        break;
+      case 'monthly':
+        periodRanges = generateMonthlyRanges(startDate, endDate);
+        break;
+      case 'quarterly':
+        periodRanges = generateQuarterlyRanges(startDate, endDate);
+        break;
+      case 'yearly':
+        periodRanges = generateYearlyRanges(startDate, endDate);
+        break;
+      default:
+        periodRanges = generateMonthlyRanges(startDate, endDate);
     }
     
-    return trends;
+    // Fetch sales summary for each period
+    const trendPromises = periodRanges.map(async (range, index) => {
+      try {
+        const periodDateRange = {
+          startDate: range.start.toISOString().split('T')[0],
+          endDate: range.end.toISOString().split('T')[0]
+        };
+        
+        const salesData = await getSalesSummary(periodDateRange);
+        const currentData = salesData[0] || {};
+        
+        // Calculate growth rate compared to previous period (if available)
+        let growth = 0;
+        if (index > 0 && trends.length > 0) {
+          const previousRevenue = trends[trends.length - 1].revenue;
+          if (previousRevenue > 0) {
+            growth = ((currentData.totalSales - previousRevenue) / previousRevenue) * 100;
+          }
+        }
+        
+        return {
+          period: range.label,
+          revenue: currentData.totalSales || 0,
+          growth: Math.round(growth * 100) / 100, // Round to 2 decimal places
+          orderCount: currentData.totalOrders || 0
+        };
+      } catch (error) {
+        console.warn(`Failed to fetch data for period ${range.label}:`, error);
+        return {
+          period: range.label,
+          revenue: 0,
+          growth: 0,
+          orderCount: 0
+        };
+      }
+    });
+    
+    const trendResults = await Promise.all(trendPromises);
+    
+    // Calculate growth rates after all data is fetched
+    const trendsWithGrowth = trendResults.map((trend, index) => {
+      if (index === 0) {
+        return { ...trend, growth: 0 }; // First period has no growth baseline
+      }
+      
+      const previousRevenue = trendResults[index - 1].revenue;
+      let growth = 0;
+      
+      if (previousRevenue > 0) {
+        growth = ((trend.revenue - previousRevenue) / previousRevenue) * 100;
+      }
+      
+      return {
+        ...trend,
+        growth: Math.round(growth * 100) / 100
+      };
+    });
+    
+    return trendsWithGrowth;
+    
   } catch (error) {
-    console.error("Error generating revenue trends:", error);
+    console.error("Error fetching revenue trends:", error);
     return [];
   }
+};
+
+// Helper functions to generate date ranges
+const generateWeeklyRanges = (startDate, endDate) => {
+  const ranges = [];
+  const current = new Date(startDate);
+  
+  while (current <= endDate) {
+    const weekStart = new Date(current);
+    const weekEnd = new Date(current);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+    
+    if (weekEnd > endDate) {
+      weekEnd.setTime(endDate.getTime());
+    }
+    
+    ranges.push({
+      start: new Date(weekStart),
+      end: new Date(weekEnd),
+      label: `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+    });
+    
+    current.setDate(current.getDate() + 7);
+  }
+  
+  return ranges;
+};
+
+const generateMonthlyRanges = (startDate, endDate) => {
+  const ranges = [];
+  const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+  
+  while (current <= endDate) {
+    const monthStart = new Date(current);
+    const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 0);
+    
+    if (monthEnd > endDate) {
+      monthEnd.setTime(endDate.getTime());
+    }
+    
+    ranges.push({
+      start: new Date(monthStart),
+      end: new Date(monthEnd),
+      label: monthStart.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+    });
+    
+    current.setMonth(current.getMonth() + 1);
+  }
+  
+  return ranges;
+};
+
+const generateQuarterlyRanges = (startDate, endDate) => {
+  const ranges = [];
+  const current = new Date(startDate.getFullYear(), Math.floor(startDate.getMonth() / 3) * 3, 1);
+  
+  while (current <= endDate) {
+    const quarterStart = new Date(current);
+    const quarterEnd = new Date(current.getFullYear(), current.getMonth() + 3, 0);
+    
+    if (quarterEnd > endDate) {
+      quarterEnd.setTime(endDate.getTime());
+    }
+    
+    const quarterNumber = Math.floor(current.getMonth() / 3) + 1;
+    
+    ranges.push({
+      start: new Date(quarterStart),
+      end: new Date(quarterEnd),
+      label: `Q${quarterNumber} ${current.getFullYear()}`
+    });
+    
+    current.setMonth(current.getMonth() + 3);
+  }
+  
+  return ranges;
+};
+
+const generateYearlyRanges = (startDate, endDate) => {
+  const ranges = [];
+  const current = new Date(startDate.getFullYear(), 0, 1);
+  
+  while (current <= endDate) {
+    const yearStart = new Date(current);
+    const yearEnd = new Date(current.getFullYear(), 11, 31);
+    
+    if (yearEnd > endDate) {
+      yearEnd.setTime(endDate.getTime());
+    }
+    
+    ranges.push({
+      start: new Date(yearStart),
+      end: new Date(yearEnd),
+      label: current.getFullYear().toString()
+    });
+    
+    current.setFullYear(current.getFullYear() + 1);
+  }
+  
+  return ranges;
 };
 
 // Export as service object
