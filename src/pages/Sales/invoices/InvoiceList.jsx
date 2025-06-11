@@ -310,7 +310,8 @@ const InvoiceList = () => {
                     >
                       {invoice.orderNumber}
                     </Link>
-                  </td>                  <td className="px-6 py-4 whitespace-nowrap">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {invoice.clientName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -326,7 +327,8 @@ const InvoiceList = () => {
                       </>
                     ) : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">                    <div className="font-medium">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-medium">
                       ${parseFloat(invoice.total || 0).toFixed(2)}
                     </div>
                     {(invoice.status.toLowerCase() === "partial" || invoice.status.toLowerCase() === "paid" || invoice.paymentDate) && (
@@ -359,7 +361,8 @@ const InvoiceList = () => {
                         title="View"
                       >
                         <FileText size={18} />
-                      </Link>                      {(invoice.status !== "paid" && invoice.status !== "PAID") && (
+                      </Link>
+                      {(invoice.status !== "paid" && invoice.status !== "PAID") && (
                         <button
                           onClick={() => navigate(`/sales/invoices/${invoice.id}`)}
                           className="text-green-600 hover:text-green-900"

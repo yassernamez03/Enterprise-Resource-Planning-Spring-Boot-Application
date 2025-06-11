@@ -44,12 +44,17 @@ const getDateRangeParams = (dateRange) => {
     if (!dateStr) return '';
     // If it's already a full ISO string, return as is
     if (dateStr.includes('T')) return dateStr;
-    // If it's date-only (YYYY-MM-DD), append time for start of day
+    // If it's date-only (YYYY-MM-DD), append time for start/end of day
     return `${dateStr}T00:00:00`;
   };
   
   const startDate = formatDateForBackend(dateRange.startDate);
-  const endDate = formatDateForBackend(dateRange.endDate);
+  // For end date, use end of day to capture all data
+  const endDate = dateRange.endDate.includes('T') 
+    ? dateRange.endDate 
+    : `${dateRange.endDate}T23:59:59`;
+  
+  console.log('Formatted date range:', { startDate, endDate });
   
   return `startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
 };
@@ -83,9 +88,21 @@ const extractResponseData = (response) => {
 
 // Report fetching functions
 export const getSalesSummary = async (dateRange) => {
-  const params = getDateRangeParams(dateRange);
-  const response = await apiService.get(`${BASE_URL}/sales-summary?${params}`);
-  return transformSalesSummaryResponse(response.data);
+  try {
+    const params = getDateRangeParams(dateRange);
+    console.log('Fetching sales summary with params:', params);
+    
+    const response = await apiService.get(`${BASE_URL}/sales-summary?${params}`);
+    console.log('Sales summary response:', response);
+    
+    const transformedData = transformSalesSummaryResponse(response.data || response);
+    console.log('Transformed sales summary:', transformedData);
+    
+    return transformedData;
+  } catch (error) {
+    console.error('Error in getSalesSummary:', error);
+    throw error;
+  }
 };
 
 export const getEmployeePerformance = async (dateRange) => {
@@ -318,7 +335,6 @@ export const getTopSellingProducts = async (limit = 5) => {
 
 export const getRevenueTrends = async (period = 'monthly', dateRange) => {
   try {
-    const trends = [];
     const endDate = new Date(dateRange.endDate);
     const startDate = new Date(dateRange.startDate);
     
@@ -342,8 +358,11 @@ export const getRevenueTrends = async (period = 'monthly', dateRange) => {
         periodRanges = generateMonthlyRanges(startDate, endDate);
     }
     
-    // Fetch sales summary for each period
-    const trendPromises = periodRanges.map(async (range, index) => {
+    // Fetch sales summary for each period sequentially to avoid issues
+    const trendResults = [];
+    
+    for (let i = 0; i < periodRanges.length; i++) {
+      const range = periodRanges[i];
       try {
         const periodDateRange = {
           startDate: range.start.toISOString().split('T')[0],
@@ -353,54 +372,41 @@ export const getRevenueTrends = async (period = 'monthly', dateRange) => {
         const salesData = await getSalesSummary(periodDateRange);
         const currentData = salesData[0] || {};
         
-        // Calculate growth rate compared to previous period (if available)
+        // Calculate growth rate compared to previous period
         let growth = 0;
-        if (index > 0 && trends.length > 0) {
-          const previousRevenue = trends[trends.length - 1].revenue;
+        if (i > 0 && trendResults.length > 0) {
+          const previousRevenue = trendResults[i - 1].revenue;
           if (previousRevenue > 0) {
             growth = ((currentData.totalSales - previousRevenue) / previousRevenue) * 100;
           }
         }
         
-        return {
+        trendResults.push({
           period: range.label,
           revenue: currentData.totalSales || 0,
-          growth: Math.round(growth * 100) / 100, // Round to 2 decimal places
+          growth: Math.round(growth * 100) / 100,
           orderCount: currentData.totalOrders || 0
-        };
+        });
+        
+        console.log(`Period ${range.label}:`, {
+          revenue: currentData.totalSales,
+          orders: currentData.totalOrders,
+          rawData: currentData
+        });
+        
       } catch (error) {
         console.warn(`Failed to fetch data for period ${range.label}:`, error);
-        return {
+        trendResults.push({
           period: range.label,
           revenue: 0,
           growth: 0,
           orderCount: 0
-        };
+        });
       }
-    });
+    }
     
-    const trendResults = await Promise.all(trendPromises);
-    
-    // Calculate growth rates after all data is fetched
-    const trendsWithGrowth = trendResults.map((trend, index) => {
-      if (index === 0) {
-        return { ...trend, growth: 0 }; // First period has no growth baseline
-      }
-      
-      const previousRevenue = trendResults[index - 1].revenue;
-      let growth = 0;
-      
-      if (previousRevenue > 0) {
-        growth = ((trend.revenue - previousRevenue) / previousRevenue) * 100;
-      }
-      
-      return {
-        ...trend,
-        growth: Math.round(growth * 100) / 100
-      };
-    });
-    
-    return trendsWithGrowth;
+    console.log('Final trend results:', trendResults);
+    return trendResults;
     
   } catch (error) {
     console.error("Error fetching revenue trends:", error);

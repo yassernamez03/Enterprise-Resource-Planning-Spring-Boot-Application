@@ -261,7 +261,8 @@ const InvoiceDetail = () => {
                     <div className="font-medium text-gray-900">
                       {item?.productName || 'Item'}
                     </div>
-                  </td>                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                     {item?.quantity || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-600">
@@ -278,14 +279,16 @@ const InvoiceDetail = () => {
                   </td>
                 </tr>
               ))}
-            </tbody>                <tfoot className="bg-gray-50">
+            </tbody>
+            <tfoot className="bg-gray-50">
               <tr>
                 <td
                   colSpan={5}
                   className="px-6 py-3 text-right text-lg font-semibold"
                 >
                   Total
-                </td>                <td className="px-6 py-3 text-right text-lg font-semibold">
+                </td>
+                <td className="px-6 py-3 text-right text-lg font-semibold">
                   ${(invoice.total || 0).toFixed(2)}
                 </td>
               </tr>

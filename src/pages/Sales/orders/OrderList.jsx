@@ -43,7 +43,11 @@ const OrderList = () => {
     orderNumber: ""
   });
   const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
-
+  const [pagination, setPagination] = useState({
+    page: 0,
+    pageSize: 10,
+    total: 0
+  });
   useEffect(() => {
     fetchOrders();
   }, [pagination.page, pagination.pageSize]);
@@ -245,9 +249,11 @@ const OrderList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {new Date(order.createdAt).toLocaleDateString()}
-                  </td>                  <td className="px-6 py-4 whitespace-nowrap font-medium">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap font-medium">
                     ${order.totalAmount.toFixed(2)}
-                  </td>                  <td className="px-6 py-4 whitespace-nowrap">
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         statusColors[order.status.toUpperCase()] || "bg-gray-200 text-gray-800"
@@ -264,7 +270,8 @@ const OrderList = () => {
                         title="View"
                       >
                         <FileText size={18} />
-                      </Link>                      {order.status.toUpperCase() !== "COMPLETED" && (
+                      </Link>
+                      {order.status.toUpperCase() !== "COMPLETED" && (
                         <Link
                           to={`/sales/orders/${order.id}/edit`}
                           className="text-amber-600 hover:text-amber-900"
@@ -279,7 +286,8 @@ const OrderList = () => {
                         title="Download PDF"
                       >
                         <Download size={18} />
-                      </button>                      {order.status.toUpperCase() === "COMPLETED" && (
+                      </button>
+                      {order.status.toUpperCase() === "COMPLETED" && (
                         <Link
                           to={`/sales/orders/${order.id}/invoice`}
                           className="text-purple-600 hover:text-purple-900"
