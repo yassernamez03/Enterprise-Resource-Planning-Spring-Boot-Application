@@ -10,7 +10,9 @@ import {
   DollarSign,
   Truck,
   Clock,
-  ShoppingCart
+  ShoppingCart,
+  FileText,
+  CreditCard
 } from "lucide-react"
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { useAppContext } from "../../../context/Sales/AppContext"
@@ -18,37 +20,6 @@ import { productService } from "../../../services/Sales/productService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
-
-// Mock sales history
-const MOCK_SALES_HISTORY = [
-  {
-    id: 1,
-    date: "2023-05-15",
-    type: "order",
-    reference: "ORD-2001",
-    quantity: 5,
-    unitPrice: 49.99,
-    client: "Acme Corporation"
-  },
-  {
-    id: 2,
-    date: "2023-04-20",
-    type: "order",
-    reference: "ORD-1845",
-    quantity: 3,
-    unitPrice: 49.99,
-    client: "Globex Industries"
-  },
-  {
-    id: 3,
-    date: "2023-03-12",
-    type: "order",
-    reference: "ORD-1721",
-    quantity: 10,
-    unitPrice: 44.99,
-    client: "Stark Industries"
-  }
-]
 
 const safeFormatDate = (dateString, formatStr) => {
   if (!dateString) return "N/A";
@@ -67,27 +38,47 @@ const ProductDetail = () => {
   const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   const [product, setProduct] = useState(null);
+  const [salesHistory, setSalesHistory] = useState([]);
+  const [salesSummary, setSalesSummary] = useState({
+    totalOrders: 0,
+    unitsSold: 0,
+    totalRevenue: 0,
+    returns: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [salesLoading, setSalesLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductData = async () => {
       try {
         setLoading(true);
-        const data = await productService.getProduct(id);
-        setProduct(data);
+        setSalesLoading(true);
+        
+        // Fetch product details
+        const productData = await productService.getProduct(id);
+        setProduct(productData);
+        
+        // Fetch sales history and summary in parallel
+        const [historyData, summaryData] = await Promise.all([
+          productService.getProductSalesHistory(id, 10),
+          productService.getProductSalesSummary(id)
+        ]);
+        
+        setSalesHistory(historyData);
+        setSalesSummary(summaryData);
+        
       } catch (error) {
-        console.error("Error fetching product:", error);
+        console.error("Error fetching product data:", error);
         showNotification("Failed to load product details", "error");
       } finally {
         setLoading(false);
+        setSalesLoading(false);
       }
     };
 
     if (id) {
-      fetchProduct();
+      fetchProductData();
     }
   }, [id, showNotification]);
 
@@ -104,14 +95,12 @@ const ProductDetail = () => {
   }
 
   const handleDeleteConfirm = async () => {
-    console.log("PRODUCT DETAIL DELETE STARTED");
-    
     try {
       await productService.deleteProduct(product.id);
       showNotification(`Product ${product.name} deleted successfully`, "success");
       navigate("/sales/products");
     } catch (error) {
-      console.log("PRODUCT DETAIL DELETE FAILED:", error);
+      console.log("Product delete failed:", error);
       handleDeleteError(error, 'Product', product.name);
     } finally {
       setDeleteDialogOpen(false);
@@ -122,21 +111,28 @@ const ProductDetail = () => {
     setDeleteDialogOpen(false)
   }
 
-  const handleErrorDialogClose = () => {
-    setErrorDialogOpen(false);
-    setErrorMessage("");
-  };
-
   const calculateMargin = () => {
-    if (!product) return { amount: 0, percentage: 0 }
+    if (!product || !product.price || !product.cost) return { amount: 0, percentage: 0 }
 
-    const amount = product.price - product.cost
-    const percentage = (amount / product.price) * 100
+    const amount = product.price - (product.cost || 0)
+    const percentage = product.price > 0 ? (amount / product.price) * 100 : 0
 
     return {
       amount,
       percentage
     }
+  }
+
+  const handleCreateQuote = () => {
+    navigate(`/sales/quotes/create?productId=${id}`);
+  }
+
+  const handleCreateOrder = () => {
+    navigate(`/sales/orders/create?productId=${id}`);
+  }
+
+  const handleUpdatePrice = () => {
+    navigate(`/sales/products/${id}/edit`);
   }
 
   const margin = calculateMargin()
@@ -151,12 +147,12 @@ const ProductDetail = () => {
           <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               <div className="h-4 bg-gray-200 rounded w-2/3"></div>
             </div>
             <div className="space-y-4">
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
               <div className="h-4 bg-gray-200 rounded w-2/3"></div>
             </div>
@@ -205,7 +201,7 @@ const ProductDetail = () => {
             {product.isActive ? "Active" : "Inactive"}
           </span>
           <span className="text-gray-600">
-            SKU: {product.sku} • Category: {product.category.name}
+            Category: {product.category.name}
           </span>
         </div>
 
@@ -237,7 +233,7 @@ const ProductDetail = () => {
             <div className="mb-6">
               <p className="text-sm text-gray-500">Description</p>
               <p className="text-gray-800 whitespace-pre-line">
-                {product.description}
+                {product.description || "No description available"}
               </p>
             </div>
 
@@ -251,35 +247,39 @@ const ProductDetail = () => {
                   <div className="flex justify-between">
                     <p className="text-sm text-gray-600">Selling Price:</p>
                     <p className="text-gray-800 font-medium">
-                      ${product.price.toFixed(2)}
+                      ${product.price?.toFixed(2) || "0.00"}
                     </p>
                   </div>
-                  <div className="flex justify-between">
-                    <p className="text-sm text-gray-600">Cost:</p>
-                    <p className="text-gray-800 font-medium">
-                     ${product.unitPrice?.toFixed(2) || "0.00"}
-                    </p>
-                  </div>
-                  <div className="pt-2 mt-2 border-t border-gray-200">
+                  {product.cost && (
                     <div className="flex justify-between">
-                      <p className="text-sm text-gray-600">Margin:</p>
+                      <p className="text-sm text-gray-600">Cost:</p>
                       <p className="text-gray-800 font-medium">
-                        ${margin.amount.toFixed(2)}
+                        ${product.cost.toFixed(2)}
                       </p>
                     </div>
-                    <div className="flex justify-between">
-                      <p className="text-sm text-gray-600">Margin %:</p>
-                      <p
-                        className={`font-medium ${
-                          margin.percentage < 30
-                            ? "text-error-600"
-                            : "text-success-600"
-                        }`}
-                      >
-                        {margin.percentage.toFixed(2)}%
-                      </p>
+                  )}
+                  {product.cost && (
+                    <div className="pt-2 mt-2 border-t border-gray-200">
+                      <div className="flex justify-between">
+                        <p className="text-sm text-gray-600">Margin:</p>
+                        <p className="text-gray-800 font-medium">
+                          ${margin.amount.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="flex justify-between">
+                        <p className="text-sm text-gray-600">Margin %:</p>
+                        <p
+                          className={`font-medium ${
+                            margin.percentage < 30
+                              ? "text-error-600"
+                              : "text-success-600"
+                          }`}
+                        >
+                          {margin.percentage.toFixed(2)}%
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 
@@ -354,18 +354,34 @@ const ProductDetail = () => {
               <h2 className="text-lg font-medium text-gray-800">
                 Sales History
               </h2>
-              <a
-                href="#"
+              <button
+                onClick={() => navigate(`/sales/orders?productId=${id}`)}
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
-                View All
-              </a>
+                View All Orders
+              </button>
             </div>
 
-            {MOCK_SALES_HISTORY.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No sales history found
-              </p>
+            {salesLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="animate-pulse flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                    <div className="h-4 bg-gray-200 rounded w-20"></div>
+                  </div>
+                ))}
+              </div>
+            ) : salesHistory.length === 0 ? (
+              <div className="text-center py-8">
+                <FileText size={48} className="mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500">No sales history found</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  This product hasn't been sold yet.
+                </p>
+              </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -392,13 +408,18 @@ const ProductDetail = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {MOCK_SALES_HISTORY.map(sale => (
+                    {salesHistory.slice(0, 5).map(sale => (
                       <tr key={sale.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           {safeFormatDate(sale.date, "MMM d, yyyy")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-primary-600 font-medium">
-                          {sale.reference}
+                          <button
+                            onClick={() => navigate(`/sales/orders/search?orderNumber=${sale.reference}`)}
+                            className="hover:text-primary-800"
+                          >
+                            {sale.reference}
+                          </button>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                           {sale.client}
@@ -407,10 +428,10 @@ const ProductDetail = () => {
                           {sale.quantity}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          ${sale.unitPrice.toFixed(2)}
+                          ${sale.unitPrice?.toFixed(2) || "0.00"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                          ${(sale.quantity * sale.unitPrice).toFixed(2)}
+                          ${sale.total?.toFixed(2) || "0.00"}
                         </td>
                       </tr>
                     ))}
@@ -427,26 +448,39 @@ const ProductDetail = () => {
               Sales Summary
             </h2>
 
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <p className="text-gray-600">Total Orders</p>
-                <p className="font-medium">18</p>
+            {salesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="animate-pulse flex justify-between">
+                    <div className="h-4 bg-gray-200 rounded w-20"></div>
+                    <div className="h-4 bg-gray-200 rounded w-12"></div>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between">
-                <p className="text-gray-600">Units Sold</p>
-                <p className="font-medium">154</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="text-gray-600">Returns</p>
-                <p className="font-medium">2</p>
-              </div>
-              <div className="pt-2 mt-2 border-t border-gray-200">
+            ) : (
+              <div className="space-y-3">
                 <div className="flex justify-between">
-                  <p className="text-gray-800 font-medium">Total Revenue</p>
-                  <p className="font-bold text-primary-600">$7,678.46</p>
+                  <p className="text-gray-600">Total Orders</p>
+                  <p className="font-medium">{salesSummary.totalOrders}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Units Sold</p>
+                  <p className="font-medium">{salesSummary.unitsSold}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Returns</p>
+                  <p className="font-medium">{salesSummary.returns}</p>
+                </div>
+                <div className="pt-2 mt-2 border-t border-gray-200">
+                  <div className="flex justify-between">
+                    <p className="text-gray-800 font-medium">Total Revenue</p>
+                    <p className="font-bold text-primary-600">
+                      ${salesSummary.totalRevenue?.toFixed(2) || "0.00"}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="bg-white rounded-lg shadow-card p-6">
@@ -455,33 +489,42 @@ const ProductDetail = () => {
             </h2>
 
             <div className="space-y-2">
-              <a
-                href="#"
+              <button
+                onClick={handleUpdatePrice}
                 className="block w-full text-left px-4 py-2 bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 transition-colors"
               >
                 <div className="flex items-center">
                   <Tag size={18} className="mr-2" />
                   <span>Update Price</span>
                 </div>
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={() => navigate(`/sales/products/${id}/edit`)}
                 className="block w-full text-left px-4 py-2 bg-secondary-50 text-secondary-700 rounded-md hover:bg-secondary-100 transition-colors"
               >
                 <div className="flex items-center">
                   <Truck size={18} className="mr-2" />
                   <span>Manage Inventory</span>
                 </div>
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={handleCreateOrder}
                 className="block w-full text-left px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition-colors"
               >
                 <div className="flex items-center">
                   <ShoppingCart size={18} className="mr-2" />
                   <span>Add to Order</span>
                 </div>
-              </a>
+              </button>
+              <button
+                onClick={handleCreateQuote}
+                className="block w-full text-left px-4 py-2 bg-warning-50 text-warning-700 rounded-md hover:bg-warning-100 transition-colors"
+              >
+                <div className="flex items-center">
+                  <FileText size={18} className="mr-2" />
+                  <span>Create Quote</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>

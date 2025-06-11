@@ -71,12 +71,12 @@ const ProductList = () => {
   const applyFilters = (products) => {
     let filtered = products;
 
-    // Apply search filter
+    // Apply search filter (only search by name and description)
     if (filters.search) {
       filtered = filtered.filter(
         (product) =>
           product.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-          product.sku.toLowerCase().includes(filters.search.toLowerCase())
+          (product.description && product.description.toLowerCase().includes(filters.search.toLowerCase()))
       );
     }
 
@@ -122,9 +122,6 @@ const ProductList = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
     // Reset to first page when filtering
     setPagination((prev) => ({ ...prev, page: 0 }));
-
-    // Remove this line - let useEffect handle the filtering
-    // fetchProducts();
   };
 
   const handleSort = (field, direction) => {
@@ -132,7 +129,6 @@ const ProductList = () => {
     const fieldMap = {
       price: "unitPrice",
       isActive: "active",
-      inStock: "stock",
     };
 
     const backendField = fieldMap[field] || field;
@@ -199,11 +195,6 @@ const ProductList = () => {
       sortable: true,
     },
     {
-      header: "SKU",
-      accessor: "sku",
-      sortable: true,
-    },
-    {
       header: "Category",
       accessor: "category.name",
     },
@@ -212,19 +203,6 @@ const ProductList = () => {
       accessor: "price",
       sortable: true,
       cell: (product) => `$${parseFloat(product.price).toFixed(2)}`,
-    },
-    {
-      header: "In Stock",
-      accessor: "inStock",
-      sortable: true,
-      cell: (product) => {
-        const isLow = product.inStock <= product.minStock;
-        return (
-          <span className={isLow ? "text-error-600 font-medium" : ""}>
-            {product.inStock}
-          </span>
-        );
-      },
     },
     {
       header: "Status",
