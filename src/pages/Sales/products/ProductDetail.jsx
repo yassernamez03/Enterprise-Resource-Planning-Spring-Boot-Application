@@ -15,6 +15,9 @@ import {
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { productService } from "../../../services/Sales/productService";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 // Mock sales history
 const MOCK_SALES_HISTORY = [
@@ -61,10 +64,13 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
+  const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -98,13 +104,15 @@ const ProductDetail = () => {
   }
 
   const handleDeleteConfirm = async () => {
+    console.log("PRODUCT DETAIL DELETE STARTED");
+    
     try {
       await productService.deleteProduct(product.id);
       showNotification(`Product ${product.name} deleted successfully`, "success");
       navigate("/sales/products");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      showNotification("Failed to delete product", "error");
+      console.log("PRODUCT DETAIL DELETE FAILED:", error);
+      handleDeleteError(error, 'Product', product.name);
     } finally {
       setDeleteDialogOpen(false);
     }
@@ -113,6 +121,11 @@ const ProductDetail = () => {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false)
   }
+
+  const handleErrorDialogClose = () => {
+    setErrorDialogOpen(false);
+    setErrorMessage("");
+  };
 
   const calculateMargin = () => {
     if (!product) return { amount: 0, percentage: 0 }
@@ -483,6 +496,13 @@ const ProductDetail = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      <ErrorNotification
+        error={error}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Product"
       />
     </div>
   )

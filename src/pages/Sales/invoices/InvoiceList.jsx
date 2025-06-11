@@ -11,6 +11,9 @@ import {
   Trash2
 } from "lucide-react"
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 // Map backend status enum values (uppercase) to frontend display values
 const statusLabels = {
@@ -50,6 +53,8 @@ const InvoiceList = () => {
     invoiceId: "",
     invoiceNumber: ""
   })
+  const { error: deleteError, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
+
   useEffect(() => {
     fetchInvoices()
   }, [])
@@ -169,19 +174,21 @@ const InvoiceList = () => {
   }
 
   const handleDeleteConfirm = async () => {
+    console.log("INVOICE DELETE STARTED for:", deleteDialog.invoiceNumber);
+    
     try {
-      await deleteInvoice(deleteDialog.invoiceId)
+      await deleteInvoice(deleteDialog.invoiceId);
       setInvoices(
         invoices.filter(invoice => invoice.id !== deleteDialog.invoiceId)
-      )
-      setError(null)
+      );
+      setError(null);
     } catch (err) {
-      setError("Failed to delete invoice")
-      console.error(err)
+      console.log("INVOICE DELETE FAILED:", err);
+      handleDeleteError(err, 'Invoice', deleteDialog.invoiceNumber);
     } finally {
-      setDeleteDialog({ open: false, invoiceId: "", invoiceNumber: "" })
+      setDeleteDialog({ open: false, invoiceId: "", invoiceNumber: "" });
     }
-  }
+  };
 
   const handleDeleteCancel = () => {
     setDeleteDialog({ open: false, invoiceId: "", invoiceNumber: "" })
@@ -397,6 +404,14 @@ const InvoiceList = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      {/* Add the error notification component */}
+      <ErrorNotification
+        error={deleteError}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Invoice"
       />
     </div>
   )

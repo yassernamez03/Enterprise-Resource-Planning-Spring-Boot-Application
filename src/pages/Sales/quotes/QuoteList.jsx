@@ -12,6 +12,9 @@ import {
   Download
 } from "lucide-react";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const statusLabels = {
   DRAFT: "Draft",
@@ -48,6 +51,7 @@ const QuoteList = () => {
     quoteId: "",
     quoteNumber: ""
   });
+  const { error: deleteError, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   useEffect(() => {
     fetchQuotes();
@@ -114,13 +118,15 @@ const QuoteList = () => {
   };
 
   const handleDeleteConfirm = async () => {
+    console.log("QUOTE DELETE STARTED for:", deleteDialog.quoteNumber);
+    
     try {
       await quoteService.deleteQuote(deleteDialog.quoteId);
       setQuotes(quotes.filter(quote => quote.id !== deleteDialog.quoteId));
       setError(null);
     } catch (err) {
-      setError("Failed to delete quote");
-      console.error(err);
+      console.log("QUOTE DELETE FAILED:", err);
+      handleDeleteError(err, 'Quote', deleteDialog.quoteNumber);
     } finally {
       setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" });
     }
@@ -373,6 +379,13 @@ const QuoteList = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      <ErrorNotification
+        error={deleteError}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Quote"
       />
     </div>
   );

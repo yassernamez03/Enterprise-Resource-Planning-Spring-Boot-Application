@@ -13,6 +13,9 @@ import {
   FileInput as FileInvoice
 } from "lucide-react";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const statusLabels = {
   IN_PROCESS: "In Process",
@@ -34,17 +37,12 @@ const OrderList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    page: 0,
-    pageSize: 10,
-    total: 0
-  });
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
     orderId: "",
     orderNumber: ""
   });
+  const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   useEffect(() => {
     fetchOrders();
@@ -110,13 +108,15 @@ const OrderList = () => {
   };
 
   const handleDeleteConfirm = async () => {
+    console.log("ORDER DELETE STARTED for:", deleteDialog.orderNumber);
+    
     try {
       await deleteOrder(deleteDialog.orderId);
       setOrders(orders.filter(order => order.id !== deleteDialog.orderId));
       setError(null);
     } catch (err) {
-      setError("Failed to delete order");
-      console.error(err);
+      console.log("ORDER DELETE FAILED:", err);
+      handleDeleteError(err, 'Order', deleteDialog.orderNumber);
     } finally {
       setDeleteDialog({ open: false, orderId: "", orderNumber: "" });
     }
@@ -375,6 +375,13 @@ const OrderList = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      <ErrorNotification
+        error={error}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Order"
       />
     </div>
   );

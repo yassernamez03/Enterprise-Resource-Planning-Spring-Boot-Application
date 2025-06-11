@@ -3,7 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getQuote,
   updateQuote,
-  convertQuoteToOrder
+  convertQuoteToOrder,
+  deleteQuote
 } from "../../../services/Sales/quoteService";
 import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService";
 import {
@@ -17,6 +18,8 @@ import {
   AlertTriangle
 } from "lucide-react";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const statusLabels = {
   DRAFT: "Draft",
@@ -44,6 +47,9 @@ const QuoteDetail = () => {
   const [statusLoading, setStatusLoading] = useState(null);
   const [isConverting, setIsConverting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const { error: deleteError, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   useEffect(() => {
     if (id) {
@@ -113,6 +119,21 @@ const QuoteDetail = () => {
     } catch (err) {
       setError(`Failed to generate PDF: ${err.message || "Unknown error"}`);
       console.error(err);
+    }
+  };
+
+  const handleDeleteConfirm = async () => {
+    console.log("QUOTE DETAIL DELETE STARTED");
+    
+    try {
+      await deleteQuote(quote.id);
+      showNotification(`Quote ${quote.quoteNumber} deleted successfully`, "success");
+      navigate("/sales/quotes");
+    } catch (error) {
+      console.log("QUOTE DETAIL DELETE FAILED:", error);
+      handleDeleteError(error, 'Quote', quote.quoteNumber);
+    } finally {
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -407,6 +428,14 @@ const QuoteDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Add the error notification component */}
+      <ErrorNotification
+        error={deleteError}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Quote"
+      />
     </div>
   );
 };

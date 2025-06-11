@@ -6,10 +6,14 @@ import DataTable from "../../../Components/Sales/common/DataTable";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { useAppContext } from "../../../context/Sales/AppContext";
 import { clientService } from "../../../services/Sales/clientService";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const ClientList = () => {
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
+  const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -134,22 +138,18 @@ const ClientList = () => {
   };
 
   const handleDeleteConfirm = async () => {
+    console.log("CLIENT DELETE STARTED");
+    
     try {
       await clientService.deleteClient(deleteDialog.clientId);
-      
-      // Refresh the current page
       fetchClients();
-      
       showNotification(
         `Client ${deleteDialog.clientName} deleted successfully`,
         "success"
       );
     } catch (error) {
-      console.error("Error deleting client:", error);
-      showNotification(
-        error.message || "Failed to delete client", 
-        "error"
-      );
+      console.log("CLIENT DELETE FAILED:", error);
+      handleDeleteError(error, 'Client', deleteDialog.clientName);
     } finally {
       setDeleteDialog({ open: false, clientId: 0, clientName: "" });
     }
@@ -266,6 +266,14 @@ const ClientList = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      {/* Add the error notification component */}
+      <ErrorNotification
+        error={error}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Client"
       />
     </div>
   );

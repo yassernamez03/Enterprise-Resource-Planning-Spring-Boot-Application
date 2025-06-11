@@ -6,10 +6,14 @@ import DataTable from "../../../Components/Sales/common/DataTable";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { useAppContext } from "../../../context/Sales/AppContext";
 import { productService } from "../../../services/Sales/productService";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const ProductList = () => {
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
+  const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -166,19 +170,19 @@ const ProductList = () => {
   };
 
   const handleDeleteConfirm = async () => {
+    console.log("DELETE ATTEMPT STARTED for:", deleteDialog.productName);
+    
     try {
       await productService.deleteProduct(deleteDialog.productId);
-
-      // Refresh the current page
       fetchProducts();
-
       showNotification(
         `Product ${deleteDialog.productName} deleted successfully`,
         "success"
       );
+      console.log("DELETE SUCCESS");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      showNotification(error.message || "Failed to delete product", "error");
+      console.log("DELETE FAILED - Error caught:", error);
+      handleDeleteError(error, 'Product', deleteDialog.productName);
     } finally {
       setDeleteDialog({ open: false, productId: 0, productName: "" });
     }
@@ -353,6 +357,14 @@ const ProductList = () => {
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         type="danger"
+      />
+
+      {/* Add the error notification component */}
+      <ErrorNotification
+        error={error}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Product"
       />
     </div>
   );

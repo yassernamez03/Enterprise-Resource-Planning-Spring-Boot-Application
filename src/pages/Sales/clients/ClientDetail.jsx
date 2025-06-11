@@ -5,6 +5,9 @@ import { Edit, ArrowLeft, Trash2, FileText, ClipboardList, CreditCard } from "lu
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { useAppContext } from "../../../context/Sales/AppContext";
 import { clientService } from "../../../services/Sales/clientService";
+import { handleForeignKeyError } from '../../../utils/errorHandlers';
+import ErrorNotification from '../../../components/ErrorNotification';
+import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 // Helper function for safe date formatting
 const safeFormatDate = (dateString, formatStr) => {
@@ -57,6 +60,7 @@ const ClientDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
+  const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -101,21 +105,8 @@ const ClientDetail = () => {
       showNotification(`Client ${client.name} deleted successfully`, "success");
       navigate("/sales/clients");
     } catch (error) {
-      console.error("Error deleting client:", error);
-      
-      // Check for foreign key constraint violation error
-      if (error.response && 
-          error.response.data && 
-          (error.response.data.includes("violates foreign key constraint") || 
-           error.response.data.includes("fkgbnmc624hyny4k4q8etbxxmu1"))) {
-        setErrorMessage(
-          `Cannot delete ${client.name} because they have associated quotes, orders, or invoices. ` +
-          `Please delete all associated documents before removing this client.`
-        );
-        setErrorDialogOpen(true);
-      } else {
-        showNotification("Failed to delete client", "error");
-      }
+      console.log("CLIENT DETAIL DELETE FAILED:", error);
+      handleDeleteError(error, 'Client', client.name);
     } finally {
       setDeleteDialogOpen(false);
     }
@@ -433,6 +424,13 @@ const ClientDetail = () => {
         onCancel={handleErrorDialogClose}
         type="warning"
         showCancelButton={false}
+      />
+
+      <ErrorNotification
+        error={error}
+        onClose={hideError}
+        showAsDialog={showAsDialog}
+        title="Cannot Delete Client"
       />
     </div>
   )
