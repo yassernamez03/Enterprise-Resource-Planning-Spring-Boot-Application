@@ -5,6 +5,9 @@ import { Edit, ArrowLeft, Trash2, FileText, ClipboardList, CreditCard } from "lu
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { useAppContext } from "../../../context/Sales/AppContext";
 import { clientService } from "../../../services/Sales/clientService";
+import { getQuotesByClient } from "../../../services/Sales/quoteService";
+import { getOrdersByClient } from "../../../services/Sales/orderService";
+import { getInvoicesByClient } from "../../../services/Sales/invoiceService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
@@ -20,42 +23,6 @@ const safeFormatDate = (dateString, formatStr) => {
   }
 };
 
-// Mock activity data
-const MOCK_ACTIVITIES = [
-  {
-    id: 1,
-    type: "quote",
-    number: "Q-1001",
-    date: "2023-05-15",
-    amount: 5000,
-    status: "Approved"
-  },
-  {
-    id: 2,
-    type: "order",
-    number: "ORD-2001",
-    date: "2023-05-20",
-    amount: 5000,
-    status: "Processing"
-  },
-  {
-    id: 3,
-    type: "invoice",
-    number: "INV-3001",
-    date: "2023-05-25",
-    amount: 5000,
-    status: "Paid"
-  },
-  {
-    id: 4,
-    type: "quote",
-    number: "Q-1002",
-    date: "2023-06-10",
-    amount: 3500,
-    status: "Pending"
-  }
-]
-
 const ClientDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -67,6 +34,16 @@ const ClientDetail = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  
+  // New state for real data
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [clientSummary, setClientSummary] = useState({
+    totalQuotes: 0,
+    totalOrders: 0,
+    totalInvoices: 0,
+    lifetimeValue: 0
+  });
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -85,6 +62,105 @@ const ClientDetail = () => {
     if (id) {
       fetchClient();
     }
+  }, [id, showNotification]);
+
+  useEffect(() => {
+    const fetchClientData = async () => {
+      if (!id) return;
+      
+      try {
+        setActivitiesLoading(true);
+        
+        // Fetch all client-related data in parallel
+        const [quotes, orders, invoices] = await Promise.all([
+          getQuotesByClient(id).catch(err => {
+            console.warn("Failed to fetch quotes:", err);
+            return [];
+          }),
+          getOrdersByClient(id).catch(err => {
+            console.warn("Failed to fetch orders:", err);
+            return [];
+          }),
+          getInvoicesByClient(id).catch(err => {
+            console.warn("Failed to fetch invoices:", err);
+            return [];
+          })
+        ]);
+
+        // Combine all activities into a single array
+        const activities = [];
+        
+        // Add quotes to activities
+        quotes.forEach(quote => {
+          activities.push({
+            id: `quote-${quote.id}`,
+            type: "quote",
+            number: quote.quoteNumber,
+            date: quote.createdAt,
+            amount: quote.total || 0,
+            status: quote.status === 'ACCEPTED' ? 'Approved' : 
+                   quote.status === 'REJECTED' ? 'Rejected' : 'Pending'
+          });
+        });
+
+        // Add orders to activities
+        orders.forEach(order => {
+          activities.push({
+            id: `order-${order.id}`,
+            type: "order",
+            number: order.orderNumber,
+            date: order.createdAt,
+            amount: order.totalAmount || 0,
+            status: order.status === 'COMPLETED' ? 'Completed' : 
+                   order.status === 'CANCELLED' ? 'Cancelled' : 'Processing'
+          });
+        });
+
+        // Add invoices to activities
+        invoices.forEach(invoice => {
+          activities.push({
+            id: `invoice-${invoice.id}`,
+            type: "invoice",
+            number: invoice.invoiceNumber,
+            date: invoice.createdAt,
+            amount: invoice.total || 0,
+            status: invoice.status === 'paid' ? 'Paid' : 
+                   invoice.status === 'partial' ? 'Partial' : 'Pending'
+          });
+        });
+
+        // Sort activities by date (most recent first)
+        activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Take only the 5 most recent activities
+        setRecentActivities(activities.slice(0, 5));
+
+        // Calculate summary data
+        const totalQuoteValue = quotes.reduce((sum, quote) => sum + (quote.total || 0), 0);
+        const totalOrderValue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        const totalInvoiceValue = invoices.reduce((sum, invoice) => sum + (invoice.total || 0), 0);
+        
+        // Lifetime value is typically the sum of all completed orders or paid invoices
+        const lifetimeValue = invoices
+          .filter(invoice => invoice.status === 'paid')
+          .reduce((sum, invoice) => sum + (invoice.total || 0), 0);
+
+        setClientSummary({
+          totalQuotes: quotes.length,
+          totalOrders: orders.length,
+          totalInvoices: invoices.length,
+          lifetimeValue: lifetimeValue
+        });
+
+      } catch (error) {
+        console.error("Error fetching client data:", error);
+        showNotification("Failed to load client activity data", "error");
+      } finally {
+        setActivitiesLoading(false);
+      }
+    };
+
+    fetchClientData();
   }, [id, showNotification]);
 
   const handleBack = () => {
@@ -177,15 +253,32 @@ const ClientDetail = () => {
     switch (status.toLowerCase()) {
       case "approved":
       case "paid":
+      case "completed":
         return "bg-success-100 text-success-800"
       case "pending":
         return "bg-warning-100 text-warning-800"
       case "processing":
         return "bg-primary-100 text-primary-800"
       case "rejected":
+      case "cancelled":
         return "bg-error-100 text-error-800"
+      case "partial":
+        return "bg-yellow-100 text-yellow-800"
       default:
         return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getActivityLink = (activity) => {
+    switch (activity.type) {
+      case "quote":
+        return `/sales/quotes/${activity.id.replace('quote-', '')}`;
+      case "order":
+        return `/sales/orders/${activity.id.replace('order-', '')}`;
+      case "invoice":
+        return `/sales/invoices/${activity.id.replace('invoice-', '')}`;
+      default:
+        return '#';
     }
   }
 
@@ -288,21 +381,43 @@ const ClientDetail = () => {
               <h2 className="text-lg font-medium text-gray-800">
                 Recent Transactions
               </h2>
-              <a
-                href="#"
+              <button
+                onClick={() => navigate(`/sales/clients/${id}/transactions`)}
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
                 View All
-              </a>
+              </button>
             </div>
 
-            {MOCK_ACTIVITIES.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                No transactions found
-              </p>
+            {activitiesLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="animate-pulse flex items-center justify-between p-3">
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 bg-gray-200 rounded-full mr-3"></div>
+                      <div>
+                        <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+                        <div className="h-3 bg-gray-200 rounded w-16"></div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="h-4 bg-gray-200 rounded w-16 mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-12"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : recentActivities.length === 0 ? (
+              <div className="text-center py-8">
+                <FileText size={48} className="mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500">No transactions found</p>
+                <p className="text-sm text-gray-400 mt-1">
+                  This client hasn't had any quotes, orders, or invoices yet.
+                </p>
+              </div>
             ) : (
               <div className="space-y-4">
-                {MOCK_ACTIVITIES.map(activity => (
+                {recentActivities.map(activity => (
                   <div
                     key={activity.id}
                     className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-md transition-colors"
@@ -312,9 +427,12 @@ const ClientDetail = () => {
                         {getActivityIcon(activity.type)}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-800">
+                        <button
+                          onClick={() => navigate(getActivityLink(activity))}
+                          className="font-medium text-blue-600 hover:text-blue-800 text-left"
+                        >
                           {activity.number}
-                        </p>
+                        </button>
                         <p className="text-sm text-gray-500">
                           {safeFormatDate(activity.date, "MMM d, yyyy")}
                         </p>
@@ -323,7 +441,10 @@ const ClientDetail = () => {
 
                     <div className="text-right">
                       <p className="font-medium text-gray-800">
-                        ${activity.amount.toLocaleString()}
+                        ${(activity.amount || 0).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}
                       </p>
                       <span
                         className={`inline-block px-2 py-1 text-xs rounded-full ${getActivityStatusColor(
@@ -344,26 +465,42 @@ const ClientDetail = () => {
           <div className="bg-white rounded-lg shadow-card p-6 mb-6">
             <h2 className="text-lg font-medium text-gray-800 mb-4">Summary</h2>
 
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <p className="text-gray-600">Total Quotes</p>
-                <p className="font-medium">2</p>
+            {activitiesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="animate-pulse flex justify-between">
+                    <div className="h-4 bg-gray-200 rounded w-20"></div>
+                    <div className="h-4 bg-gray-200 rounded w-8"></div>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between">
-                <p className="text-gray-600">Total Orders</p>
-                <p className="font-medium">1</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="text-gray-600">Total Invoices</p>
-                <p className="font-medium">1</p>
-              </div>
-              <div className="pt-2 mt-2 border-t border-gray-200">
+            ) : (
+              <div className="space-y-3">
                 <div className="flex justify-between">
-                  <p className="text-gray-800 font-medium">Lifetime Value</p>
-                  <p className="font-bold text-primary-600">$8,500.00</p>
+                  <p className="text-gray-600">Total Quotes</p>
+                  <p className="font-medium">{clientSummary.totalQuotes}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Total Orders</p>
+                  <p className="font-medium">{clientSummary.totalOrders}</p>
+                </div>
+                <div className="flex justify-between">
+                  <p className="text-gray-600">Total Invoices</p>
+                  <p className="font-medium">{clientSummary.totalInvoices}</p>
+                </div>
+                <div className="pt-2 mt-2 border-t border-gray-200">
+                  <div className="flex justify-between">
+                    <p className="text-gray-800 font-medium">Lifetime Value</p>
+                    <p className="font-bold text-primary-600">
+                      ${clientSummary.lifetimeValue.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="bg-white rounded-lg shadow-card p-6">
@@ -372,33 +509,33 @@ const ClientDetail = () => {
             </h2>
 
             <div className="space-y-2">
-              <a
-                href="#"
+              <button
+                onClick={() => navigate(`/sales/quotes/create?clientId=${id}`)}
                 className="block w-full text-left px-4 py-2 bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 transition-colors"
               >
                 <div className="flex items-center">
                   <FileText size={18} className="mr-2" />
                   <span>Create New Quote</span>
                 </div>
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={() => navigate(`/sales/orders/create?clientId=${id}`)}
                 className="block w-full text-left px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition-colors"
               >
                 <div className="flex items-center">
                   <ClipboardList size={18} className="mr-2" />
                   <span>Create New Order</span>
                 </div>
-              </a>
-              <a
-                href="#"
+              </button>
+              <button
+                onClick={() => navigate(`/sales/invoices/create?clientId=${id}`)}
                 className="block w-full text-left px-4 py-2 bg-warning-50 text-warning-700 rounded-md hover:bg-warning-100 transition-colors"
               >
                 <div className="flex items-center">
                   <CreditCard size={18} className="mr-2" />
                   <span>Create New Invoice</span>
                 </div>
-              </a>
+              </button>
             </div>
           </div>
         </div>
