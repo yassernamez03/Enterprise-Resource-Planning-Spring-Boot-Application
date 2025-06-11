@@ -14,7 +14,7 @@ const ClientList = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
-    page: 0, // Spring uses 0-based indexing
+    page: 0,
     pageSize: 10,
     total: 0
   });
@@ -30,16 +30,26 @@ const ClientList = () => {
     clientName: ""
   });
 
+  const [allClients, setAllClients] = useState([]); // Store all clients
+  const [filteredClients, setFilteredClients] = useState([]); // Store filtered clients
+
   const fetchClients = async () => {
     try {
       setLoading(true);
-      const response = await clientService.getClients(pagination, filters);
+      // Remove search from API call for client-side filtering
+      const response = await clientService.getClients(pagination, {
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder
+      });
       
-      setClients(response.content || []);
+      setAllClients(response.content || []);
+      // Apply client-side filtering
+      applyFilters(response.content || []);
+      
       setPagination(prev => ({
         ...prev,
         total: response.totalElements || 0,
-        page: response.number || 0, // Using Spring's returned page number
+        page: response.number || 0,
         pageSize: response.size || 10
       }));
       
@@ -49,15 +59,39 @@ const ClientList = () => {
         error.message || "Failed to load clients", 
         "error"
       );
-      setClients([]);
+      setAllClients([]);
+      setFilteredClients([]);
     } finally {
       setLoading(false);
     }
   };
 
+  const applyFilters = (clientsData) => {
+    let filtered = clientsData;
+
+    // Apply search filter
+    if (filters.search) {
+      filtered = filtered.filter(client =>
+        client.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+        client.email.toLowerCase().includes(filters.search.toLowerCase()) ||
+        (client.phone && client.phone.toLowerCase().includes(filters.search.toLowerCase()))
+      );
+    }
+
+    setFilteredClients(filtered);
+    setClients(filtered);
+  };
+
   useEffect(() => {
     fetchClients();
   }, [pagination.page, pagination.pageSize, filters.sortBy, filters.sortOrder]);
+
+  // Separate effect for search - this handles client-side filtering
+  useEffect(() => {
+    if (allClients.length > 0) {
+      applyFilters(allClients);
+    }
+  }, [filters.search, allClients]);
 
   const handleSearch = (e) => {
     const search = e.target.value;
@@ -65,9 +99,6 @@ const ClientList = () => {
     
     // Reset to first page when searching
     setPagination(prev => ({ ...prev, page: 0 }));
-    
-    // Trigger fetch with updated search parameter
-    fetchClients();
   };
 
   const handleSearchDebounced = debounce(handleSearch, 500);

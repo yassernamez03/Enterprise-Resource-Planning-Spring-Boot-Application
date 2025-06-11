@@ -32,40 +32,83 @@ const ProductList = () => {
     productName: "",
   });
 
+  const [allProducts, setAllProducts] = useState([]); // Store all products
+  const [filteredProducts, setFilteredProducts] = useState([]); // Store filtered products
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await productService.getProducts(pagination, filters);
+      // Remove filters from API call temporarily
+      const response = await productService.getProducts(pagination, {
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+      });
 
-      // Data is now properly transformed in the service
-      setProducts(response.data);
+      setAllProducts(response.data);
+      // Apply client-side filtering
+      applyFilters(response.data);
+
       setPagination((prev) => ({
         ...prev,
         total: response.total,
-        page: response.page || pagination.page, // Use returned page if available
+        page: response.page || pagination.page,
         pageSize: response.pageSize || pagination.pageSize,
       }));
     } catch (error) {
       console.error("Error fetching products:", error);
       showNotification(error.message || "Failed to load products", "error");
-      setProducts([]); // Set empty array on error
+      setAllProducts([]);
+      setFilteredProducts([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const applyFilters = (products) => {
+    let filtered = products;
+
+    // Apply search filter
+    if (filters.search) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+          product.sku.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+
+    // Apply category filter
+    if (filters.category) {
+      filtered = filtered.filter(
+        (product) => product.category.name === filters.category
+      );
+    }
+
+    // Apply active filter
+    if (filters.active !== "") {
+      const isActive = filters.active === "true";
+      filtered = filtered.filter((product) => product.isActive === isActive);
+    }
+
+    setFilteredProducts(filtered);
+    setProducts(filtered);
   };
 
   useEffect(() => {
     fetchProducts();
   }, [pagination.page, pagination.pageSize, filters.sortBy, filters.sortOrder]);
 
+  // Separate effect for search and filters - this handles client-side filtering
+  useEffect(() => {
+    if (allProducts.length > 0) {
+      applyFilters(allProducts);
+    }
+  }, [filters.search, filters.category, filters.active, allProducts]);
+
   const handleSearch = (e) => {
     const search = e.target.value;
     setFilters((prev) => ({ ...prev, search }));
     // Reset to first page when searching
     setPagination((prev) => ({ ...prev, page: 0 }));
-
-    // Trigger fetch with updated search parameter
-    fetchProducts();
   };
 
   const handleSearchDebounced = debounce(handleSearch, 500);
@@ -76,8 +119,8 @@ const ProductList = () => {
     // Reset to first page when filtering
     setPagination((prev) => ({ ...prev, page: 0 }));
 
-    // Trigger fetch with updated filter
-    fetchProducts();
+    // Remove this line - let useEffect handle the filtering
+    // fetchProducts();
   };
 
   const handleSort = (field, direction) => {
