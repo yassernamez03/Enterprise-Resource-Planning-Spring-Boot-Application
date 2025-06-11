@@ -106,13 +106,15 @@ const productService = {
     const backendProduct = {
       name: productData.name,
       description: productData.description,
-      unitPrice: productData.price,
+      unitPrice: productData.unitPrice, // ✅ Use unitPrice directly from form
       sku: productData.sku,
       stock: productData.inStock,
       minStock: productData.minStock,
-      active: productData.isActive,
+      active: productData.active, // ✅ Use active directly from form
       category: productData.category?.name || productData.category
     };
+    
+    console.log("Updating product with data:", backendProduct); // Add logging
     
     return apiService.put(`${BASE_URL}/update/${id}`, backendProduct);
   },

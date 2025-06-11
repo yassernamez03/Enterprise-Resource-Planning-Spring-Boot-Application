@@ -60,7 +60,9 @@ const EditProduct = () => {
       navigate(`/sales/products/${product.id}`);
     } catch (error) {
       console.error("Error updating product:", error);
-      showNotification("Failed to update product", "error");
+      // Show more specific error message
+      const errorMessage = error.message || "Failed to update product";
+      showNotification(errorMessage, "error");
       setSaving(false);
     }
   };
