@@ -1,45 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { Bell, User, Search, Settings, LogOut, FileText } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Bell, User, Search, Settings, LogOut, FileText, Home } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext"; // Import the same auth context
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth(); // Get user data and logout function
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
-  // Generate breadcrumbs based on location
-  const getBreadcrumbs = () => {
-    const pathParts = location.pathname.split("/").filter(Boolean);
-    
-    const breadcrumbs = [{ title: "Home", path: "/" }];
-    
-    let currentPath = "";
-    pathParts.forEach((part, index) => {
-      currentPath += `/${part}`;
-      
-      // Get title based on path part
-      let title = part.charAt(0).toUpperCase() + part.slice(1);
-      
-      // Handle detail pages
-      if (!Number.isNaN(Number(part)) && index > 0) {
-        const parentPart = pathParts[index - 1];
-        // Remove trailing 's' from plural and capitalize
-        title = `${parentPart
-          .slice(0, -1)
-          .charAt(0)
-          .toUpperCase()}${parentPart.slice(1, -1)} ${part}`;
-      }
-      
-      breadcrumbs.push({
-        title,
-        path: currentPath
-      });
-    });
-    
-    return breadcrumbs;
-  };
 
   // Handle clicks outside the menu to close it
   useEffect(() => {
@@ -67,13 +36,22 @@ const Header = () => {
   const handleLogout = () => {
     logout();
   };
-  
-  const breadcrumbs = getBreadcrumbs();
+
+  const handleReturnHome = () => {
+    navigate('/');
+  };
   
   return (
     <header className="bg-white border-b border-gray-200 h-16 flex items-center px-4 sticky top-0 z-20 shadow-sm">
-
-
+      {/* Return Home Button */}
+      <button
+        onClick={handleReturnHome}
+        className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+        title="Return to Home"
+      >
+        <Home size={20} />
+        <span className="hidden sm:inline text-sm font-medium">Home</span>
+      </button>
 
       {/* CSS Animations */}
       <style>
