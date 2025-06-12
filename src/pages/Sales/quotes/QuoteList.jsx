@@ -136,13 +136,16 @@ const QuoteList = () => {
     setDeleteDialog({ open: false, quoteId: "", quoteNumber: "" });
   };
 
-  const handleDownloadPdf = async (id, quoteNumber) => {
+  const handleDownloadPdf = async (id, number) => {
     try {
-      const pdfBlob = await generateQuotePdf(id);
-      downloadPdf(pdfBlob, `Quote-${quoteNumber}.pdf`);
-    } catch (err) {
-      setError("Failed to generate PDF");
-      console.error(err);
+      setLoading(true);
+      const pdfBlob = await generateQuotePdf(id); // or generateOrderPdf/generateInvoicePdf
+      downloadPdf(pdfBlob, `Quote-${number}.pdf`);
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      setError('Failed to generate PDF. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 

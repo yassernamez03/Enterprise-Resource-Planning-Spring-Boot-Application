@@ -194,13 +194,16 @@ const InvoiceList = () => {
     setDeleteDialog({ open: false, invoiceId: "", invoiceNumber: "" })
   }
 
-  const handleDownloadPdf = async (id, invoiceNumber) => {
+  const handleDownloadPdf = async (id, number) => {
     try {
+      setLoading(true);
       const pdfBlob = await generateInvoicePdf(id)
-      downloadPdf(pdfBlob, `Invoice-${invoiceNumber}.pdf`)
-    } catch (err) {
-      setError("Failed to generate PDF")
-      console.error(err)
+      downloadPdf(pdfBlob, `Invoice-${number}.pdf`)
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      setError('Failed to generate PDF. Please try again.');
+    } finally {
+      setLoading(false);
     }
   }
 

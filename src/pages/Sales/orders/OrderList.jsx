@@ -130,13 +130,16 @@ const OrderList = () => {
     setDeleteDialog({ open: false, orderId: "", orderNumber: "" });
   };
 
-  const handleDownloadPdf = async (id, orderNumber) => {
+  const handleDownloadPdf = async (id, number) => {
     try {
+      setLoading(true);
       const pdfBlob = await generateOrderPdf(id);
-      downloadPdf(pdfBlob, `Order-${orderNumber}.pdf`);
-    } catch (err) {
-      setError("Failed to generate PDF");
-      console.error(err);
+      downloadPdf(pdfBlob, `Order-${number}.pdf`);
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      setError('Failed to generate PDF. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
