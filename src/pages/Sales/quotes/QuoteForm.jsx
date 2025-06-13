@@ -183,25 +183,58 @@ const QuoteForm = () => {
     }
   }, [id, isEditMode, reset]);
 
+  // Modify the useEffect that handles calculations
   useEffect(() => {
-    // Calculate totals when items change
-    let newSubtotal = 0;
+    // Calculate totals whenever items, discount, or tax change
+    if (watchItems?.length > 0) {
+      let newSubtotal = 0;
 
-    watchItems?.forEach((item) => {
-      newSubtotal += calculateItemTotal(item);
-    });
+      watchItems.forEach((item) => {
+        if (item.quantity && item.unitPrice) {
+          newSubtotal += calculateItemTotal(item);
+        }
+      });
 
-    setSubtotal(newSubtotal);
+      setSubtotal(newSubtotal);
 
-    const discountAmount = newSubtotal * (discount / 100);
-    const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
-    setTotal(newSubtotal - discountAmount + taxAmount);
+      const discountAmount = newSubtotal * (discount / 100);
+      const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
+      setTotal(newSubtotal - discountAmount + taxAmount);
+    }
   }, [watchItems, discount, tax]);
 
   const handleProductSelect = (index, productId) => {
     const product = products.find((p) => p.id.toString() === productId);
     if (product) {
-      setValue(`items.${index}.unitPrice`, product.price);
+      // Temporarily store the current values
+      const currentQuantity = watchItems?.[index]?.quantity || 1;
+
+      // Update the price with the product's price
+      setValue(`items.${index}.unitPrice`, product.price || 0);
+
+      // Ensure we update immediately by forcing the calculation
+      const updatedItem = {
+        ...watchItems[index],
+        productId,
+        unitPrice: product.price || 0,
+        quantity: currentQuantity,
+      };
+      const updatedItems = [...watchItems];
+      updatedItems[index] = updatedItem;
+
+      // Update the subtotal immediately
+      let newSubtotal = 0;
+      updatedItems.forEach((item) => {
+        if (item.quantity && item.unitPrice) {
+          newSubtotal += calculateItemTotal(item);
+        }
+      });
+
+      setSubtotal(newSubtotal);
+
+      const discountAmount = newSubtotal * (discount / 100);
+      const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
+      setTotal(newSubtotal - discountAmount + taxAmount);
     }
   };
 
@@ -480,9 +513,30 @@ const QuoteForm = () => {
                               type="number"
                               min="1"
                               {...field}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
+                              onChange={(e) => {
+                                const newValue = Number(e.target.value);
+                                field.onChange(newValue);
+
+                                // Update calculations immediately
+                                const updatedItems = [...watchItems];
+                                updatedItems[index] = {
+                                  ...updatedItems[index],
+                                  quantity: newValue,
+                                };
+
+                                // Recalculate totals
+                                let newSubtotal = 0;
+                                updatedItems.forEach((item) => {
+                                  if (item.quantity && item.unitPrice) {
+                                    newSubtotal += calculateItemTotal(item);
+                                  }
+                                });
+
+                                setSubtotal(newSubtotal);
+                                const discountAmount = newSubtotal * (discount / 100);
+                                const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
+                                setTotal(newSubtotal - discountAmount + taxAmount);
+                              }}
                               className={`w-full p-2 border rounded-md ${
                                 itemErrors?.quantity
                                   ? "border-red-500"
@@ -508,9 +562,30 @@ const QuoteForm = () => {
                               min="0"
                               step="0.01"
                               {...field}
-                              onChange={(e) =>
-                                field.onChange(Number(e.target.value))
-                              }
+                              onChange={(e) => {
+                                const newValue = Number(e.target.value);
+                                field.onChange(newValue);
+
+                                // Update calculations immediately
+                                const updatedItems = [...watchItems];
+                                updatedItems[index] = {
+                                  ...updatedItems[index],
+                                  unitPrice: newValue,
+                                };
+
+                                // Recalculate totals
+                                let newSubtotal = 0;
+                                updatedItems.forEach((item) => {
+                                  if (item.quantity && item.unitPrice) {
+                                    newSubtotal += calculateItemTotal(item);
+                                  }
+                                });
+
+                                setSubtotal(newSubtotal);
+                                const discountAmount = newSubtotal * (discount / 100);
+                                const taxAmount = (newSubtotal - discountAmount) * (tax / 100);
+                                setTotal(newSubtotal - discountAmount + taxAmount);
+                              }}
                               className={`w-full p-2 border rounded-md ${
                                 itemErrors?.unitPrice
                                   ? "border-red-500"
