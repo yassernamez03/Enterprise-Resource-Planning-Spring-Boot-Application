@@ -8,7 +8,8 @@ import {
   FileText,
   Download,
   DollarSign,
-  Trash2
+  Trash2,
+  Mail
 } from "lucide-react"
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
@@ -16,6 +17,7 @@ import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
 // Add hashids import
 import { encodeId } from "../../../utils/hashids";
+import { emailInvoicePdf } from "../../../services/Sales/emailService";
 
 // Map backend status enum values (uppercase) to frontend display values
 const statusLabels = {
@@ -210,6 +212,26 @@ const InvoiceList = () => {
     }
   }
 
+  const handleEmailInvoice = async (id, invoiceNumber) => {
+    try {
+      setLoading(true);
+      
+      // Generate PDF
+      const pdfBlob = await generateInvoicePdf(id);
+      
+      // Send email
+      const result = await emailInvoicePdf(id, pdfBlob);
+      
+      alert(`Invoice ${invoiceNumber} emailed successfully to ${result.sentTo}`);
+      
+    } catch (error) {
+      console.error('Failed to email invoice:', error);
+      setError('Failed to email invoice. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading)
     return <div className="flex justify-center p-8">Loading invoices...</div>
   if (error) return <div className="text-red-500 p-4">{error}</div>
@@ -394,6 +416,13 @@ const InvoiceList = () => {
                         title="Delete"
                       >
                         <Trash2 size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleEmailInvoice(invoice.id, invoice.invoiceNumber)}
+                        className="text-blue-600 hover:text-blue-900"
+                        title="Email Invoice"
+                      >
+                        <Mail size={18} />
                       </button>
                     </div>
                   </td>

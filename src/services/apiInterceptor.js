@@ -69,10 +69,27 @@ export const apiRequest = async (endpoint, options = {}) => {
 export const apiService = {
   get: (endpoint) => apiRequest(endpoint, { method: 'GET' }),
   
-  post: (endpoint, data) => apiRequest(endpoint, {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
+  post: (endpoint, data, options = {}) => {
+    // Check if this is a multipart request by looking at the data type
+    const isFormData = data instanceof FormData;
+    
+    if (isFormData) {
+      // For FormData, use the upload method
+      return apiRequest(endpoint, {
+        method: 'POST',
+        isMultipart: true,
+        body: data,
+        ...options
+      });
+    } else {
+      // For regular JSON data
+      return apiRequest(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        ...options
+      });
+    }
+  },
   
   put: (endpoint, data) => apiRequest(endpoint, {
     method: 'PUT',
@@ -86,13 +103,12 @@ export const apiService = {
   
   delete: (endpoint) => apiRequest(endpoint, { method: 'DELETE' }),
   
-  // Form data upload (for files)
+  // Form data upload (for files) - keeping this for backward compatibility
   upload: (endpoint, formData) => {
     return apiRequest(endpoint, {
       method: 'POST',
-      isMultipart: true, // Flag to indicate this is a multipart request
+      isMultipart: true,
       body: formData,
-      // Do NOT set Content-Type header here - browser will set it automatically with the boundary
     });
   },
 };

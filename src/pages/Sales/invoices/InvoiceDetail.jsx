@@ -11,6 +11,9 @@ import {
 import { ArrowLeft, DollarSign, Download, MailOpen } from "lucide-react";
 // Add hashids import
 import { decodeId, encodeId } from "../../../utils/hashids";
+import { emailInvoicePdf } from "../../../services/Sales/emailService";
+import EmailInvoiceModal from "../../../Components/Sales/EmailInvoiceModal";
+import Toast from "../../../Components/UI/Toast";
 
 // Map backend status enum values to frontend display values
 const statusLabels = {
@@ -37,6 +40,13 @@ const InvoiceDetail = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [actualId, setActualId] = useState(null); // Store the decoded integer ID
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [toastConfig, setToastConfig] = useState({
+    isVisible: false,
+    message: { title: "", description: "" },
+    type: "success",
+  });
 
   useEffect(() => {
     if (hashId) {
@@ -78,6 +88,49 @@ const InvoiceDetail = () => {
       console.error(err);
     }
   };
+
+  const handleEmailInvoice = async (customMessage = "") => {
+    if (!invoice || !actualId) return;
+
+    try {
+      setIsEmailLoading(true);
+
+      // Generate PDF blob
+      const pdfBlob = await generateInvoicePdf(actualId);
+
+      // Send email with PDF
+      const result = await emailInvoicePdf(actualId, pdfBlob, customMessage);
+
+      // Show enhanced success message
+      setToastConfig({
+        isVisible: true,
+        type: "success",
+        message: {
+          title: "Invoice Sent Successfully!",
+          description: `Invoice #${invoice.invoiceNumber} has been emailed to ${result.sentTo}. The client will receive it shortly with the PDF attachment.`,
+        },
+      });
+    } catch (err) {
+      console.error("Failed to email invoice:", err);
+
+      // Show error toast
+      setToastConfig({
+        isVisible: true,
+        type: "error",
+        message: {
+          title: "Email Failed",
+          description:
+            err.response?.data?.error ||
+            "Failed to send email. Please check your connection and try again.",
+        },
+      });
+
+      throw new Error(err.response?.data?.error || "Failed to send email");
+    } finally {
+      setIsEmailLoading(false);
+    }
+  };
+
   if (loading)
     return (
       <div className="flex justify-center p-8">Loading invoice details...</div>
@@ -164,9 +217,13 @@ const InvoiceDetail = () => {
             <Download size={18} className="mr-1" />
             Download PDF
           </button>
-          <button className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center">
+          <button
+            onClick={() => setIsEmailModalOpen(true)}
+            className="btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md flex items-center"
+            disabled={isEmailLoading}
+          >
             <MailOpen size={18} className="mr-1" />
-            Email Invoice
+            {isEmailLoading ? "Sending..." : "Email Invoice"}
           </button>
           {/* Payment Modal */}
           {isPaymentModalOpen && (
@@ -209,6 +266,13 @@ const InvoiceDetail = () => {
               </div>
             </div>
           )}
+          <EmailInvoiceModal
+            isOpen={isEmailModalOpen}
+            onClose={() => setIsEmailModalOpen(false)}
+            invoice={invoice}
+            onSendEmail={handleEmailInvoice}
+            isLoading={isEmailLoading}
+          />
         </div>
       </div>
 
@@ -390,6 +454,17 @@ const InvoiceDetail = () => {
           </div>
         </div>
       )}
+
+      {/* Toast Notification */}
+      <Toast
+        isVisible={toastConfig.isVisible}
+        message={toastConfig.message}
+        type={toastConfig.type}
+        onClose={() =>
+          setToastConfig((prev) => ({ ...prev, isVisible: false }))
+        }
+        duration={6000}
+      />
     </div>
   );
 };
