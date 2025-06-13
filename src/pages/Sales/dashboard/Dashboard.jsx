@@ -25,6 +25,9 @@ const Dashboard = () => {
     performance: null
   })
 
+  // Add current date state if needed
+  const [currentDate] = useState(new Date().toISOString().split('T')[0])
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       // Fetch sales summary
@@ -56,18 +59,19 @@ const Dashboard = () => {
       // Fetch sales performance
       try {
         setLoading(prev => ({ ...prev, performance: true }))
-        const performanceData = await getSalesPerformance('month')
+        const performanceData = await getSalesPerformance('month', currentDate) // Pass current date
         setSalesPerformance(performanceData)
         setError(prev => ({ ...prev, performance: null }))
       } catch (err) {
         console.error("Error fetching sales performance:", err)
-        setError(prev => ({ ...prev, performance: "Failed to load sales performance" }))      } finally {
+        setError(prev => ({ ...prev, performance: "Failed to load sales performance" }))
+      } finally {
         setLoading(prev => ({ ...prev, performance: false }))
       }
     }
 
     fetchDashboardData()
-  }, [])
+  }, [currentDate])
 
   const handleRefresh = () => {
     fetchDashboardData()

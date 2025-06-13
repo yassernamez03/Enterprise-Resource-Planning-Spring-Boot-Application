@@ -528,7 +528,7 @@ const ClientDetail = () => {
 
             <div className="space-y-2">
               <button
-                onClick={() => navigate(`/sales/quotes/create?clientId=${hashId}`)}
+                onClick={() => navigate(`/sales/quotes/new`)}
                 className="block w-full text-left px-4 py-2 bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 transition-colors"
               >
                 <div className="flex items-center">
@@ -537,21 +537,12 @@ const ClientDetail = () => {
                 </div>
               </button>
               <button
-                onClick={() => navigate(`/sales/orders/create?clientId=${hashId}`)}
+                onClick={() => navigate(`/sales/orders/new`)}
                 className="block w-full text-left px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition-colors"
               >
                 <div className="flex items-center">
                   <ClipboardList size={18} className="mr-2" />
                   <span>Create New Order</span>
-                </div>
-              </button>
-              <button
-                onClick={() => navigate(`/sales/invoices/create?clientId=${hashId}`)}
-                className="block w-full text-left px-4 py-2 bg-warning-50 text-warning-700 rounded-md hover:bg-warning-100 transition-colors"
-              >
-                <div className="flex items-center">
-                  <CreditCard size={18} className="mr-2" />
-                  <span>Create New Invoice</span>
                 </div>
               </button>
             </div>

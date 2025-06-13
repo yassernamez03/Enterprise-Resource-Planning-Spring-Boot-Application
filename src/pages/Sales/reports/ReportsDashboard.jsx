@@ -28,10 +28,20 @@ const COLORS = [
   "#EC4899"
 ]
 
-const ReportsDashboard = () => {  const [dateRange, setDateRange] = useState({
-    startDate: "2025-01-01",
-    endDate: "2025-12-31"
-  });
+const ReportsDashboard = () => {
+  // Get current date and set default date range to last 30 days
+  const getCurrentDateRange = () => {
+    const today = new Date()
+    const thirtyDaysAgo = new Date(today)
+    thirtyDaysAgo.setDate(today.getDate() - 30)
+    
+    return {
+      startDate: thirtyDaysAgo.toISOString().split('T')[0],
+      endDate: today.toISOString().split('T')[0]
+    }
+  }
+
+  const [dateRange, setDateRange] = useState(getCurrentDateRange())
   const [activeReport, setActiveReport] = useState("client-spending");
   const [clientData, setClientData] = useState([])
   const [revenueTrends, setRevenueTrends] = useState([])
