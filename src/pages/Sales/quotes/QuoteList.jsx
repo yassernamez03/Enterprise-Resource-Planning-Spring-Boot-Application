@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import quoteService from "../../../services/Sales/quoteService";
 import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService";
+import { encodeId } from "../../../utils/hashids";
 import {
   Search,
   Filter,
@@ -139,7 +140,7 @@ const QuoteList = () => {
   const handleDownloadPdf = async (id, number) => {
     try {
       setLoading(true);
-      const pdfBlob = await generateQuotePdf(id); // or generateOrderPdf/generateInvoicePdf
+      const pdfBlob = await generateQuotePdf(id); // Still uses integer ID for API call
       downloadPdf(pdfBlob, `Quote-${number}.pdf`);
     } catch (error) {
       console.error('Failed to generate PDF:', error);
@@ -243,7 +244,7 @@ const QuoteList = () => {
                 <tr key={quote.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link
-                      to={`/sales/quotes/${quote.id}`}
+                      to={`/sales/quotes/${encodeId(quote.id)}`}
                       className="text-blue-600 hover:text-blue-800 font-medium"
                     >
                       {quote.quoteNumber}
@@ -273,14 +274,14 @@ const QuoteList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
                       <Link
-                        to={`/sales/quotes/${quote.id}`}
+                        to={`/sales/quotes/${encodeId(quote.id)}`}
                         className="text-blue-600 hover:text-blue-900"
                         title="View"
                       >
                         <FileText size={18} />
                       </Link>
                       <Link
-                        to={`/sales/quotes/${quote.id}/edit`}
+                        to={`/sales/quotes/${encodeId(quote.id)}/edit`}
                         className="text-amber-600 hover:text-amber-900"
                         title="Edit"
                       >

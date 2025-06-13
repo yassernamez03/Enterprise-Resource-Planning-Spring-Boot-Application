@@ -7,6 +7,7 @@ import {
   deleteQuote
 } from "../../../services/Sales/quoteService";
 import { generateQuotePdf, downloadPdf } from "../../../services/Sales/pdfService";
+import { decodeId, encodeId } from "../../../utils/hashids";
 import {
   ArrowLeft,
   ClipboardEdit,
@@ -38,7 +39,7 @@ const statusColors = {
 };
 
 const QuoteDetail = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
 
   const [quote, setQuote] = useState(null);
@@ -48,19 +49,30 @@ const QuoteDetail = () => {
   const [isConverting, setIsConverting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   const { error: deleteError, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
 
   useEffect(() => {
-    if (id) {
-      fetchQuote(id);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        setError("Invalid quote ID");
+        setLoading(false);
+        return;
+      }
+      
+      setActualId(decodedId);
+      fetchQuote(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id]);
+  }, [hashId]);
 
   const fetchQuote = async (quoteId) => {
     try {
       setLoading(true);
-      const data = await getQuote(quoteId);
+      const data = await getQuote(quoteId); // API still expects integer ID
       setQuote(data);
     } catch (err) {
       setError(
@@ -73,11 +85,11 @@ const QuoteDetail = () => {
   };
 
   const handleStatusChange = async (status) => {
-    if (!quote || !id) return;
+    if (!quote || !actualId) return;
 
     try {
       setStatusLoading(status);
-      const updatedQuote = await updateQuote(id, { status });
+      const updatedQuote = await updateQuote(actualId, { status }); // Use integer ID for API
       setQuote(updatedQuote);
     } catch (error) {
       console.error("Status update error:", error);
@@ -88,74 +100,56 @@ const QuoteDetail = () => {
   };
 
   const handleConvertToOrder = async () => {
-    if (!quote || !id) return;
+    if (!quote || !actualId) return;
 
     try {
       setIsConverting(true);
-      const result = await convertQuoteToOrder(id);
+      const result = await convertQuoteToOrder(actualId); // Use integer ID for API
 
       if (!result || !result.orderId) {
         throw new Error("No order ID returned from conversion");
       }
 
-      navigate(`/sales/orders/${result.orderId}`);
-    } catch (err) {
-      console.error("Error converting quote to order:", err);
-      setError(
-        `Failed to convert quote to order: ${err.response?.data?.message || err.message || "Unknown error"}`
-      );
-      setShowConfirmation(false);
+      // Navigate to the new order using encoded ID
+      navigate(`/sales/orders/${encodeId(result.orderId)}`);
+    } catch (error) {
+      console.error("Conversion error:", error);
+      setError(error.response?.data?.message || error.message || "Failed to convert quote to order");
     } finally {
       setIsConverting(false);
     }
   };
 
-  const handleDownloadPdf = async () => {
-    if (!quote || !id) return;
+  const handleDelete = async () => {
+    if (!actualId) return;
 
     try {
-      const pdfBlob = await generateQuotePdf(id);
-      downloadPdf(pdfBlob, `Quote-${quote.quoteNumber}.pdf`);
+      await deleteQuote(actualId); // Use integer ID for API
+      navigate('/sales/quotes');
     } catch (err) {
-      setError(`Failed to generate PDF: ${err.message || "Unknown error"}`);
-      console.error(err);
-    }
-  };
-
-  const handleDeleteConfirm = async () => {
-    console.log("QUOTE DETAIL DELETE STARTED");
-    
-    try {
-      await deleteQuote(quote.id);
-      showNotification(`Quote ${quote.quoteNumber} deleted successfully`, "success");
-      navigate("/sales/quotes");
-    } catch (error) {
-      console.log("QUOTE DETAIL DELETE FAILED:", error);
-      handleDeleteError(error, 'Quote', quote.quoteNumber);
+      handleDeleteError(err, 'Quote', quote?.quoteNumber || '');
     } finally {
       setDeleteDialogOpen(false);
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex justify-center p-8">Loading quote details...</div>
-    );
-  if (error)
-    return (
-      <div className="p-4 mb-4 bg-red-50 border-l-4 border-red-500">
-        <div className="flex items-center">
-          <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
-          <p className="text-red-700">{error}</p>
-        </div>
-        <button
-          onClick={() => setError(null)}
-          className="mt-2 text-red-700 hover:text-red-900 underline text-sm"
-        >
-          Dismiss
-        </button>
-      </div>
-    );
+  const handleDownloadPdf = async () => {
+    if (!actualId || !quote) return;
+
+    try {
+      setLoading(true);
+      const pdfBlob = await generateQuotePdf(actualId); // Use integer ID for API
+      downloadPdf(pdfBlob, `Quote-${quote.quoteNumber}.pdf`);
+    } catch (error) {
+      console.error('Failed to generate PDF:', error);
+      setError('Failed to generate PDF. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div className="flex justify-center p-8">Loading quote...</div>;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
   if (!quote) return <div className="text-red-500 p-4">Quote not found</div>;
 
   // Handle status case sensitivity between backend enum and frontend display
@@ -429,7 +423,6 @@ const QuoteDetail = () => {
         )}
       </div>
 
-      {/* Add the error notification component */}
       <ErrorNotification
         error={deleteError}
         onClose={hideError}

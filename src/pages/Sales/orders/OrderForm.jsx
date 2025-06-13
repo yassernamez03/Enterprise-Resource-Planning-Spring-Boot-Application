@@ -274,17 +274,19 @@ const OrderForm = () => {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">
-          {isEditMode ? "Edit Order" : "Create New Order"}
-        </h1>
-        <button
-          onClick={() => navigate("/sales/orders")}
-          className="text-gray-600 hover:text-gray-800 flex items-center"
-        >
-          <ArrowLeft size={18} className="mr-1" /> Back to Orders
-        </button>
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate("/sales/orders")}
+            className="mr-4 p-2 text-gray-500 hover:text-gray-700"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-2xl font-semibold text-gray-800">
+            {isEditing ? "Edit Order" : "Create New Order"}
+          </h1>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
