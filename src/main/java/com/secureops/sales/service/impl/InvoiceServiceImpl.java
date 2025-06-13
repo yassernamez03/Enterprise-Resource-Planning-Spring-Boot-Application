@@ -168,14 +168,22 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     private InvoiceResponse convertToResponse(Invoice invoice) {
+        if (invoice == null) {
+            return null;
+        }
+        
         return InvoiceResponse.builder()
                 .id(invoice.getId())
                 .invoiceNumber(invoice.getInvoiceNumber())
                 .createdDate(invoice.getCreatedDate())
-                .clientId(invoice.getClient().getId())
-                .clientName(invoice.getClient().getName())
-                .orderId(invoice.getOrder().getId())
-                .orderNumber(invoice.getOrder().getOrderNumber())
+                .clientId(invoice.getOrder() != null && invoice.getOrder().getClient() != null ? 
+                         invoice.getOrder().getClient().getId() : null)
+                .clientName(invoice.getOrder() != null && invoice.getOrder().getClient() != null ? 
+                           invoice.getOrder().getClient().getName() : "Unknown Client")
+                .clientEmail(invoice.getOrder() != null && invoice.getOrder().getClient() != null ? 
+                            invoice.getOrder().getClient().getEmail() : null)
+                .orderId(invoice.getOrder() != null ? invoice.getOrder().getId() : null)
+                .orderNumber(invoice.getOrder() != null ? invoice.getOrder().getOrderNumber() : null)
                 .totalAmount(invoice.getTotalAmount())
                 .status(invoice.getStatus())
                 .paymentDueDate(invoice.getPaymentDueDate())

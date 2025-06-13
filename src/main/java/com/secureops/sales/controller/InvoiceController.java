@@ -6,6 +6,7 @@ import com.secureops.sales.entity.InvoiceStatus;
 import com.secureops.sales.service.InvoiceService;
 import com.secureops.service.LogService;
 import com.secureops.service.UserService;
+import com.secureops.service.EmailService;
 import com.secureops.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sales/invoices")
@@ -34,6 +37,9 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
     private final LogService logService;
     private final UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     public InvoiceController(InvoiceService invoiceService, LogService logService, UserService userService) {
@@ -596,6 +602,123 @@ public class InvoiceController {
         }
     }
     
+    @PostMapping("/{id}/email")
+    public ResponseEntity<?> emailInvoice(
+            @PathVariable Long id,
+            @RequestParam("pdfFile") MultipartFile pdfFile,
+            @RequestParam(value = "message", required = false) String customMessage) {
+        
+        String clientIp = getClientIpSafely();
+        Long currentUserId = getCurrentUserIdSafely();
+        String currentUsername = getCurrentUsernameSafely();
+        
+        logger.info("Invoice email request - invoiceId: {}, userId: {}, username: {}, ip: {}", 
+                id, currentUserId, currentUsername, clientIp);
+        
+        try {
+            // Validate input parameters
+            if (id == null || id <= 0) {
+                logger.warn("Invalid invoice ID parameter: {} - userId: {}, ip: {}", 
+                        id, currentUserId, clientIp);
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Invalid invoice ID"));
+            }
+            
+            if (pdfFile == null || pdfFile.isEmpty()) {
+                logger.warn("PDF file is missing or empty for invoice: {} - userId: {}, ip: {}", 
+                        id, currentUserId, clientIp);
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "PDF file is required"));
+            }
+            
+            // Get invoice response from service
+            InvoiceResponse invoiceResponse = invoiceService.getInvoiceById(id);
+            if (invoiceResponse == null) {
+                logger.warn("Invoice not found: {} - userId: {}, ip: {}", 
+                        id, currentUserId, clientIp);
+                return ResponseEntity.notFound().build();
+            }
+            
+            // Debug logging for troubleshooting
+            logger.debug("Invoice found - ID: {}, Number: {}, ClientName: {}, ClientEmail: {}", 
+                    invoiceResponse.getId(), invoiceResponse.getInvoiceNumber(), 
+                    invoiceResponse.getClientName(), invoiceResponse.getClientEmail());
+            
+            // Get client email from the response
+            String clientEmail = invoiceResponse.getClientEmail();
+            if (clientEmail == null || clientEmail.trim().isEmpty()) {
+                logger.warn("Client email not found for invoice: {} - ClientId: {}, ClientName: {}, userId: {}, ip: {}", 
+                        id, invoiceResponse.getClientId(), invoiceResponse.getClientName(), currentUserId, clientIp);
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Client email not found. Please ensure the client has a valid email address."));
+            }
+            
+            // Validate email format
+            if (!isValidEmail(clientEmail)) {
+                logger.warn("Invalid client email format for invoice: {} - Email: {}, userId: {}, ip: {}", 
+                        id, clientEmail, currentUserId, clientIp);
+                return ResponseEntity.badRequest()
+                    .body(Map.of("error", "Client email format is invalid"));
+            }
+            
+            // Convert PDF to byte array
+            byte[] pdfContent = pdfFile.getBytes();
+            
+            // Format total amount
+            String formattedTotal = String.format("$%.2f", invoiceResponse.getTotalAmount());
+            
+            // Send email
+            emailService.sendInvoiceEmail(
+                clientEmail,
+                invoiceResponse.getClientName(),
+                invoiceResponse.getInvoiceNumber(),
+                formattedTotal,
+                pdfContent
+            );
+            
+            logger.info("Invoice email sent successfully - invoiceId: {}, clientEmail: {}, userId: {}, ip: {}", 
+                    id, maskEmail(clientEmail), currentUserId, clientIp);
+            
+            logService.createLog(
+                    AppConstants.LOG_ACTION_UPDATE,
+                    "Emailed invoice - ID: " + id + ", Number: " + invoiceResponse.getInvoiceNumber() + ", To: " + maskEmail(clientEmail),
+                    clientIp,
+                    AppConstants.LOG_TYPE_USER,
+                    currentUserId);
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Invoice emailed successfully",
+                "sentTo", clientEmail
+            ));
+            
+        } catch (Exception e) {
+            logger.error("Failed to email invoice {} - userId: {}, username: {}, ip: {}", 
+                    id, currentUserId, currentUsername, clientIp, e);
+            
+            logService.createLog(
+                    AppConstants.LOG_ACTION_UPDATE,
+                    "Failed to email invoice " + id + ": " + e.getMessage(),
+                    clientIp,
+                    AppConstants.LOG_TYPE_ERROR,
+                    currentUserId);
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to send email: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/test-email")
+    public ResponseEntity<?> testEmailConfiguration(@RequestParam String toEmail) {
+        try {
+            emailService.sendTestEmail(toEmail);
+            return ResponseEntity.ok(Map.of("message", "Test email sent successfully to " + toEmail));
+        } catch (Exception e) {
+            logger.error("Test email failed", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Test email failed: " + e.getMessage()));
+        }
+    }
+
     // Security and utility helper methods
     
     private Long getCurrentUserIdSafely() {
@@ -753,5 +876,22 @@ public class InvoiceController {
         return input.replaceAll("[\r\n\t]", "_")
                    .replaceAll("[<>\"'&]", "*")
                    .substring(0, Math.min(input.length(), 100));
+    }
+    
+    private boolean isValidEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    }
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return "invalid-email";
+        }
+        String[] parts = email.split("@");
+        String username = parts[0];
+        String domain = parts[1];
+        return username.charAt(0) + "***@" + domain.charAt(0) + "***." + domain.substring(domain.lastIndexOf('.') + 1);
     }
 }

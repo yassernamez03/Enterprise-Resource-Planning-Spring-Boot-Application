@@ -19,6 +19,7 @@ public class InvoiceResponse {
     private LocalDateTime createdDate;
     private Long clientId;
     private String clientName;
+    private String clientEmail;
     private Long orderId;
     private String orderNumber;
     private BigDecimal totalAmount;
