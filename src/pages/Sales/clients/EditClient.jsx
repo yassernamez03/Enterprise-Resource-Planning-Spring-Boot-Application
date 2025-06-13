@@ -4,60 +4,55 @@ import { ArrowLeft } from "lucide-react"
 import ClientForm from "./components/ClientForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { clientService } from "../../../services/Sales/clientService";
-
-// Mock client for development
-const MOCK_CLIENT = {
-  id: 1,
-  name: "Acme Corporation",
-  email: "contact@acme.com",
-  phone: "+1 (555) 123-4567",
-  address: "123 Main St, Suite 101",
-  city: "San Francisco",
-  state: "CA",
-  zipCode: "94105",
-  country: "United States",
-  taxId: "US1234567890",
-  notes: "Major technology client with multiple divisions",
-  createdAt: "2023-01-15T08:30:00.000Z",
-  updatedAt: "2023-05-20T14:45:00.000Z"
-}
+import { decodeId } from "../../../utils/hashids";
 
 const EditClient = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
 
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   useEffect(() => {
-    const fetchClient = async () => {
-      try {
-        setLoading(true);
-        const data = await clientService.getClient(id);
-        setClient(data);
-      } catch (error) {
-        console.error("Error fetching client:", error);
-        showNotification("Failed to load client details", "error");
-      } finally {
-        setLoading(false);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        showNotification("Invalid client ID", "error");
+        navigate("/sales/clients");
+        return;
       }
-    };
-
-    if (id) {
-      fetchClient();
+      
+      setActualId(decodedId);
+      fetchClient(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id]);
+  }, [hashId, navigate, showNotification]);
+
+  const fetchClient = async (clientId) => {
+    try {
+      setLoading(true);
+      const data = await clientService.getClient(clientId); // API uses integer ID
+      setClient(data);
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      showNotification("Failed to load client details", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async data => {
-    if (!client) return;
+    if (!client || !actualId) return;
 
     try {
       setSaving(true);
-      await clientService.updateClient(client.id, data);
+      await clientService.updateClient(actualId, data); // Use integer ID for API
       showNotification("Client updated successfully", "success");
-      navigate(`/sales/clients/${client.id}`);
+      navigate(`/sales/clients/${hashId}`); // Use the original hash for navigation
     } catch (error) {
       console.error("Error updating client:", error);
       showNotification(error.message || "Failed to update client", "error");
@@ -66,7 +61,7 @@ const EditClient = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/sales/clients/${client?.id || ""}`)
+    navigate(`/sales/clients/${hashId}`) // Use the original hash for navigation
   }
 
   if (loading) {

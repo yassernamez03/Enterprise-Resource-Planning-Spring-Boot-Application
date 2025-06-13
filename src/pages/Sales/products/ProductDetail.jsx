@@ -20,6 +20,8 @@ import { productService } from "../../../services/Sales/productService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { decodeId, encodeId } from "../../../utils/hashids";
 
 const safeFormatDate = (dateString, formatStr) => {
   if (!dateString) return "N/A";
@@ -32,7 +34,7 @@ const safeFormatDate = (dateString, formatStr) => {
 }
 
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
   const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
@@ -48,46 +50,57 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [salesLoading, setSalesLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   useEffect(() => {
-    const fetchProductData = async () => {
-      try {
-        setLoading(true);
-        setSalesLoading(true);
-        
-        // Fetch product details
-        const productData = await productService.getProduct(id);
-        setProduct(productData);
-        
-        // Fetch sales history and summary in parallel
-        const [historyData, summaryData] = await Promise.all([
-          productService.getProductSalesHistory(id, 10),
-          productService.getProductSalesSummary(id)
-        ]);
-        
-        setSalesHistory(historyData);
-        setSalesSummary(summaryData);
-        
-      } catch (error) {
-        console.error("Error fetching product data:", error);
-        showNotification("Failed to load product details", "error");
-      } finally {
-        setLoading(false);
-        setSalesLoading(false);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        showNotification("Invalid product ID", "error");
+        navigate("/sales/products");
+        return;
       }
-    };
-
-    if (id) {
-      fetchProductData();
+      
+      setActualId(decodedId);
+      fetchProductData(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id, showNotification]);
+  }, [hashId, navigate, showNotification]);
+
+  const fetchProductData = async (productId) => {
+    try {
+      setLoading(true);
+      setSalesLoading(true);
+      
+      // Fetch product details using integer ID
+      const productData = await productService.getProduct(productId);
+      setProduct(productData);
+      
+      // Fetch sales history and summary in parallel using integer ID
+      const [historyData, summaryData] = await Promise.all([
+        productService.getProductSalesHistory(productId, 10),
+        productService.getProductSalesSummary(productId)
+      ]);
+      
+      setSalesHistory(historyData);
+      setSalesSummary(summaryData);
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+      showNotification("Failed to load product details", "error");
+    } finally {
+      setLoading(false);
+      setSalesLoading(false);
+    }
+  };
 
   const handleBack = () => {
     navigate("/sales/products")
   }
 
   const handleEdit = () => {
-    navigate(`/sales/products/${id}/edit`)
+    navigate(`/sales/products/${hashId}/edit`) // Use the original hash in the edit link
   }
 
   const handleDeletePrompt = () => {
@@ -95,8 +108,10 @@ const ProductDetail = () => {
   }
 
   const handleDeleteConfirm = async () => {
+    if (!actualId) return;
+
     try {
-      await productService.deleteProduct(product.id);
+      await productService.deleteProduct(actualId); // Use integer ID for API
       showNotification(`Product ${product.name} deleted successfully`, "success");
       navigate("/sales/products");
     } catch (error) {
@@ -124,15 +139,15 @@ const ProductDetail = () => {
   }
 
   const handleCreateQuote = () => {
-    navigate(`/sales/quotes/create?productId=${id}`);
+    navigate(`/sales/quotes/create?productId=${hashId}`); // Use hash for consistency
   }
 
   const handleCreateOrder = () => {
-    navigate(`/sales/orders/create?productId=${id}`);
+    navigate(`/sales/orders/create?productId=${hashId}`); // Use hash for consistency
   }
 
   const handleUpdatePrice = () => {
-    navigate(`/sales/products/${id}/edit`);
+    navigate(`/sales/products/${hashId}/edit`); // Use hash for consistency
   }
 
   const margin = calculateMargin()
@@ -201,7 +216,7 @@ const ProductDetail = () => {
             {product.isActive ? "Active" : "Inactive"}
           </span>
           <span className="text-gray-600">
-            Category: {product.category.name}
+            Category: {product.category.name} • Product ID: {hashId}
           </span>
         </div>
 
@@ -355,7 +370,7 @@ const ProductDetail = () => {
                 Sales History
               </h2>
               <button
-                onClick={() => navigate(`/sales/orders?productId=${id}`)}
+                onClick={() => navigate(`/sales/orders?productId=${hashId}`)} // Use hash for consistency
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
                 View All Orders
@@ -499,7 +514,7 @@ const ProductDetail = () => {
                 </div>
               </button>
               <button
-                onClick={() => navigate(`/sales/products/${id}/edit`)}
+                onClick={() => navigate(`/sales/products/${hashId}/edit`)}
                 className="block w-full text-left px-4 py-2 bg-secondary-50 text-secondary-700 rounded-md hover:bg-secondary-100 transition-colors"
               >
                 <div className="flex items-center">

@@ -9,6 +9,8 @@ import { clientService } from "../../../services/Sales/clientService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { encodeId } from "../../../utils/hashids";
 
 const ClientList = () => {
   const navigate = useNavigate();
@@ -34,20 +36,18 @@ const ClientList = () => {
     clientName: ""
   });
 
-  const [allClients, setAllClients] = useState([]); // Store all clients
-  const [filteredClients, setFilteredClients] = useState([]); // Store filtered clients
+  const [allClients, setAllClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
 
   const fetchClients = async () => {
     try {
       setLoading(true);
-      // Remove search from API call for client-side filtering
       const response = await clientService.getClients(pagination, {
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder
       });
       
       setAllClients(response.content || []);
-      // Apply client-side filtering
       applyFilters(response.content || []);
       
       setPagination(prev => ({
@@ -73,7 +73,6 @@ const ClientList = () => {
   const applyFilters = (clientsData) => {
     let filtered = clientsData;
 
-    // Apply search filter
     if (filters.search) {
       filtered = filtered.filter(client =>
         client.name.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -90,7 +89,6 @@ const ClientList = () => {
     fetchClients();
   }, [pagination.page, pagination.pageSize, filters.sortBy, filters.sortOrder]);
 
-  // Separate effect for search - this handles client-side filtering
   useEffect(() => {
     if (allClients.length > 0) {
       applyFilters(allClients);
@@ -100,8 +98,6 @@ const ClientList = () => {
   const handleSearch = (e) => {
     const search = e.target.value;
     setFilters(prev => ({ ...prev, search }));
-    
-    // Reset to first page when searching
     setPagination(prev => ({ ...prev, page: 0 }));
   };
 
@@ -111,9 +107,7 @@ const ClientList = () => {
     setFilters(prev => ({ ...prev, sortBy: field, sortOrder: direction }));
   };
 
-  // Fixed handlePageChange function - convert from 1-based to 0-based for Spring
   const handlePageChange = (page) => {
-    // Adjust page to 0-based for Spring
     setPagination(prev => ({ ...prev, page: page - 1 }));
   };
 
@@ -122,17 +116,19 @@ const ClientList = () => {
   };
 
   const handleViewClient = (id) => {
-    navigate(`/sales/clients/${id}`);
+    // Use encoded ID for navigation
+    navigate(`/sales/clients/${encodeId(id)}`);
   };
 
   const handleEditClient = (id) => {
-    navigate(`/sales/clients/${id}/edit`);
+    // Use encoded ID for navigation
+    navigate(`/sales/clients/${encodeId(id)}/edit`);
   };
 
   const handleDeletePrompt = (client) => {
     setDeleteDialog({
       open: true,
-      clientId: client.id,
+      clientId: client.id, // Keep integer ID for API call
       clientName: client.name
     });
   };
@@ -141,7 +137,7 @@ const ClientList = () => {
     console.log("CLIENT DELETE STARTED");
     
     try {
-      await clientService.deleteClient(deleteDialog.clientId);
+      await clientService.deleteClient(deleteDialog.clientId); // Use integer ID for API
       fetchClients();
       showNotification(
         `Client ${deleteDialog.clientName} deleted successfully`,
@@ -213,9 +209,9 @@ const ClientList = () => {
         data={clients}
         columns={clientColumns}
         total={pagination.total}
-        currentPage={pagination.page + 1} // Convert 0-based to 1-based for display
+        currentPage={pagination.page + 1}
         pageSize={pagination.pageSize}
-        onPageChange={handlePageChange} // This receives 1-based index from DataTable
+        onPageChange={handlePageChange}
         onSort={handleSort}
         loading={loading}
         emptyMessage="No clients found"
@@ -268,7 +264,6 @@ const ClientList = () => {
         type="danger"
       />
 
-      {/* Add the error notification component */}
       <ErrorNotification
         error={error}
         onClose={hideError}

@@ -16,6 +16,8 @@ import {
   Ban,
   AlertTriangle
 } from "lucide-react";
+// Add hashids import
+import { decodeId, encodeId } from "../../../utils/hashids";
 
 const statusLabels = {
   PENDING: "Pending",
@@ -34,13 +36,14 @@ const statusColors = {
 };
 
 const OrderDetail = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [statusLoading, setStatusLoading] = useState(null);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
   
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogConfig, setDialogConfig] = useState({
@@ -53,15 +56,25 @@ const OrderDetail = () => {
   });
 
   useEffect(() => {
-    if (id) {
-      fetchOrder(id);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        setError("Invalid order ID");
+        setLoading(false);
+        return;
+      }
+      
+      setActualId(decodedId);
+      fetchOrder(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id]);
+  }, [hashId]);
 
   const fetchOrder = async (orderId) => {
     try {
       setLoading(true);
-      const data = await getOrder(orderId);
+      const data = await getOrder(orderId); // API uses integer ID
       setOrder(data);
     } catch (err) {
       setError("Failed to fetch order details: " + (err.message || "Unknown error"));
@@ -106,11 +119,11 @@ const OrderDetail = () => {
   };
 
   const handleStatusChange = async (status) => {
-    if (!order || !id) return;
+    if (!order || !actualId) return;
 
     try {
       setStatusLoading(status);
-      const updatedOrder = await updateOrder(id, { status });
+      const updatedOrder = await updateOrder(actualId, { status }); // Use integer ID for API
       setOrder(updatedOrder);
     } catch (err) {
       setError("Failed to update order status: " + (err.message || "Unknown error"));
@@ -122,12 +135,14 @@ const OrderDetail = () => {
   };
 
   const handleGenerateInvoice = async () => {
-    if (!order || !id) return;
+    if (!order || !actualId) return;
 
     try {
       setLoading(true);
-      const result = await createInvoiceFromOrder(id);
-      navigate(`/sales/invoices/${result.invoiceId}`);
+      const result = await createInvoiceFromOrder(actualId); // Use integer ID for API
+      
+      // Navigate to the new invoice using encoded ID
+      navigate(`/sales/invoices/${encodeId(result.invoiceId)}`);
     } catch (err) {
       setError("Failed to generate invoice: " + (err.message || "Unknown error"));
       console.error(err);
@@ -137,10 +152,10 @@ const OrderDetail = () => {
   };
 
   const handleDownloadPdf = async () => {
-    if (!order || !id) return;
+    if (!order || !actualId) return;
 
     try {
-      const pdfBlob = await generateOrderPdf(id);
+      const pdfBlob = await generateOrderPdf(actualId); // Use integer ID for API
       downloadPdf(pdfBlob, `Order-${order.orderNumber || 'order'}.pdf`);
     } catch (err) {
       setError("Failed to generate PDF: " + (err.message || "Unknown error"));
@@ -283,7 +298,7 @@ const OrderDetail = () => {
         <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
           {isEditable && (
             <Link
-              to={`/sales/orders/${order.id}/edit`}
+              to={`/sales/orders/${hashId}/edit`} // Use the original hash in the edit link
               className="btn bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded-md flex items-center"
             >
               <ClipboardEdit size={18} className="mr-1" />

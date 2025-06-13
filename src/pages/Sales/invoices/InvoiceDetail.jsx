@@ -9,6 +9,8 @@ import {
   downloadPdf,
 } from "../../../services/Sales/pdfService";
 import { ArrowLeft, DollarSign, Download, MailOpen } from "lucide-react";
+// Add hashids import
+import { decodeId, encodeId } from "../../../utils/hashids";
 
 // Map backend status enum values to frontend display values
 const statusLabels = {
@@ -27,24 +29,35 @@ const statusColors = {
 };
 
 const InvoiceDetail = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("CREDIT_CARD");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   useEffect(() => {
-    if (id) {
-      fetchInvoice(id);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+
+      if (!decodedId) {
+        setError("Invalid invoice ID");
+        setLoading(false);
+        return;
+      }
+
+      setActualId(decodedId);
+      fetchInvoice(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id]);
+  }, [hashId]);
 
   const fetchInvoice = async (invoiceId) => {
     try {
       setLoading(true);
-      const data = await getInvoice(invoiceId);
+      const data = await getInvoice(invoiceId); // API uses integer ID
       setInvoice(data);
     } catch (err) {
       setError("Failed to fetch invoice details");
@@ -55,10 +68,10 @@ const InvoiceDetail = () => {
   };
 
   const handleDownloadPdf = async () => {
-    if (!invoice || !id) return;
+    if (!invoice || !actualId) return;
 
     try {
-      const pdfBlob = await generateInvoicePdf(id);
+      const pdfBlob = await generateInvoicePdf(actualId); // Use integer ID for API
       downloadPdf(pdfBlob, `Invoice-${invoice.invoiceNumber}.pdf`);
     } catch (err) {
       setError("Failed to generate PDF");
@@ -79,13 +92,13 @@ const InvoiceDetail = () => {
     new Date(invoice.dueDate) < new Date() && invoice.status !== "paid";
 
   const handleRecordPayment = async () => {
-    if (!paymentMethod) return;
+    if (!paymentMethod || !actualId) return;
 
     try {
       setIsSubmitting(true);
-      await recordPayment(invoice.id, paymentMethod);
+      await recordPayment(actualId, paymentMethod); // Use integer ID for API
       // Refetch invoice to get updated status
-      await fetchInvoice(invoice.id);
+      await fetchInvoice(actualId);
       setIsPaymentModalOpen(false);
     } catch (err) {
       setError("Failed to record payment");
@@ -238,7 +251,7 @@ const InvoiceDetail = () => {
             Related Order
           </h3>
           <Link
-            to={`/sales/orders/${invoice.orderId}`}
+            to={`/sales/orders/${encodeId(invoice.orderId)}`}
             className="font-medium text-blue-600 hover:text-blue-800"
           >
             Order #{invoice.orderNumber}

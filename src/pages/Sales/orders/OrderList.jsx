@@ -16,6 +16,8 @@ import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { encodeId } from "../../../utils/hashids";
 
 const statusLabels = {
   IN_PROCESS: "In Process",
@@ -48,6 +50,7 @@ const OrderList = () => {
     pageSize: 10,
     total: 0
   });
+
   useEffect(() => {
     fetchOrders();
   }, [pagination.page, pagination.pageSize]);
@@ -77,6 +80,7 @@ const OrderList = () => {
       setLoading(false);
     }
   };
+
   const filterOrders = () => {
     let filtered = [...orders];
 
@@ -106,7 +110,7 @@ const OrderList = () => {
   const handleDeletePrompt = (id, orderNumber) => {
     setDeleteDialog({
       open: true,
-      orderId: id,
+      orderId: id, // Keep integer ID for API call
       orderNumber: orderNumber
     });
   };
@@ -115,7 +119,7 @@ const OrderList = () => {
     console.log("ORDER DELETE STARTED for:", deleteDialog.orderNumber);
     
     try {
-      await deleteOrder(deleteDialog.orderId);
+      await deleteOrder(deleteDialog.orderId); // Use integer ID for API
       setOrders(orders.filter(order => order.id !== deleteDialog.orderId));
       setError(null);
     } catch (err) {
@@ -133,7 +137,7 @@ const OrderList = () => {
   const handleDownloadPdf = async (id, number) => {
     try {
       setLoading(true);
-      const pdfBlob = await generateOrderPdf(id);
+      const pdfBlob = await generateOrderPdf(id); // Still uses integer ID for API call
       downloadPdf(pdfBlob, `Order-${number}.pdf`);
     } catch (error) {
       console.error('Failed to generate PDF:', error);
@@ -241,7 +245,7 @@ const OrderList = () => {
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link
-                      to={`/sales/orders/${order.id}`}
+                      to={`/sales/orders/${encodeId(order.id)}`}
                       className="text-blue-600 hover:text-blue-800 font-medium"
                     >
                       {order.orderNumber}
@@ -268,7 +272,7 @@ const OrderList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
                       <Link
-                        to={`/sales/orders/${order.id}`}
+                        to={`/sales/orders/${encodeId(order.id)}`}
                         className="text-blue-600 hover:text-blue-900"
                         title="View"
                       >
@@ -276,7 +280,7 @@ const OrderList = () => {
                       </Link>
                       {order.status.toUpperCase() !== "COMPLETED" && (
                         <Link
-                          to={`/sales/orders/${order.id}/edit`}
+                          to={`/sales/orders/${encodeId(order.id)}/edit`}
                           className="text-amber-600 hover:text-amber-900"
                           title="Edit"
                         >
@@ -292,7 +296,7 @@ const OrderList = () => {
                       </button>
                       {order.status.toUpperCase() === "COMPLETED" && (
                         <Link
-                          to={`/sales/orders/${order.id}/invoice`}
+                          to={`/sales/orders/${encodeId(order.id)}/invoice`}
                           className="text-purple-600 hover:text-purple-900"
                           title="Generate Invoice"
                         >

@@ -12,6 +12,8 @@ import { clientService } from "../../../services/Sales/clientService";
 import { productService } from "../../../services/Sales/productService";
 import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+// Add hashids import
+import { decodeId, encodeId } from "../../../utils/hashids";
 
 const schema = yup
   .object({
@@ -45,9 +47,9 @@ const calculateItemTotal = (item) => {
 };
 
 const OrderForm = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
-  const isEditMode = Boolean(id);
+  const isEditMode = Boolean(hashId);
 
   const [clients, setClients] = useState([]);
   const [products, setProducts] = useState([]);
@@ -57,6 +59,7 @@ const OrderForm = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   const {
     control,
@@ -134,9 +137,18 @@ const OrderForm = () => {
 
     fetchData();
 
-    if (isEditMode && id) {
+    if (isEditMode && hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        setError("Invalid order ID");
+        return;
+      }
+      
+      setActualId(decodedId);
       setLoading(true);
-      getOrder(id)
+      getOrder(decodedId) // Use integer ID for API call
         .then((orderData) => {
           reset({
             clientId: orderData.clientId?.toString(),
@@ -164,7 +176,7 @@ const OrderForm = () => {
           setLoading(false);
         });
     }
-  }, [id, isEditMode, reset]);
+  }, [hashId, isEditMode, reset]);
 
   // Modify the useEffect that handles calculations
   useEffect(() => {
@@ -254,13 +266,20 @@ const OrderForm = () => {
         quoteId: data.quoteId || null,
       };
 
-      if (isEditMode && id) {
-        await updateOrder(id, orderData);
+      let result;
+      if (isEditMode && actualId) {
+        result = await updateOrder(actualId, orderData); // Use integer ID for API
+        // Navigate back to the order detail using the original hash
+        navigate(`/sales/orders/${hashId}`);
       } else {
-        await createOrder(orderData);
+        result = await createOrder(orderData);
+        // For new orders, encode the returned ID for navigation
+        if (result && result.id) {
+          navigate(`/sales/orders/${encodeId(result.id)}`);
+        } else {
+          navigate("/sales/orders");
+        }
       }
-
-      navigate("/sales/orders");
     } catch (err) {
       setError("Failed to save order");
       console.error(err);
@@ -274,7 +293,7 @@ const OrderForm = () => {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white rounded-lg shadow">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <button
@@ -284,7 +303,7 @@ const OrderForm = () => {
             <ArrowLeft size={20} />
           </button>
           <h1 className="text-2xl font-semibold text-gray-800">
-            {isEditing ? "Edit Order" : "Create New Order"}
+            {isEditMode ? "Edit Order" : "Create New Order"}
           </h1>
         </div>
       </div>

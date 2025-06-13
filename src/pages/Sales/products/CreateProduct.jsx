@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react"
 import ProductForm from "./components/ProductForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { productService } from "../../../services/Sales/productService";
+import { encodeId } from "../../../utils/hashids";
 
 const CreateProduct = () => {
   const navigate = useNavigate()
@@ -17,14 +18,20 @@ const CreateProduct = () => {
 
       console.log("Creating product with data:", data);
       
-      // In a real app, call the create API
+      // Call the create API
       const newProduct = await productService.createProduct(data);
 
-      // For development, just wait a bit then redirect
-      setTimeout(() => {
-        showNotification("Product created successfully", "success")
-        navigate("/sales/products")
-      }, 500)
+      // Navigate to the new product detail page using encoded ID
+      if (newProduct && newProduct.id) {
+        showNotification("Product created successfully", "success");
+        navigate(`/sales/products/${encodeId(newProduct.id)}`);
+      } else {
+        // Fallback for development
+        setTimeout(() => {
+          showNotification("Product created successfully", "success")
+          navigate("/sales/products")
+        }, 500);
+      }
     } catch (error) {
       console.error("Error creating product:", error)
       showNotification("Failed to create product", "error")

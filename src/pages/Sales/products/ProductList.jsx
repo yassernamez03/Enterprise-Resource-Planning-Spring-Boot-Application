@@ -9,6 +9,8 @@ import { productService } from "../../../services/Sales/productService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { encodeId } from "../../../utils/hashids";
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -150,17 +152,19 @@ const ProductList = () => {
   };
 
   const handleViewProduct = (id) => {
-    navigate(`/sales/products/${id}`);
+    // Use encoded ID for navigation
+    navigate(`/sales/products/${encodeId(id)}`);
   };
 
   const handleEditProduct = (id) => {
-    navigate(`/sales/products/${id}/edit`);
+    // Use encoded ID for navigation
+    navigate(`/sales/products/${encodeId(id)}/edit`);
   };
 
   const handleDeletePrompt = (product) => {
     setDeleteDialog({
       open: true,
-      productId: product.id,
+      productId: product.id, // Keep integer ID for API call
       productName: product.name,
     });
   };
@@ -169,7 +173,7 @@ const ProductList = () => {
     console.log("DELETE ATTEMPT STARTED for:", deleteDialog.productName);
     
     try {
-      await productService.deleteProduct(deleteDialog.productId);
+      await productService.deleteProduct(deleteDialog.productId); // Use integer ID for API
       fetchProducts();
       showNotification(
         `Product ${deleteDialog.productName} deleted successfully`,

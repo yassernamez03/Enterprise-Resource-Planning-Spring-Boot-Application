@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react"
 import ClientForm from "./components/ClientForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { clientService } from "../../../services/Sales/clientService";
+import { encodeId } from "../../../utils/hashids";
 
 const CreateClient = () => {
   const navigate = useNavigate()
@@ -15,15 +16,17 @@ const CreateClient = () => {
     try {
       setLoading(true)
 
-      // In a real app, call the create API
       const newClient = await clientService.createClient(data);
-      // navigate(`/clients/create/${newClient.id}`);
-
-      // For development, just wait a bit then redirect
-      setTimeout(() => {
-        showNotification("Client created successfully", "success")
-        navigate("/sales/clients")
-      }, 500)
+      
+      if (newClient && newClient.id) {
+        showNotification("Client created successfully", "success");
+        navigate(`/sales/clients/${encodeId(newClient.id)}`);
+      } else {
+        setTimeout(() => {
+          showNotification("Client created successfully", "success")
+          navigate("/sales/clients")
+        }, 500);
+      }
     } catch (error) {
       console.error("Error creating client:", error)
       showNotification("Failed to create client", "error")

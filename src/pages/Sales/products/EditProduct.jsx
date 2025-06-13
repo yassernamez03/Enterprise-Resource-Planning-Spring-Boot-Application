@@ -4,60 +4,55 @@ import { ArrowLeft } from "lucide-react"
 import ProductForm from "./components/ProductForm"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { productService } from "../../../services/Sales/productService";
-
-// Mock product for development
-const MOCK_PRODUCT = {
-  id: 1,
-  name: "Premium Widget",
-  description: "High-quality widget with premium features",
-  sku: "WDG-001",
-  price: 49.99,
-  cost: 19.99,
-  categoryId: 1,
-  category: { id: 1, name: "Electronics" },
-  inStock: 150,
-  minStock: 20,
-  isActive: true,
-  createdAt: "2023-02-15T08:30:00.000Z",
-  updatedAt: "2023-05-20T14:45:00.000Z"
-}
+import { decodeId } from "../../../utils/hashids";
 
 const EditProduct = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const data = await productService.getProduct(id);
-        setProduct(data);
-      } catch (error) {
-        console.error("Error fetching product:", error);
-        showNotification("Failed to load product details", "error");
-      } finally {
-        setLoading(false);
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        showNotification("Invalid product ID", "error");
+        navigate("/sales/products");
+        return;
       }
-    };
-
-    if (id) {
-      fetchProduct();
+      
+      setActualId(decodedId);
+      fetchProduct(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id]);
+  }, [hashId, navigate, showNotification]);
+
+  const fetchProduct = async (productId) => {
+    try {
+      setLoading(true);
+      const data = await productService.getProduct(productId); // API uses integer ID
+      setProduct(data);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      showNotification("Failed to load product details", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async data => {
-    if (!product) return;
+    if (!product || !actualId) return;
 
     try {
       setSaving(true);
-      await productService.updateProduct(product.id, data);
+      await productService.updateProduct(actualId, data); // Use integer ID for API
       showNotification("Product updated successfully", "success");
-      navigate(`/sales/products/${product.id}`);
+      navigate(`/sales/products/${hashId}`); // Use the original hash for navigation
     } catch (error) {
       console.error("Error updating product:", error);
       // Show more specific error message
@@ -68,7 +63,7 @@ const EditProduct = () => {
   };
 
   const handleCancel = () => {
-    navigate(`/sales/products/${product?.id || ""}`)
+    navigate(`/sales/products/${hashId}`) // Use the original hash for navigation
   }
 
   if (loading) {

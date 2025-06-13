@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { getInvoice, recordPayment } from "../../../services/Sales/invoiceService"
 import { ArrowLeft, DollarSign } from "lucide-react"
+import { decodeId } from "../../../utils/hashids";
 
 const schema = yup
   .object({
@@ -20,13 +21,14 @@ const schema = yup
   .required()
 
 const PaymentForm = () => {
-  const { id } = useParams()
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate()
 
   const [invoice, setInvoice] = useState(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
 
   const {
     control,
@@ -44,15 +46,25 @@ const PaymentForm = () => {
   })
 
   useEffect(() => {
-    if (id) {
-      fetchInvoice(id)
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        setError("Invalid invoice ID");
+        setLoading(false);
+        return;
+      }
+      
+      setActualId(decodedId);
+      fetchInvoice(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id])
+  }, [hashId]);
 
   const fetchInvoice = async invoiceId => {
     try {
       setLoading(true)
-      const data = await getInvoice(invoiceId)
+      const data = await getInvoice(invoiceId) // API uses integer ID
       setInvoice(data)
       setValue("amount", data.amountDue)
     } catch (err) {
@@ -64,19 +76,19 @@ const PaymentForm = () => {
   }
 
   const onSubmit = async data => {
-    if (!invoice || !id) return
+    if (!invoice || !actualId) return
 
     try {
       setSubmitting(true)
 
-      await recordPayment(id, {
+      await recordPayment(actualId, { // Use integer ID for API
         amount: data.amount,
         method: data.method,
         date: data.date,
         notes: data.notes || ""
       })
 
-      navigate(`/invoices/${id}`)
+      navigate(`/sales/invoices/${hashId}`) // Use the original hash for navigation
     } catch (err) {
       setError("Failed to record payment")
       console.error(err)
@@ -97,7 +109,7 @@ const PaymentForm = () => {
       <div className="p-6 bg-white rounded-lg shadow">
         <div className="flex items-center mb-6">
           <Link
-            to={`/sales/invoices/${invoice.id}`}
+            to={`/sales/invoices/${hashId}`} // Use the original hash for navigation
             className="text-gray-600 hover:text-gray-800 mr-2"
           >
             <ArrowLeft size={18} />
@@ -113,7 +125,7 @@ const PaymentForm = () => {
         </div>
 
         <Link
-          to={`/sales/invoices/${invoice.id}`}
+          to={`/sales/invoices/${hashId}`} // Use the original hash for navigation
           className="btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
         >
           Back to Invoice
@@ -126,7 +138,7 @@ const PaymentForm = () => {
     <div className="p-6 bg-white rounded-lg shadow">
       <div className="flex items-center mb-6">
         <Link
-          to={`/sales/invoices/${invoice.id}`}
+          to={`/sales/invoices/${hashId}`} // Use the original hash for navigation
           className="text-gray-600 hover:text-gray-800 mr-2"
         >
           <ArrowLeft size={18} />
@@ -283,7 +295,7 @@ const PaymentForm = () => {
 
               <div className="flex justify-between pt-4">
                 <Link
-                  to={`/sales/invoices/${invoice.id}`}
+                  to={`/sales/invoices/${hashId}`} // Use the original hash for navigation
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                 >
                   Cancel

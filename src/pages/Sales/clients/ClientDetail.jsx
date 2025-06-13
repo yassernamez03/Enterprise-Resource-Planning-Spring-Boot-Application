@@ -11,6 +11,8 @@ import { getInvoicesByClient } from "../../../services/Sales/invoiceService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { decodeId, encodeId } from "../../../utils/hashids";
 
 // Helper function for safe date formatting
 const safeFormatDate = (dateString, formatStr) => {
@@ -24,7 +26,7 @@ const safeFormatDate = (dateString, formatStr) => {
 };
 
 const ClientDetail = () => {
-  const { id } = useParams();
+  const { id: hashId } = useParams(); // Get the hashed ID from URL
   const navigate = useNavigate();
   const { showNotification } = useAppContext();
   const { error, showAsDialog, showError, hideError, handleDeleteError } = useErrorNotification();
@@ -34,8 +36,8 @@ const ClientDetail = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [actualId, setActualId] = useState(null); // Store the decoded integer ID
   
-  // New state for real data
   const [recentActivities, setRecentActivities] = useState([]);
   const [clientSummary, setClientSummary] = useState({
     totalQuotes: 0,
@@ -46,42 +48,52 @@ const ClientDetail = () => {
   const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   useEffect(() => {
-    const fetchClient = async () => {
-      try {
-        setLoading(true);
-        const data = await clientService.getClient(id);
-        setClient(data);
-      } catch (error) {
-        console.error("Error fetching client:", error);
-        showNotification("Failed to load client details", "error");
-      } finally {
+    if (hashId) {
+      // Decode the hash to get the actual integer ID
+      const decodedId = decodeId(hashId);
+      
+      if (!decodedId) {
+        setError("Invalid client ID");
         setLoading(false);
+        return;
       }
-    };
-
-    if (id) {
-      fetchClient();
+      
+      setActualId(decodedId);
+      fetchClient(decodedId); // Use the decoded integer ID for API call
     }
-  }, [id, showNotification]);
+  }, [hashId]);
+
+  const fetchClient = async (clientId) => {
+    try {
+      setLoading(true);
+      const data = await clientService.getClient(clientId); // API uses integer ID
+      setClient(data);
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      showNotification("Failed to load client details", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchClientData = async () => {
-      if (!id) return;
+      if (!actualId) return;
       
       try {
         setActivitiesLoading(true);
         
-        // Fetch all client-related data in parallel
+        // Fetch all client-related data in parallel using integer ID
         const [quotes, orders, invoices] = await Promise.all([
-          getQuotesByClient(id).catch(err => {
+          getQuotesByClient(actualId).catch(err => {
             console.warn("Failed to fetch quotes:", err);
             return [];
           }),
-          getOrdersByClient(id).catch(err => {
+          getOrdersByClient(actualId).catch(err => {
             console.warn("Failed to fetch orders:", err);
             return [];
           }),
-          getInvoicesByClient(id).catch(err => {
+          getInvoicesByClient(actualId).catch(err => {
             console.warn("Failed to fetch invoices:", err);
             return [];
           })
@@ -99,7 +111,8 @@ const ClientDetail = () => {
             date: quote.createdAt,
             amount: quote.total || 0,
             status: quote.status === 'ACCEPTED' ? 'Approved' : 
-                   quote.status === 'REJECTED' ? 'Rejected' : 'Pending'
+                   quote.status === 'REJECTED' ? 'Rejected' : 'Pending',
+            entityId: quote.id // Store original ID for navigation
           });
         });
 
@@ -112,7 +125,8 @@ const ClientDetail = () => {
             date: order.createdAt,
             amount: order.totalAmount || 0,
             status: order.status === 'COMPLETED' ? 'Completed' : 
-                   order.status === 'CANCELLED' ? 'Cancelled' : 'Processing'
+                   order.status === 'CANCELLED' ? 'Cancelled' : 'Processing',
+            entityId: order.id // Store original ID for navigation
           });
         });
 
@@ -125,7 +139,8 @@ const ClientDetail = () => {
             date: invoice.createdAt,
             amount: invoice.total || 0,
             status: invoice.status === 'paid' ? 'Paid' : 
-                   invoice.status === 'partial' ? 'Partial' : 'Pending'
+                   invoice.status === 'partial' ? 'Partial' : 'Pending',
+            entityId: invoice.id // Store original ID for navigation
           });
         });
 
@@ -161,14 +176,14 @@ const ClientDetail = () => {
     };
 
     fetchClientData();
-  }, [id, showNotification]);
+  }, [actualId, showNotification]);
 
   const handleBack = () => {
     navigate("/sales/clients")
   }
 
   const handleEdit = () => {
-    navigate(`/sales/clients/${id}/edit`)
+    navigate(`/sales/clients/${hashId}/edit`) // Use the original hash in the edit link
   }
 
   const handleDeletePrompt = () => {
@@ -176,8 +191,10 @@ const ClientDetail = () => {
   }
 
   const handleDeleteConfirm = async () => {
+    if (!actualId) return;
+
     try {
-      await clientService.deleteClient(client.id);
+      await clientService.deleteClient(actualId); // Use integer ID for API
       showNotification(`Client ${client.name} deleted successfully`, "success");
       navigate("/sales/clients");
     } catch (error) {
@@ -270,13 +287,14 @@ const ClientDetail = () => {
   }
 
   const getActivityLink = (activity) => {
+    // Use encoded IDs for navigation
     switch (activity.type) {
       case "quote":
-        return `/sales/quotes/${activity.id.replace('quote-', '')}`;
+        return `/sales/quotes/${encodeId(activity.entityId)}`;
       case "order":
-        return `/sales/orders/${activity.id.replace('order-', '')}`;
+        return `/sales/orders/${encodeId(activity.entityId)}`;
       case "invoice":
-        return `/sales/invoices/${activity.id.replace('invoice-', '')}`;
+        return `/sales/invoices/${encodeId(activity.entityId)}`;
       default:
         return '#';
     }
@@ -297,7 +315,7 @@ const ClientDetail = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b border-gray-200">
         <div>
           <p className="text-gray-600">
-            Client ID: {client.id} • Created on{" "}
+            Client ID: {hashId} • Created on{" "}
             {safeFormatDate(client.createdAt, "PPP")}
           </p>
         </div>
@@ -382,7 +400,7 @@ const ClientDetail = () => {
                 Recent Transactions
               </h2>
               <button
-                onClick={() => navigate(`/sales/clients/${id}/transactions`)}
+                onClick={() => navigate(`/sales/clients/${hashId}/transactions`)}
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
                 View All
@@ -510,7 +528,7 @@ const ClientDetail = () => {
 
             <div className="space-y-2">
               <button
-                onClick={() => navigate(`/sales/quotes/create?clientId=${id}`)}
+                onClick={() => navigate(`/sales/quotes/create?clientId=${hashId}`)}
                 className="block w-full text-left px-4 py-2 bg-primary-50 text-primary-700 rounded-md hover:bg-primary-100 transition-colors"
               >
                 <div className="flex items-center">
@@ -519,7 +537,7 @@ const ClientDetail = () => {
                 </div>
               </button>
               <button
-                onClick={() => navigate(`/sales/orders/create?clientId=${id}`)}
+                onClick={() => navigate(`/sales/orders/create?clientId=${hashId}`)}
                 className="block w-full text-left px-4 py-2 bg-success-50 text-success-700 rounded-md hover:bg-success-100 transition-colors"
               >
                 <div className="flex items-center">
@@ -528,7 +546,7 @@ const ClientDetail = () => {
                 </div>
               </button>
               <button
-                onClick={() => navigate(`/sales/invoices/create?clientId=${id}`)}
+                onClick={() => navigate(`/sales/invoices/create?clientId=${hashId}`)}
                 className="block w-full text-left px-4 py-2 bg-warning-50 text-warning-700 rounded-md hover:bg-warning-100 transition-colors"
               >
                 <div className="flex items-center">

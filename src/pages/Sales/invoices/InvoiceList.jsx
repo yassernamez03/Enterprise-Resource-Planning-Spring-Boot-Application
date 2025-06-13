@@ -14,6 +14,8 @@ import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
 import ErrorNotification from '../../../components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
+// Add hashids import
+import { encodeId } from "../../../utils/hashids";
 
 // Map backend status enum values (uppercase) to frontend display values
 const statusLabels = {
@@ -99,7 +101,8 @@ const InvoiceList = () => {
         const filterStatus = statusFilter.toLowerCase();
         return invoiceStatus === filterStatus;
       })
-    }    setFilteredInvoices(filtered);
+    }    
+    setFilteredInvoices(filtered);
   };
   
   const handleSearch = async (event) => {
@@ -168,7 +171,7 @@ const InvoiceList = () => {
   const handleDeletePrompt = (id, invoiceNumber) => {
     setDeleteDialog({
       open: true,
-      invoiceId: id,
+      invoiceId: id, // Keep integer ID for API call
       invoiceNumber: invoiceNumber
     })
   }
@@ -177,7 +180,7 @@ const InvoiceList = () => {
     console.log("INVOICE DELETE STARTED for:", deleteDialog.invoiceNumber);
     
     try {
-      await deleteInvoice(deleteDialog.invoiceId);
+      await deleteInvoice(deleteDialog.invoiceId); // Use integer ID for API
       setInvoices(
         invoices.filter(invoice => invoice.id !== deleteDialog.invoiceId)
       );
@@ -197,7 +200,7 @@ const InvoiceList = () => {
   const handleDownloadPdf = async (id, number) => {
     try {
       setLoading(true);
-      const pdfBlob = await generateInvoicePdf(id)
+      const pdfBlob = await generateInvoicePdf(id) // Still uses integer ID for API call
       downloadPdf(pdfBlob, `Invoice-${number}.pdf`)
     } catch (error) {
       console.error('Failed to generate PDF:', error);
@@ -300,7 +303,7 @@ const InvoiceList = () => {
                 <tr key={invoice.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link
-                      to={`/sales/invoices/${invoice.id}`}
+                      to={`/sales/invoices/${encodeId(invoice.id)}`}
                       className="text-blue-600 hover:text-blue-800 font-medium"
                     >
                       {invoice.invoiceNumber}
@@ -308,7 +311,7 @@ const InvoiceList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link
-                      to={`/sales/orders/${invoice.orderId}`}
+                      to={`/sales/orders/${encodeId(invoice.orderId)}`}
                       className="text-blue-600 hover:text-blue-800"
                     >
                       {invoice.orderNumber}
@@ -359,7 +362,7 @@ const InvoiceList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
                       <Link
-                        to={`/sales/invoices/${invoice.id}`}
+                        to={`/sales/invoices/${encodeId(invoice.id)}`}
                         className="text-blue-600 hover:text-blue-900"
                         title="View"
                       >
@@ -367,7 +370,7 @@ const InvoiceList = () => {
                       </Link>
                       {(invoice.status !== "paid" && invoice.status !== "PAID") && (
                         <button
-                          onClick={() => navigate(`/sales/invoices/${invoice.id}`)}
+                          onClick={() => navigate(`/sales/invoices/${encodeId(invoice.id)}`)}
                           className="text-green-600 hover:text-green-900"
                           title="Record Payment"
                         >
