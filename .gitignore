@@ -47,7 +47,11 @@ logs/archived/error-2025-05-29-0.log
 logs/archived/security-2025-05-27-0.log
 logs/archived/security-2025-05-29-0.log
 logs/archived/**
-.gitignore
-logs/application.log
-logs/error.log
-logs/security.log
+
+# Sensitive files
+*.p12
+*.jks
+*.key
+*.pem
+*.crt
+.env.properties
