@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -8,34 +7,55 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
+target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Environment variables - NEVER commit these files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
 *.local
 
+# SSL Certificates - NEVER commit these files
 /cert/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
 
-# Editor directories and files
+# File uploads
+/uploads/
+
+# IDE and Editor directories
 .vscode/*
 !.vscode/extensions.json
 .idea
+*.iws
+*.iml
+*.ipr
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-=======
+
+# Spring Boot / Maven
 HELP.md
-target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.env
-
-/uploads/
-
-### STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -44,22 +64,9 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
->>>>>>> origin/V2
