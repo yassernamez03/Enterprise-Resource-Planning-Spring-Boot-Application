@@ -1,6 +1,6 @@
 # SecureOps Enterprise Resource Planning - Backend API
 
-> **Branch: `backend`** | **Version:** 0.0.1-SNAPSHOT | **Spring Boot:** 3.4.5 | **Java:** 21
+> **Branch:** `backend` | **Version:** 0.0.1-SNAPSHOT | **Spring Boot:** 3.4.5 | **Java:** 21
 
 A production-ready, enterprise-grade RESTful API backend for a comprehensive ERP system. Built with Spring Boot 3.x, this backend provides robust security, real-time communication, and comprehensive business operation management capabilities.
 
@@ -144,6 +144,43 @@ CREATE USER secureops_user WITH ENCRYPTED PASSWORD 'your_secure_password';
 
 -- Grant privileges
 GRANT ALL PRIVILEGES ON DATABASE secureops_db TO secureops_user;
+```
+
+### 3. Environment Configuration
+
+Create a `.env` file or configure `application.properties`:
+
+```properties
+# Database Configuration
+DB_URL=jdbc:postgresql://localhost:5432/secureops_db
+DB_USERNAME=secureops_user
+DB_PASSWORD=your_secure_password
+
+# JWT Configuration (Generate a strong secret)
+JWT_SECRET=your-256-bit-secret-key-here
+JWT_EXPIRATION=86400000
+
+# Email Configuration (SMTP)
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@example.com
+MAIL_PASSWORD=your-app-specific-password
+
+# Admin User (Will be created on first startup)
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=StrongAdm!nP@ssw0rd
+
+# Google reCAPTCHA
+RECAPTCHA_SECRET=your-recaptcha-secret-key
+
+# SSL Configuration
+SSL_KEY_STORE_PASSWORD=your-keystore-password
+```
+
+**💡 Configuration Tips:**
+- Generate a secure JWT secret: `openssl rand -base64 64`
+- For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833)
+- Get reCAPTCHA keys from [Google reCAPTCHA Console](https://www.google.com/recaptcha/admin)
 
 ### 4. SSL Certificate Setup
 
@@ -167,6 +204,30 @@ Use a valid SSL certificate from a Certificate Authority (Let's Encrypt, DigiCer
 ⚠️ **Security Warning**: The `keystore.p12` file is excluded from version control. Never commit certificates to Git.
 
 ### 5. Build the Application
+
+```bash
+# Build the project
+./mvnw clean install
+
+# Skip tests during build (if needed)
+./mvnw clean install -DskipTests
+```
+
+### 6. Run the Application
+
+```bash
+# Development mode (with auto-reload)
+./mvnw spring-boot:run
+
+# Or run with specific profile
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+
+# Run the built JAR
+java -jar target/secureops-0.0.1-SNAPSHOT.jar
+```
+
+The application will start on `https://localhost:8443`
+
 ---
 
 ## ⚙️ Configuration
@@ -222,14 +283,7 @@ spring.servlet.multipart.max-request-size=10MB
 app.security.max-login-attempts=5
 app.security.lockout-duration-minutes=15
 ```
-### 6. Run the Application
 
-```bash
-# Development mode (with auto-reload)
-./mvnw spring-boot:run
-
-# Or run with specific profile
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ---
 
 ## 📁 Project Structure
@@ -246,8 +300,7 @@ secureops-backend/
 │   │   │   │   ├── JwtAuthenticationFilter.java   # JWT filter for requests
 │   │   │   │   ├── WebSocketConfig.java           # WebSocket configuration
 │   │   │   │   ├── MailConfig.java                # Email configuration
-│   │   │   │   ├── RecaptchaConfig.java           # reCAPTCHA setup
-│   │   │   │   └── ...                            # Other configs
+│   │   │   │   └── RecaptchaConfig.java           # reCAPTCHA setup
 │   │   │   ├── controller/                        # REST API endpoints
 │   │   │   │   ├── AuthController.java            # Authentication endpoints
 │   │   │   │   ├── UserController.java            # User management
@@ -263,8 +316,7 @@ secureops-backend/
 │   │   │   │   ├── LoginDto.java
 │   │   │   │   ├── UserRegistrationDto.java
 │   │   │   │   ├── MessageDto.java
-│   │   │   │   ├── TaskEventDto.java
-│   │   │   │   └── ...
+│   │   │   │   └── TaskEventDto.java
 │   │   │   ├── entity/                            # JPA entities
 │   │   │   │   ├── User.java                      # User entity
 │   │   │   │   ├── Chat.java                      # Chat entity
@@ -283,6 +335,22 @@ secureops-backend/
 │   │   │   │   ├── AuthService.java               # Authentication logic
 │   │   │   │   ├── UserService.java               # User operations
 │   │   │   │   ├── ChatService.java               # Chat management
+│   │   │   │   ├── MessageService.java            # Message handling
+│   │   │   │   ├── TaskEventService.java          # Task/Event operations
+│   │   │   │   └── FileService.java               # File management
+│   │   │   └── util/                              # Utility classes
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── application-dev.properties
+│   │       ├── application-prod.properties
+│   │       └── logback-spring.xml
+│   └── test/                                      # Test files
+├── logs/                                          # Application logs
+├── uploads/                                       # Uploaded files
+├── pom.xml                                        # Maven configuration
+└── README.md
+```
+
 ---
 
 ## 📡 API Reference
@@ -321,6 +389,117 @@ POST /api/auth/login
   "expiresIn": 86400000
 }
 ```
+
+### User Management
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/users/profile` | Get user profile | User |
+| `PUT` | `/users/profile` | Update profile | User |
+| `POST` | `/users/change-password` | Change password | User |
+| `POST` | `/users/upload-avatar` | Upload profile picture | User |
+
+### Chat & Messaging
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/chats` | Get user's chats | User |
+| `POST` | `/chats` | Create new chat | User |
+| `GET` | `/chats/{id}` | Get chat details | User |
+| `PUT` | `/chats/{id}/archive` | Archive chat | User |
+| `GET` | `/messages` | Get messages (paginated) | User |
+| `POST` | `/messages/text` | Send text message | User |
+| `POST` | `/messages/file` | Send file message | User |
+| `DELETE` | `/messages/{id}` | Delete message | User |
+
+**WebSocket Endpoint:**
+```
+wss://localhost:8443/ws
+```
+
+**Topics:**
+- `/topic/chat/{chatId}` - Chat messages
+- `/topic/typing/{chatId}` - Typing indicators
+- `/user/queue/notifications` - Personal notifications
+
+### Task & Event Management
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/tasks` | Get tasks (paginated) | User |
+| `POST` | `/tasks` | Create task | User |
+| `GET` | `/tasks/{id}` | Get task details | User |
+| `PUT` | `/tasks/{id}` | Update task | User |
+| `DELETE` | `/tasks/{id}` | Delete task | User |
+| `PUT` | `/tasks/{id}/status` | Update task status | User |
+
+### Security & Alerts
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/alerts` | Get security alerts | Admin |
+| `GET` | `/alerts/summary` | Get alert summary | Admin |
+| `PUT` | `/alerts/{id}/status` | Update alert status | Admin |
+
+### Logging & Monitoring
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `GET` | `/logs/admin` | View application logs | Admin |
+| `GET` | `/logs/security` | View security logs | Admin |
+| `GET` | `/actuator/health` | Application health status | Public |
+| `GET` | `/actuator/info` | Application information | Public |
+| `GET` | `/actuator/metrics` | Application metrics | Admin |
+
+### File Management
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| `POST` | `/files/upload` | Upload file | User |
+| `GET` | `/files/{filename}` | Download file | User |
+| `DELETE` | `/files/{filename}` | Delete file | User/Admin |
+
+---
+
+## 🔐 Security Features
+
+### Authentication Flow
+
+1. **User Registration** → Email verification → Account activation
+2. **Login** → JWT token generation → Token-based access
+3. **Password Reset** → Email token → Secure password update
+
+### Security Measures
+
+| Feature | Implementation |
+|---------|----------------|
+| **Password Hashing** | BCrypt with configurable strength |
+| **JWT Tokens** | HS256 algorithm, configurable expiration |
+| **CSRF Protection** | Enabled for state-changing operations |
+| **CORS** | Configured for trusted origins |
+| **SQL Injection Prevention** | JPA parameterized queries |
+| **XSS Protection** | Input validation and output encoding |
+| **Rate Limiting** | Login attempt throttling |
+| **Session Management** | Stateless JWT-based sessions |
+| **Audit Logging** | All security events logged |
+
+### Security Best Practices
+
+⚠️ **Before deploying to production:**
+
+- [x] Generate a strong JWT secret (256+ bits)
+- [x] Use valid SSL certificates (not self-signed)
+- [x] Change all default passwords
+- [x] Configure firewall rules (allow only 443, 8443)
+- [x] Enable database connection pooling
+- [x] Set up automated backups
+- [x] Review and configure CORS settings
+- [x] Implement rate limiting at reverse proxy
+- [x] Configure log rotation and archiving
+- [x] Enable Spring Actuator security
+- [x] Set up monitoring and alerting
+- [x] Review all environment variables
+
 ---
 
 ## 🧪 Testing
@@ -405,7 +584,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 ```bash
 # Build and run
 docker build -t secureops-backend .
-docker run -p 8443:8443 --env-file .env.properties secureops-backend
+docker run -p 8443:8443 --env-file .env secureops-backend
 ```
 
 ---
@@ -428,8 +607,6 @@ We welcome contributions! Please follow these guidelines:
 - Ensure all tests pass before submitting
 - Never commit sensitive information (secrets, keys, passwords)
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
-
 ---
 
 ## 📄 License
@@ -442,7 +619,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](https://github.com/yassernamez03/Enterprise-Resource-Planning-Spring-Boot-Application/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yassernamez03/Enterprise-Resource-Planning-Spring-Boot-Application/discussions)
-- **Security**: For security vulnerabilities, please see [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md)
+- **Security**: For security vulnerabilities, please email security@yourdomain.com
 
 ---
 
@@ -464,228 +641,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Built with ❤️ using Spring Boot**
-
-| Method | Endpoint | Description | Authorization |
-|--------|----------|-------------|---------------|
-| `GET` | `/chats` | Get user's chats | User |
-| `POST` | `/chats` | Create new chat | User |
-| `GET` | `/chats/{id}` | Get chat details | User |
-| `PUT` | `/chats/{id}/archive` | Archive chat | User |
-| `GET` | `/messages` | Get messages (paginated) | User |
-| `POST` | `/messages/text` | Send text message | User |
-| `POST` | `/messages/file` | Send file message | User |
-| `DELETE` | `/messages/{id}` | Delete message | User |
-
-**WebSocket Endpoint:**
-```
-wss://localhost:8443/ws
-```
-
-**Topics:**
-- `/topic/chat/{chatId}` - Chat messages
-- `/topic/typing/{chatId}` - Typing indicators
-- `/user/queue/notifications` - Personal notifications
-
-### Task & Event Management
-
-| Method | Endpoint | Description | Authorization |
-|--------|----------|-------------|---------------|
-| `GET` | `/tasks` | Get tasks (paginated) | User |
-| `POST` | `/tasks` | Create task | User |
-| `GET` | `/tasks/{id}` | Get task details | User |
-| `PUT` | `/tasks/{id}` | Update task | User |
-| `DELETE` | `/tasks/{id}` | Delete task | User |
-| `PUT` | `/tasks/{id}/status` | Update task status | User |
-
-### Security & Alerts
-
-| Method | Endpoint | Description | Authorization |
-|--------|----------|-------------|---------------|
-| `GET` | `/alerts` | Get security alerts | Admin |
-| `GET` | `/alerts/summary` | Get alert summary | Admin |
-| `PUT` | `/alerts/{id}/status` | Update alert status | Admin |
-
-### Logging & Monitoring
-
-| Method | Endpoint | Description | Authorization |
-|--------|----------|-------------|---------------|
-| `GET` | `/logs/admin` | View application logs | Admin |
-| `GET` | `/logs/security` | View security logs | Admin |
-| `GET` | `/actuator/health` | Application health status | Public |
-| `GET` | `/actuator/info` | Application information | Public |
-
-### File Management
-
-| Method | Endpoint | Description | Authorization |
-|--------|----------|-------------|---------------|
-| `POST` | `/files/upload` | Upload file | User |
-| `GET` | `/files/{filename}` | Download file | User |
-| `DELETE` | `/files/{filename}` | Delete file | User/Admin |
-
----
-
-## 🔐 Security Features
-
-### Authentication Flow
-
-1. **User Registration** → Email verification → Account activation
-2. **Login** → JWT token generation → Token-based access
-3. **Password Reset** → Email token → Secure password update
-
-### Security Measures
-
-| Feature | Implementation |
-|---------|----------------|
-| **Password Hashing** | BCrypt with configurable strength |
-| **JWT Tokens** | HS256 algorithm, configurable expiration |
-| **CSRF Protection** | Enabled for state-changing operations |
-| **CORS** | Configured for trusted origins |
-| **SQL Injection Prevention** | JPA parameterized queries |
-| **XSS Protection** | Input validation and output encoding |
-| **Rate Limiting** | Login attempt throttling |
-| **Session Management** | Stateless JWT-based sessions |
-| **Audit Logging** | All security events logged |
-
-### Security Best Practices
-
-⚠️ **Before deploying to production:**
-
-1. ✅ Generate a strong JWT secret (256+ bits)
-2. ✅ Use valid SSL certificates (not self-signed)
-3. ✅ Change all default passwords
-4. ✅ Configure firewall rules (allow only 443, 8443)
-5. ✅ Enable database connection pooling
-6. ✅ Set up automated backups
-7. ✅ Review and configure CORS settings
-8. ✅ Implement rate limiting at reverse proxy
-9. ✅ Configure log rotation and archiving
-10. ✅ Enable Spring Actuator security
-11. ✅ Set up monitoring and alerting
-12. ✅ Review all environment variablesg secret)
-JWT_SECRET=your-256-bit-secret-key-here
-JWT_EXPIRATION=86400000
-
-# Email Configuration (SMTP)
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@example.com
-MAIL_PASSWORD=your-app-specific-password
-
-# Admin User (Will be created on first startup)
-ADMIN_EMAIL=admin@yourdomain.com
-ADMIN_PASSWORD=StrongAdm!nP@ssw0rd
-
-# Google reCAPTCHA
-RECAPTCHA_SECRET=your-recaptcha-secret-key
-
-# SSL Configuration
-SSL_KEY_STORE_PASSWORD=your-keystore-password
-```
-
-**💡 Tips:**
-- Generate a secure JWT secret: `openssl rand -base64 64`
-- For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833)
-- Get reCAPTCHA keys from [Google reCAPTCHA Console](https://www.google.com/recaptcha/admin)
-
-### 4. SSL Certificate (Optional for Development)
-
-For development, you can generate a self-signed certificate:
-
-```bash
-keytool -genkeypair -alias localhost -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore src/main/resources/keystore.p12 -validity 3650
-```
-
-⚠️ **Important**: Never commit the `keystore.p12` file to version control. It's already in `.gitignore`.
-
-### 5. Build and Run
-
-```bash
-# Build the project
-./mvnw clean install
-
-# Run the application
-./mvnw spring-boot:run
-```
-
-The application will start on `https://localhost:8443`
-
-## Configuration Profiles
-
-The application supports multiple profiles:
-
-- `dev` - Development environment
-- `prod` - Production environment
-
-Set the active profile in `application.properties` or via environment variable:
-
-```bash
-SPRING_PROFILES_ACTIVE=prod
-```
-
-## Security Considerations
-
-⚠️ **Before deploying to production:**
-
-1. Generate strong JWT secret (256+ bits)
-2. Use proper SSL certificates (not self-signed)
-3. Change all default passwords
-4. Configure firewall rules
-5. Enable database connection pooling
-6. Set up proper backup procedures
-7. Review and configure CORS settings
-8. Enable rate limiting
-9. Configure proper logging rotation
-
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/secureops/
-│   │   ├── config/          # Security, JWT, WebSocket configs
-│   │   ├── controller/      # REST API endpoints
-│   │   ├── dto/             # Data Transfer Objects
-│   │   ├── entity/          # JPA entities
-│   │   ├── repository/      # Database repositories
-│   │   ├── service/         # Business logic
-│   │   └── util/            # Utility classes
-│   └── resources/
-│       ├── application.properties
-│       └── logback-spring.xml
-```
-
-## API Documentation
-
-### Authentication Endpoints
-
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/reset-password` - Password reset
-
-### User Management
-
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/profile` - Update profile
-- `POST /api/users/change-password` - Change password
-
-### Chat & Messaging
-
-- WebSocket endpoint: `wss://localhost:8443/ws`
-- `GET /api/messages` - Get messages
-- `POST /api/messages` - Send message
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-[Specify your license here]
-
-## Support
-
-For issues and questions, please create an issue in the GitHub repository.
