@@ -1,0 +1,19 @@
+# Environment variables
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker volumes
+pgdata/
+
+# Logs
+*.log
+logs/

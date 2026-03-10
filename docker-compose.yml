@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: secureops
+      POSTGRES_USER: ${DB_USERNAME:-secureops}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secureops123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-secureops}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./Backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://db:5432/secureops
+      DB_USERNAME: ${DB_USERNAME:-secureops}
+      DB_PASSWORD: ${DB_PASSWORD:-secureops123}
+      JWT_SECRET: ${JWT_SECRET:-c2VjdXJlb3BzLWRldi1zZWNyZXQta2V5LW1pbmltdW0tMjU2LWJpdHMtbG9uZw==}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@secureops.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      RECAPTCHA_SECRET: ${RECAPTCHA_SECRET:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./Frontend
+      args:
+        VITE_BACKEND_URL: /api
+        VITE_API_URL: /api
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

@@ -1,0 +1,57 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.env.properties
+
+/uploads/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+security.md
+security.pdf
+logs/application.log
+logs/error.log
+logs/security.log
+logs/archived/application-2025-05-27-0.log
+logs/archived/application-2025-05-29-0.log
+logs/archived/error-2025-05-24-0.log
+logs/archived/error-2025-05-27-0.log
+logs/archived/error-2025-05-29-0.log
+logs/archived/security-2025-05-27-0.log
+logs/archived/security-2025-05-29-0.log
+logs/archived/**
+
+# Sensitive files
+*.p12
+*.jks
+*.key
+*.pem
+*.crt
+.env.properties

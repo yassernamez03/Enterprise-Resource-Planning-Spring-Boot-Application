@@ -1,0 +1,52 @@
+{"properties": [
+  {
+    "name": "app.file.upload-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'app.file.upload-dir'"
+  },
+  {
+    "name": "app.jwt.expiration-ms",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.expiration-ms'"
+  },
+  {
+    "name": "app.jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'app.jwt.secret'"
+  },
+  {
+    "name": "recaptcha.secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'recaptcha.secret.key'"
+  },
+  {
+    "name": "recaptcha.verify.url",
+    "type": "java.lang.String",
+    "description": "A description for 'recaptcha.verify.url'"
+  },
+  {
+    "name": "admin.email",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.email'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
+  },
+  {
+    "name": "admin.password",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.password'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
+  },
+  {
+    "name": "admin.fullName",
+    "type": "java.lang.String",
+    "description": "A description for 'admin.fullName'"
+  }
+]}
