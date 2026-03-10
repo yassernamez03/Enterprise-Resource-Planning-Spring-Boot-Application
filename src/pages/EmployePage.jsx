@@ -3,7 +3,7 @@ import { Search, UserRound, Filter, MoreHorizontal, Edit2, Trash2, Eye, ArrowLef
 import { Link } from 'react-router-dom';
 import employeeServices from '../services/employeeService';
 import EditEmployeeModal from '../Components/Employes/EditEmployeeModal';
-import CreateEmployeeModal from '../components/Employes/CreateEmployeeModal';
+import CreateEmployeeModal from '../Components/Employes/CreateEmployeeModal';
 import { useAuth } from '../context/AuthContext';
 import logService from '../services/logService';
 

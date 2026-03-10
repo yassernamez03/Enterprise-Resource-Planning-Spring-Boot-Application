@@ -9,7 +9,7 @@ import { getQuotesByClient } from "../../../services/Sales/quoteService";
 import { getOrdersByClient } from "../../../services/Sales/orderService";
 import { getInvoicesByClient } from "../../../services/Sales/invoiceService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
-import ErrorNotification from '../../../components/ErrorNotification';
+import ErrorNotification from '../../../Components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
 // Add hashids import
 import { decodeId, encodeId } from "../../../utils/hashids";

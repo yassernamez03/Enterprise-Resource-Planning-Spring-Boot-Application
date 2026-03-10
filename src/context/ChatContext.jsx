@@ -6,7 +6,7 @@ import React, {
   useContext,
   useRef,
 } from "react";
-import websocketService from "../services/websocketService";
+import websocketService from "../services/webSocketService";
 import authService from "../services/authService";
 import apiService from "../services/apiInterceptor";
 import { useToast } from "./ToastContext";

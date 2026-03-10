@@ -19,7 +19,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog";
-import ErrorNotification from '../../../components/ErrorNotification';
+import ErrorNotification from '../../../Components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
 
 const statusLabels = {

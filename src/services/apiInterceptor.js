@@ -3,7 +3,7 @@
 import authService from './authService';
 import { parseErrorResponse, getDefaultErrorMessage } from './apiErrorHandler';
 
-const API_URL = "https://localhost:8443/api";
+const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 // Function to handle API requests with automatic token inclusion
 export const apiRequest = async (endpoint, options = {}) => {

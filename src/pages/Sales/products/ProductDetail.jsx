@@ -18,7 +18,7 @@ import ConfirmDialog from "../../../Components/Sales/common/ConfirmDialog"
 import { useAppContext } from "../../../context/Sales/AppContext"
 import { productService } from "../../../services/Sales/productService";
 import { handleForeignKeyError } from '../../../utils/errorHandlers';
-import ErrorNotification from '../../../components/ErrorNotification';
+import ErrorNotification from '../../../Components/ErrorNotification';
 import { useErrorNotification } from '../../../hooks/useErrorNotification';
 // Add hashids import
 import { decodeId, encodeId } from "../../../utils/hashids";

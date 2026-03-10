@@ -44,7 +44,8 @@ class WebSocketService {
     this.connectionPromise = new Promise((resolve, reject) => {
       try {
         // Create SockJS connection to the WebSocket endpoint
-        const socket = new SockJS('https://localhost:8443/ws');
+        const wsUrl = (import.meta.env.VITE_BACKEND_URL || '') + '/ws';
+        const socket = new SockJS(wsUrl.startsWith('/') ? `${window.location.origin}${wsUrl}` : wsUrl);
         this.stompClient = Stomp.over(socket);
 
         // Disable debug logs in production

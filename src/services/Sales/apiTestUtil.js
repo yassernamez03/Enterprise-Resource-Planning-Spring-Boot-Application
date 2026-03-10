@@ -2,7 +2,7 @@
 // Use this in the browser console to test backend connectivity
 
 export const testSalesApi = async () => {
-  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8443/api";
+  const baseUrl = import.meta.env.VITE_API_URL || "/api";
   const token = localStorage.getItem("auth_token");
   
   const headers = {

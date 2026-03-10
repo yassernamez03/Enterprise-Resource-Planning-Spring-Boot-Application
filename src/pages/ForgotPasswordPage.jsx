@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import ReCAPTCHA from 'react-google-recaptcha';
+// import ReCAPTCHA from 'react-google-recaptcha'; // Disabled for local dev
 
 // This component uses URL parameters to track the reset password flow state
 export default function ForgotPasswordPage() {
@@ -18,8 +18,8 @@ export default function ForgotPasswordPage() {
   const [verificationCode, setVerificationCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [recaptchaValue, setRecaptchaValue] = useState(null);
-  const recaptchaRef = useRef(null);
+  // reCAPTCHA disabled for local/Docker development
+  const recaptchaValue = "disabled";
   
   // Get auth functions
   const { forgotPassword, verifyResetCode } = useAuth();
@@ -40,19 +40,14 @@ export default function ForgotPasswordPage() {
     }
   }, [email]);
   
-  const handleRecaptchaChange = (value) => {
-    setRecaptchaValue(value);
-  };
+
   
   // Request verification code
   const handleRequestCode = useCallback(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     
     // Validate reCAPTCHA if on request step
-    if ((!stepFromUrl || stepFromUrl === 'request') && !recaptchaValue) {
-      setError('Please confirm that you are not a robot');
-      return;
-    }
+
     
     console.log('Starting handleRequestCode with email:', email);
     setIsSubmitting(true);
@@ -69,9 +64,7 @@ export default function ForgotPasswordPage() {
       console.error('Forgot password error:', err);
       setError('Failed to request password reset. Please try again.');
       setIsSubmitting(false);
-      // Reset reCAPTCHA on error
-      recaptchaRef.current?.reset();
-      setRecaptchaValue(null);
+
     }
   }, [email, forgotPassword, navigate, recaptchaValue, stepFromUrl]);
 
@@ -159,18 +152,11 @@ export default function ForgotPasswordPage() {
               />
             </div>
             
-            {/* Add reCAPTCHA */}
-            <div className="mb-6 flex justify-center">
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                onChange={handleRecaptchaChange}
-              />
-            </div>
+
 
             <button
               type="submit"
-              disabled={isSubmitting || !recaptchaValue}
+              disabled={isSubmitting}
               className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400 text-white font-medium rounded-lg transition-colors"
               data-testid="request-button"
             >
