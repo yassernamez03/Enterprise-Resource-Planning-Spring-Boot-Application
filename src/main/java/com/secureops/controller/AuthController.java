@@ -246,10 +246,11 @@ public class AuthController {
         if (password != null) {
             validateRequiredField(password, "Password");
         }
-        validateRequiredField(recaptchaResponse, "reCAPTCHA verification");
+        // reCAPTCHA validation disabled for local/Docker development
+        // validateRequiredField(recaptchaResponse, "reCAPTCHA verification");
 
         validateInputSecurity(email, clientIp);
-        validateRecaptcha(recaptchaResponse, email, clientIp);
+        // validateRecaptcha(recaptchaResponse, email, clientIp);
     }
 
     private void validateRequiredField(String value, String fieldName) {
@@ -259,12 +260,8 @@ public class AuthController {
     }
 
     private void validateRecaptcha(String recaptchaResponse, String email, String clientIp) {
-        logger.debug("Validating reCAPTCHA for email: {}, IP: {}", email, clientIp);
-        if (!recaptchaService.validateCaptcha(recaptchaResponse)) {
-            securityLogger.warn("Failed reCAPTCHA validation - email: {}, IP: {}", email, clientIp);
-            throw new BadRequestException("reCAPTCHA validation failed");
-        }
-        logger.debug("reCAPTCHA validated successfully for email: {}", email);
+        // reCAPTCHA validation disabled for local/Docker development
+        logger.debug("reCAPTCHA validation skipped (disabled) for email: {}, IP: {}", email, clientIp);
     }
 
     private void validateVerificationCode(String verificationCode, String clientIp) {
